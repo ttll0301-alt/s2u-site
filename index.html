@@ -49,6 +49,9 @@
     color:#ffffff; border:1.5px solid #ffffff; padding:4px 10px 2px;
     mix-blend-mode:normal; text-shadow:0 1px 6px rgba(0,0,0,0.25);
   }
+  .top-right{display:flex; align-items:center; gap:22px;}
+  .ig-icon{display:flex; color:var(--bone); opacity:0.9; transition:opacity .2s, transform .2s;}
+  .ig-icon:hover{opacity:1; transform:translateY(-1px);}
   .menu-btn{
     background:none; border:none; color:var(--bone);
     font-family:'Pretendard'; font-weight:600; font-size:13px;
@@ -915,10 +918,15 @@
 
   <div class="topbar">
     <a href="#top" class="logo">S2:U</a>
-    <button class="menu-btn" id="menuOpen" aria-expanded="false" aria-controls="overlayNav">
-      MENU
-      <span class="bars"><span></span><span></span></span>
-    </button>
+    <div class="top-right">
+      <a class="ig-icon" href="https://www.instagram.com/s2useoul/" target="_blank" rel="noopener" aria-label="S2:U Instagram (@s2useoul)">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <button class="menu-btn" id="menuOpen" aria-expanded="false" aria-controls="overlayNav">
+        MENU
+        <span class="bars"><span></span><span></span></span>
+      </button>
+    </div>
   </div>
 
   <nav class="overlay-nav" id="overlayNav">
