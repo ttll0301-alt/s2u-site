@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0c0c0d">
+<meta name="description" content="S2:U — Sustain to You. 서울 기반 하이브리드 웰니스 퍼포먼스 클럽 회사 소개서.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="S2:U Company Profile">
+<meta property="og:description" content="운동하고, 회복하고, 함께하는 사람들. S2:U 브랜드 세션과 코치, 커뮤니티 소개.">
+<link rel="icon" href="media/s2u-wordmark-white.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<title>S2:U Company Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: S2:U house style — off-black club night, bone type, Bebas numerals; Movement red / Recovery blue as the only two signals */
+:root{
+  --off-black:#0c0c0d;
+  --black-2:#141416;
+  --bone:#f4f2ed;
+  --bone-dim:rgba(244,242,237,.62);
+  --fog:#c9cdd0;
+  --line:rgba(244,242,237,.14);
+  --line-strong:rgba(244,242,237,.28);
+  --move-red:#ff3d2e;
+  --recover-blue:#5b93d6;
+  --display:'Bebas Neue','Oswald',Impact,sans-serif;
+  --body:'Pretendard','Noto Sans KR',-apple-system,'Apple SD Gothic Neo',sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;background:var(--off-black)}
+img,video{max-width:100%}
+[hidden]{display:none!important}
+body{margin:0;overflow-x:hidden;background:var(--off-black);color:var(--bone);font-family:var(--body);font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:clamp(16px,4vw,48px);padding-block:0}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+.eyebrow{font-family:var(--display);font-size:20px;letter-spacing:.14em;color:var(--bone-dim)}
+.eyebrow b{font-weight:400;color:var(--move-red)}
+section{padding-block:clamp(64px,10vw,128px);border-top:1px solid var(--line)}
+
+/* top */
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-block:22px}
+.top img{height:40px;width:auto}
+.top span{font-family:var(--display);letter-spacing:.16em;font-size:15px;color:var(--bone-dim)}
+
+/* hero */
+.hero{border-top:none;padding-block:clamp(48px,8vw,96px) clamp(56px,9vw,112px)}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(72px,15vw,208px);line-height:.84;letter-spacing:.005em}
+.hero h1 em{font-style:normal;color:var(--move-red)}
+.hero-row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(24px,5vw,72px);align-items:end;margin-top:clamp(28px,4vw,48px)}
+.flow{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--display);font-size:clamp(24px,3vw,38px);letter-spacing:.05em}
+.flow .m{color:var(--move-red)}.flow .r{color:var(--recover-blue)}.flow i{font-style:normal;color:var(--bone-dim)}
+.lede{color:var(--bone-dim);font-size:clamp(16px,1.5vw,18px);max-width:36em}
+.lede b{color:var(--bone);font-weight:700}
+.bpm{display:flex;align-items:baseline;gap:10px;margin-top:20px}
+.bpm strong{font-family:var(--display);font-weight:400;font-size:56px;line-height:1;color:var(--move-red)}
+.bpm span{font-family:var(--display);letter-spacing:.14em;color:var(--bone-dim)}
+
+/* section head */
+.head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(16px,4vw,56px);align-items:end;margin-bottom:clamp(32px,5vw,64px)}
+.head h2{font-family:var(--display);font-weight:400;font-size:clamp(48px,7vw,96px);line-height:.9;letter-spacing:.01em;margin-top:8px}
+.head p{color:var(--bone-dim);max-width:36em}
+
+/* about */
+.pillars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line-strong)}
+.pillar{padding:26px 22px 8px 0;min-width:0}
+.pillar+.pillar{padding-left:22px;border-left:1px solid var(--line)}
+.pillar h3{font-family:var(--display);font-weight:400;font-size:clamp(32px,3.4vw,46px);letter-spacing:.04em;line-height:1}
+.pillar:nth-child(1) h3{color:var(--move-red)}
+.pillar:nth-child(2) h3{color:var(--recover-blue)}
+.pillar p{color:var(--bone-dim);font-size:15px;margin-top:10px}
+
+/* in-house */
+.house{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.house div{background:var(--off-black);padding:clamp(22px,3vw,34px);min-width:0;display:flex;flex-direction:column;gap:12px}
+.house .k{font-family:var(--display);font-size:clamp(34px,3.6vw,48px);line-height:.95;letter-spacing:.03em}
+.house div:nth-child(1) .k{color:var(--move-red)}
+.house div:nth-child(2) .k{color:var(--recover-blue)}
+.house p{color:var(--bone-dim);font-size:15px}
+.house ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.house li{font-size:13px;border:1px solid var(--line-strong);border-radius:999px;padding:3px 10px;color:var(--fog)}
+.media.duo{grid-template-columns:repeat(2,minmax(0,1fr))}
+.media.duo img,.media.duo img:first-child{grid-column:auto;aspect-ratio:3/4}
+.media.single img:first-child{aspect-ratio:16/10}
+.feature .media.mix img{grid-column:auto;aspect-ratio:3/4}
+.feature .media.mix img.wide{grid-column:span 2;aspect-ratio:5/3}
+.feature .media.poster{grid-template-columns:minmax(0,1fr);max-width:440px}
+.feature .media.poster img,.feature .media.poster img:first-child{grid-column:auto;aspect-ratio:4/5;object-fit:contain}
+@media (max-width:960px){.house{grid-template-columns:minmax(0,1fr)}}
+
+/* sessions */
+.feature{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:clamp(20px,3vw,40px);align-items:start;padding-block:clamp(28px,4vw,44px);border-top:1px solid var(--line)}
+.feature:first-of-type{border-top:none;padding-top:0}
+.feature .media{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.feature .media img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;border-radius:2px}
+.feature .media img:first-child{grid-column:span 2;aspect-ratio:16/8}
+.feature .media.tall{grid-template-columns:repeat(3,minmax(0,1fr))}
+.feature .media.tall img,.feature .media.tall img:first-child{grid-column:auto;aspect-ratio:3/4}
+.meta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;margin-bottom:14px}
+.tag{font-family:var(--display);letter-spacing:.12em;font-size:15px;padding:3px 10px;border:1px solid var(--line-strong);border-radius:999px;line-height:1.3}
+.tag.m{border-color:var(--move-red);color:var(--move-red)}
+.tag.r{border-color:var(--recover-blue);color:var(--recover-blue)}
+.date{font-family:var(--display);letter-spacing:.1em;color:var(--bone-dim);font-size:17px}
+.feature h3{font-size:clamp(24px,2.6vw,32px);font-weight:900;line-height:1.25;letter-spacing:-.01em}
+.feature .with{font-family:var(--display);letter-spacing:.1em;color:var(--fog);font-size:18px;margin-top:6px}
+.feature p.desc{color:var(--bone-dim);margin-top:14px;font-size:15.5px}
+.feature ul{margin:14px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:14.5px;color:var(--fog)}
+.feature li::before{content:"— ";color:var(--move-red)}
+
+.films{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(10px,1.6vw,20px);margin-top:clamp(36px,5vw,56px)}
+.film{min-width:0;display:flex;flex-direction:column;gap:10px}
+.film .frame{aspect-ratio:9/16;max-width:100%;background:var(--black-2);overflow:hidden;border-radius:2px}
+.film video{width:100%;height:100%;object-fit:cover;display:block;cursor:pointer}
+.film h3{font-size:17px;font-weight:700}
+.film p{font-size:14px;color:var(--bone-dim)}
+.sound{font-family:var(--display);letter-spacing:.12em;font-size:16px;background:none;border:1px solid var(--line-strong);color:var(--bone);padding:6px 14px;border-radius:999px;cursor:pointer;margin-top:18px}
+.sound[aria-pressed="true"]{border-color:var(--move-red);color:var(--move-red)}
+.sound:focus-visible,a:focus-visible,.chip:focus-visible{outline:2px solid var(--move-red);outline-offset:3px}
+
+/* stills */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.chip{font-family:var(--display);letter-spacing:.12em;font-size:16px;background:none;color:var(--bone-dim);border:1px solid var(--line-strong);border-radius:999px;padding:5px 14px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--bone);color:var(--off-black);border-color:var(--bone)}
+.gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.gallery figure{margin:0;position:relative;min-width:0}
+.gallery img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:50% 35%;display:block;border-radius:2px}
+.gallery figcaption{position:absolute;left:10px;bottom:8px;font-family:var(--display);letter-spacing:.12em;font-size:14px;color:var(--bone);text-shadow:0 1px 6px rgba(0,0,0,.7)}
+
+/* log */
+.log-wrap{overflow-x:auto}
+.log{width:100%;border-collapse:collapse;font-size:15px;min-width:640px}
+.log th{font-family:var(--display);font-weight:400;letter-spacing:.14em;font-size:15px;color:var(--bone-dim);text-align:left;padding:0 18px 12px 0;border-bottom:1px solid var(--line-strong)}
+.log td{padding:15px 18px 15px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.log td:first-child{font-family:var(--display);letter-spacing:.08em;font-size:18px;color:var(--bone-dim);white-space:nowrap}
+.log td:last-child{color:var(--fog);font-size:14px}
+
+/* coaches */
+.coaches{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.coach{background:var(--off-black);padding:24px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.coach img{width:76px;height:76px;border-radius:50%;object-fit:cover}
+.coach h3{font-size:19px;font-weight:700}
+.coach .handle{font-family:var(--display);letter-spacing:.08em;color:var(--move-red);font-size:17px;overflow-wrap:anywhere;text-decoration:none;align-self:flex-start;border-bottom:1px solid transparent}
+.coach .handle:hover{border-bottom-color:var(--move-red)}
+.coach .handle:focus-visible{outline:2px solid var(--move-red);outline-offset:2px}
+.coach ul{margin:0;padding-left:16px;color:var(--bone-dim);font-size:14px;line-height:1.65}
+.coach.join{justify-content:center}
+.coach.join p{font-family:var(--display);font-size:34px;line-height:.95;letter-spacing:.03em;color:var(--fog)}
+
+/* network */
+.net{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:clamp(24px,5vw,72px);align-items:start}
+.big{font-family:var(--display);font-size:clamp(120px,18vw,240px);line-height:.8;color:var(--move-red)}
+.handles{display:flex;flex-wrap:wrap;gap:8px}
+.handles a{font-size:13px;border:1px solid var(--line-strong);border-radius:999px;padding:4px 11px;color:var(--bone-dim);text-decoration:none;transition:color .15s,border-color .15s}
+.handles a:hover{color:var(--bone);border-color:var(--move-red)}
+.handles a:focus-visible{outline:2px solid var(--move-red);outline-offset:2px}
+
+/* contact */
+.contact{display:flex;justify-content:space-between;align-items:end;gap:28px;flex-wrap:wrap}
+.contact h2{font-family:var(--display);font-weight:400;font-size:clamp(64px,10vw,140px);line-height:.85}
+.contact h2 em{font-style:normal;color:var(--move-red)}
+.contact dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 20px;margin:0}
+.contact dt{font-family:var(--display);letter-spacing:.14em;color:var(--bone-dim)}
+.contact dd{margin:0;user-select:all}
+.contact a{color:var(--bone)}
+footer{padding-block:28px 52px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--display);letter-spacing:.14em;color:var(--bone-dim);border-top:1px solid var(--line)}
+
+@media (max-width:960px){
+  .hero-row,.head,.feature,.net{grid-template-columns:minmax(0,1fr)}
+  .coaches{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gallery{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:560px){
+  .bpm{flex-wrap:wrap}
+  .feature .media.tall{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .feature .media.tall img:first-child{grid-column:span 2;aspect-ratio:4/3}
+  .chip{padding:9px 14px}
+  .handles a{padding:9px 14px;font-size:14px}
+  .coach .handle{padding-block:6px}
+  .sound{padding:10px 18px}
+  .log{min-width:0}
+  .log thead{display:none}
+  .log,.log tbody,.log tr,.log td{display:block}
+  .log tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .log td{padding:0;border:0}
+  .log td:first-child{font-size:16px}
+  .log td:nth-child(2){margin-top:2px}
+  .log td:last-child{margin-top:2px}
+  .pillars{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pillar:nth-child(3){padding-left:0;border-left:none}
+  .pillar:nth-child(n+3){border-top:1px solid var(--line)}
+  .films{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .coaches,.gallery{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="top">
+    <img src="media/s2u-wordmark-white.png" alt="S2:U Sustain to You">
+    <span>SEOUL · HYBRID WELLNESS PERFORMANCE CLUB</span>
+  </div>
+
+  <section class="hero">
+    <p class="eyebrow">COMPANY PROFILE · <b>2026</b></p>
+    <h1>SUSTAIN<br>TO <em>YOU</em></h1>
+    <div class="hero-row">
+      <div>
+        <div class="flow" aria-label="Movement, Recovery, Community, You"><span class="m">MOVEMENT</span><i>→</i><span class="r">RECOVERY</span><i>→</i><span>COMMUNITY</span><i>→</i><span>YOU</span></div>
+        <div class="bpm"><strong>62</strong><span>BPM · MOVE TO RAISE YOUR HEART RATE</span></div>
+      </div>
+      <p class="lede"><b>운동은 끝나도 삶은 계속됩니다.</b> S2:U는 강도 높은 트레이닝과 제대로 된 회복, 그리고 그 과정을 함께하는 사람들을 하나의 흐름 안에 놓는 퍼포먼스 컬쳐 브랜드입니다. 운동하고, 회복하고, 함께하는 사람들. 하나의 흐름이 되는 순간이 지속 가능한 나를 만듭니다.</p>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="head">
+      <div><p class="eyebrow">01 · ABOUT</p><h2>WHY S2:U</h2></div>
+      <p>땀 흘리고 끝나는 수업이 아니라, 몸을 밀어붙인 만큼 정확하게 되돌려 놓는 회복 루틴까지 설계합니다. 그리고 그 여정은 혼자가 아니라 커뮤니티 안에서 지속됩니다. 브랜드와 함께할 때도 같은 흐름으로 현장을 만듭니다.</p>
+    </div>
+    <div class="pillars">
+      <div class="pillar"><h3>MOVEMENT</h3><p>러닝, 하이브리드 트레이닝, 애니멀 플로우, 럭킹까지. 몸을 쓰는 세션과 1:1 코칭</p></div>
+      <div class="pillar"><h3>RECOVERY</h3><p>사우나, 아이스배스, 호흡과 명상으로 이어지는 회복 루틴</p></div>
+      <div class="pillar"><h3>COMMUNITY</h3><p>러닝 크루, 코치, 크리에이터가 함께 만드는 현장</p></div>
+      <div class="pillar"><h3>YOU</h3><p>심박 데이터와 사진으로 남는 나의 기록</p></div>
+    </div>
+  </section>
+
+  <section id="inhouse">
+    <div class="head">
+      <div><p class="eyebrow">02 · IN-HOUSE</p><h2>WE MAKE IT<br>OURSELVES</h2></div>
+      <p>기획부터 현장 운영, 기록과 디자인까지 외주 없이 한 팀 안에서 끝냅니다. 그래서 세션의 분위기가 결과물까지 그대로 이어집니다.</p>
+    </div>
+    <div class="house">
+      <div><span class="k">PHOTO &amp; FILM</span><p>자체 사진·영상팀이 세션 현장을 직접 촬영하고 편집합니다. 스틸컷, 숏폼 릴스, 브랜드 필름까지 행사 직후 바로 전달합니다.</p><ul><li>현장 스틸</li><li>숏폼 · 릴스</li><li>브랜드 필름</li></ul></div>
+      <div><span class="k">DESIGN</span><p>자체 디자인팀이 포스터, 사이니지, 굿즈, 디지털 에셋을 브랜드 톤에 맞춰 만듭니다.</p><ul><li>포스터 · 사이니지</li><li>협업 굿즈</li><li>SNS 에셋</li></ul></div>
+      <div><span class="k">COMMUNITY</span><p>서울과 부산을 기반으로 한 자체 애슬레틱 커뮤니티를 운영합니다. 정기 세션으로 쌓은 참가자와 코치, 크리에이터가 브랜드 세션의 첫 참여자가 됩니다.</p><ul><li>정기 러닝 · 트레이닝 세션</li><li>코치 7인</li><li>크리에이터 32인</li></ul></div>
+    </div>
+  </section>
+
+  <section id="sessions">
+    <div class="head">
+      <div><p class="eyebrow">03 · SESSIONS</p><h2>BRAND SESSIONS</h2></div>
+      <p>브랜드와 함께 만든 세션입니다. 공간을 고르고, 프로그램을 짜고, 코치를 세우고, 현장을 기록하는 일까지 S2:U가 직접 합니다.</p>
+    </div>
+
+    <article class="feature">
+      <div class="media">
+        <img src="media/s/hearim-1.jpg" alt="헤아림 세션, 타일 바닥 공간에서 매트에 누워 이완하는 참가자들">
+        <img src="media/s/hearim-3.jpg" alt="헤아림 세션 중 서예를 쓰는 참가자" loading="lazy">
+        <img src="media/s/hearim-5.jpg" alt="차 명상 중 찻잔을 든 참가자" loading="lazy">
+      </div>
+      <div>
+        <div class="meta"><span class="tag r">RECOVERY</span><span class="date">2026.09</span></div>
+        <h3>헤아림 〈모닝 웰니스〉</h3>
+        <p class="with">S2:U × OUR SYMBOL</p>
+        <p class="desc">빠르고 자극적인 일상에서 잠시 벗어나, 천천히 움직이고 호흡하며 몸과 마음을 살펴보는 이틀간의 아침 프로그램입니다.</p>
+        <ul><li>DAY 1 — 슬로우 러닝 · 요가 · 염주 명상</li><li>DAY 2 — 애니멀 플로우 · 호흡 · 서예</li><li>참가자 사진은 얼굴 검색으로 바로 전달</li></ul>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="media">
+        <img src="media/s/craft-1.jpg" alt="서울공예박물관 앞마당, 조명 아래 매트에 앉은 참가자들" loading="lazy">
+        <img src="media/s/craft-3.jpg" alt="야간 세션 중 바닥 동작을 하는 참가자" loading="lazy">
+        <img src="media/s/craft-4.jpg" alt="매트 위에서 쉬는 참가자" loading="lazy">
+      </div>
+      <div>
+        <div class="meta"><span class="tag">NIGHT SESSION</span><span class="date">2026.10</span></div>
+        <h3>서울공예박물관 나이트 세션</h3>
+        <p class="with">SEOUL MUSEUM OF CRAFT ART</p>
+        <p class="desc">해가 진 박물관 마당에 매트와 무드등을 깔고, 움직임에서 이완까지 이어지는 야간 웰니스 세션을 열었습니다.</p>
+        <ul><li>야외 마당 · 조명 · 매트 공간 연출</li><li>움직임 → 호흡 → 이완 순서의 세션 설계</li></ul>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="media">
+        <img src="media/s/goruck-1.jpg" alt="웨이트 베스트를 메고 숲길 계단을 오르는 참가자들" loading="lazy">
+        <img src="media/s/goruck-2.jpg" alt="해방촌 골목을 걷는 럭킹 그룹" loading="lazy">
+        <img src="media/s/goruck-4.jpg" alt="럭킹 후 쉬고 있는 참가자들" loading="lazy">
+      </div>
+      <div>
+        <div class="meta"><span class="tag m">MOVEMENT</span><span class="date">2026.10.05</span></div>
+        <h3>FIRST RUCK SESSION</h3>
+        <p class="with">S2:U × GORUCK</p>
+        <p class="desc">더템플짐 해방촌에서 출발해 웨이트 베스트를 메고 동네와 숲길을 함께 걷고 오른 S2:U의 첫 럭킹 세션입니다. 15명을 초대했습니다.</p>
+        <ul><li>짐 워밍업 → 시티 럭 → 숲길 업힐</li><li>GORUCK 기어 착용 체험</li></ul>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="media tall">
+        <img src="media/s/sunn-2.jpg" alt="텐트 사우나 안에서 웃고 있는 두 참가자" loading="lazy">
+        <img src="media/s/sunn-3.jpg" alt="야간 아이스배스에 들어간 참가자" loading="lazy">
+        <img src="media/s/sunn-1.jpg" alt="장작 스토브가 있는 텐트 사우나 내부" loading="lazy">
+      </div>
+      <div>
+        <div class="meta"><span class="tag m">MOVEMENT</span><span class="tag r">RECOVERY</span><span class="date">2026.10.03 – 04</span></div>
+        <h3>SUNN FESTIVAL 고성</h3>
+        <p class="with">SEALING SERVICE · SUNN</p>
+        <p class="desc">고성 세계잼버리수련장에서 열린 SUNN 페스티벌의 웰니스 세션 전체를 기획하고 이틀간 운영했습니다. 숲에서 달리고, 몸을 깨우고, 호흡을 고른 뒤 사우나로 마무리하는 흐름입니다.</p>
+        <ul><li>웰니스 세션 전체 기획 · 운영</li><li>애니멀 플로우 · 브레스워크 · 포레스트 런</li><li>텐트 사우나 · 아이스배스 · 외기욕</li></ul>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="media poster">
+        <img src="media/s/runnershouse-movv.jpg" alt="MOVV URBAN 5K RUN RECOVERY EXPERIENCE 포스터, 2026년 10월 19일 더샵갤러리 러너스하우스" loading="lazy">
+      </div>
+      <div>
+        <div class="meta"><span class="tag m">MOVEMENT</span><span class="tag r">RECOVERY</span><span class="date">2026.10.19</span></div>
+        <h3>RUNNER'S HOUSE · MOVV URBAN 5K RUN</h3>
+        <p class="with">MOVV × THE SHARP GALLERY</p>
+        <p class="desc">더샵갤러리 러너스하우스에서 MOVV와 함께 도심 5K를 달리고 회복까지 이어가는 프라이빗 세션을 S2:U가 운영합니다.</p>
+        <ul><li>2026.10.19 (월) 08:30 – 11:30</li><li>5K 어반 런 → 리커버리 익스피리언스</li><li>더샵갤러리 러너스하우스 · 프라이빗 세션</li></ul>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="media tall">
+        <img src="media/s/garmin-1.jpg" alt="가민 이태원 오프닝 런 후 셀카를 찍는 참가자들" loading="lazy">
+        <img src="media/s/garmin-2.jpg" alt="가민 남산 그래픽 티셔츠를 입고 횡단보도 앞에 선 러너" loading="lazy">
+        <img src="media/s/garmin-3.jpg" alt="가민 워치를 확인하며 달리는 참가자" loading="lazy">
+      </div>
+      <div>
+        <div class="meta"><span class="tag m">MOVEMENT</span><span class="date">2026.07.17</span></div>
+        <h3>ITAEWON COMMUNITY RUN</h3>
+        <p class="with">GARMIN FLAGSHIP STORE ITAEWON · RUN PM</p>
+        <p class="desc">가민 플래그십 스토어 이태원의 그랜드 오프닝 위크 첫 러닝입니다. 스토어에서 출발해 이태원 거리를 함께 달리며 새 공간의 시작을 열었습니다.</p>
+        <ul><li>오프닝 위크 커뮤니티 런 기획 · 운영</li><li>SCR 라디오 디제잉</li></ul>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="media mix">
+        <img class="wide" src="media/s/bandit-news-2.jpg" alt="BANDIT 러닝웨어를 입고 뉴욕 거리에 선 모델 두 컷" loading="lazy">
+        <img src="media/s/bandit-1.jpg" alt="겨울 아침 공원길을 함께 달리는 러너들" loading="lazy">
+        <img src="media/s/bandit-5.jpg" alt="경복궁 앞을 달리는 러너" loading="lazy">
+        <img class="wide" src="media/s/bandit-news-3.jpg" alt="BANDIT 러닝웨어를 입고 뉴욕 도로와 다리 아래에 선 모델 두 컷" loading="lazy">
+      </div>
+      <div>
+        <div class="meta"><span class="tag">BRAND COLLAB</span><span class="date">2026.01.12</span></div>
+        <h3>BANDITRUNNING TRIAL SESSION</h3>
+        <p class="with">BANDIT · ONYOURMARK · DOWNBEAT RUNNING</p>
+        <p class="desc">뉴욕 러닝 브랜드 밴디트의 국내 트라이얼 세션입니다. 한겨울 아침, 러닝 크루들과 함께 제품을 입고 달렸습니다.</p>
+      </div>
+    </article>
+
+    <div class="films">
+      <article class="film">
+        <div class="frame"><video src="media/s2u-fila-arc.mp4" poster="media/s2u-fila-arc.jpg" muted loop playsinline preload="metadata" aria-label="FILA × ARC 러닝 세션 영상"></video></div>
+        <h3>FILA × ARC FLOAT TR9 2.0</h3><p>2026.04 · 신제품 트라이얼 러닝</p>
+      </article>
+      <article class="film">
+        <div class="frame"><video src="media/s2u-nothing-trial.mp4" poster="media/s2u-nothing-trial.jpg" muted loop playsinline preload="metadata" aria-label="nothing 러닝 트라이얼 영상"></video></div>
+        <h3>nothing Running Trial</h3><p>2025.11 · with eyesmag, wellness mate</p>
+      </article>
+      <article class="film">
+        <div class="frame"><video src="media/s2u-paperseoul-minirox.mp4" poster="media/s2u-paperseoul-minirox.jpg" muted loop playsinline preload="metadata" aria-label="PAPER SEOUL 미니록스 세션 영상"></video></div>
+        <h3>PAPER SEOUL 미니록스</h3><p>2025.10 · 하이록스형 그룹 트레이닝</p>
+      </article>
+    </div>
+    <button class="sound" id="soundToggle" type="button" aria-pressed="false">SOUND ON</button>
+  </section>
+
+  <section id="stills">
+    <div class="head">
+      <div><p class="eyebrow">04 · STILLS</p><h2>ON SITE</h2></div>
+      <p>현장의 장면들입니다. 세션별로 골라 보세요.</p>
+    </div>
+    <div class="chips" role="group" aria-label="세션별 사진 보기">
+      <button class="chip" type="button" data-f="all" aria-pressed="true">ALL</button>
+      <button class="chip" type="button" data-f="hearim" aria-pressed="false">헤아림</button>
+      <button class="chip" type="button" data-f="craft" aria-pressed="false">서울공예박물관</button>
+      <button class="chip" type="button" data-f="goruck" aria-pressed="false">GORUCK</button>
+      <button class="chip" type="button" data-f="sunn" aria-pressed="false">SUNN 고성</button>
+      <button class="chip" type="button" data-f="garmin" aria-pressed="false">GARMIN</button>
+      <button class="chip" type="button" data-f="bandit" aria-pressed="false">BANDIT</button>
+    </div>
+    <div class="gallery" id="gallery">
+      <figure data-s="hearim"><img src="media/s/hearim-2.jpg" alt="헤아림, 매트 위 스트레칭" loading="lazy"><figcaption>헤아림</figcaption></figure>
+      <figure data-s="garmin"><img src="media/s/garmin-4.jpg" alt="이태원 골목을 달리는 커뮤니티 런 참가자들" loading="lazy"><figcaption>GARMIN</figcaption></figure>
+      <figure data-s="craft"><img src="media/s/craft-2.jpg" alt="서울공예박물관 마당 전경과 세션" loading="lazy"><figcaption>서울공예박물관</figcaption></figure>
+      <figure data-s="bandit"><img src="media/s/bandit-1.jpg" alt="겨울 아침 공원길을 달리는 러너들" loading="lazy"><figcaption>BANDIT</figcaption></figure>
+      <figure data-s="goruck"><img src="media/s/goruck-3.jpg" alt="숲길을 오르는 럭킹 그룹" loading="lazy"><figcaption>GORUCK</figcaption></figure>
+      <figure data-s="craft"><img src="media/s/craft-6.jpg" alt="박물관 건물 앞 매트 위의 참가자들" loading="lazy"><figcaption>서울공예박물관</figcaption></figure>
+      <figure data-s="garmin"><img src="media/s/garmin-5.jpg" alt="가민 워치를 찬 손목을 모은 러너들" loading="lazy"><figcaption>GARMIN</figcaption></figure>
+      <figure data-s="bandit"><img src="media/s/bandit-5.jpg" alt="경복궁 앞을 달리는 러너들" loading="lazy"><figcaption>BANDIT</figcaption></figure>
+      <figure data-s="sunn"><img src="media/s/sunn-1.jpg" alt="텐트 사우나 내부" loading="lazy"><figcaption>SUNN 고성</figcaption></figure>
+      <figure data-s="hearim"><img src="media/s/hearim-4.jpg" alt="헤아림, 명상 중인 참가자" loading="lazy"><figcaption>헤아림</figcaption></figure>
+      <figure data-s="craft"><img src="media/s/craft-7.jpg" alt="눈을 감고 호흡하는 참가자" loading="lazy"><figcaption>서울공예박물관</figcaption></figure>
+      <figure data-s="garmin"><img src="media/s/garmin-6.jpg" alt="가로수길을 함께 달리는 러너들" loading="lazy"><figcaption>GARMIN</figcaption></figure>
+      <figure data-s="bandit"><img src="media/s/bandit-6.jpg" alt="이른 아침 거리를 달리는 러너들" loading="lazy"><figcaption>BANDIT</figcaption></figure>
+      <figure data-s="goruck"><img src="media/s/goruck-5.jpg" alt="숲길 돌계단을 넘는 참가자" loading="lazy"><figcaption>GORUCK</figcaption></figure>
+      <figure data-s="garmin"><img src="media/s/garmin-2.jpg" alt="가민 남산 그래픽 티셔츠를 입은 러너" loading="lazy"><figcaption>GARMIN</figcaption></figure>
+      <figure data-s="craft"><img src="media/s/craft-8.jpg" alt="매트 위에 앉아 명상하는 참가자" loading="lazy"><figcaption>서울공예박물관</figcaption></figure>
+      <figure data-s="hearim"><img src="media/s/hearim-6.jpg" alt="헤아림, 애니멀 플로우 시범" loading="lazy"><figcaption>헤아림</figcaption></figure>
+      <figure data-s="garmin"><img src="media/s/garmin-7.jpg" alt="횡단보도 앞을 달리는 두 러너" loading="lazy"><figcaption>GARMIN</figcaption></figure>
+      <figure data-s="goruck"><img src="media/s/goruck-6.jpg" alt="실내에서 워밍업하는 럭킹 참가자들" loading="lazy"><figcaption>GORUCK</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="log">
+    <div class="head">
+      <div><p class="eyebrow">05 · SESSION LOG</p><h2>WHO WE RAN WITH</h2></div>
+      <p>지금까지 함께 달린 브랜드와 공간입니다.</p>
+    </div>
+    <div class="log-wrap">
+      <table class="log">
+        <thead><tr><th>DATE</th><th>SESSION</th><th>WITH</th></tr></thead>
+        <tbody>
+          <tr><td>2026.10.19</td><td>MOVV URBAN 5K RUN RECOVERY EXPERIENCE · 러너스하우스 프라이빗 세션</td><td>MOVV · 더샵갤러리</td></tr>
+          <tr><td>2026.10.05</td><td>FIRST RUCK SESSION</td><td>GORUCK · 더템플짐</td></tr>
+          <tr><td>2026.10.03</td><td>SUNN FESTIVAL 웰니스 세션 전체 기획 · 운영</td><td>SUNN · 실링서비스</td></tr>
+          <tr><td>2026.10</td><td>나이트 웰니스 세션</td><td>서울공예박물관</td></tr>
+          <tr><td>2026.09</td><td>헤아림 모닝 웰니스</td><td>아워심볼</td></tr>
+          <tr><td>2026.08.29</td><td>나이트 러닝</td><td>THE NORTH FACE</td></tr>
+          <tr><td>2026.08.15</td><td>S2: MOVE BETTER CLASS · 임창현 코치</td><td>RUN PM</td></tr>
+          <tr><td>2026.07.17</td><td>ITAEWON COMMUNITY RUN · 플래그십 오프닝</td><td>GARMIN KOREA · SCR RADIO</td></tr>
+          <tr><td>2026.06.23</td><td>월드컵 트라이얼 러닝</td><td>PUMA · OVER THE PITCH · ARC · ONYOURMARK</td></tr>
+          <tr><td>2026.04.29</td><td>FLOAT TR9 2.0 트라이얼</td><td>FILA · ARC · ONYOURMARK</td></tr>
+          <tr><td>2026.01.12</td><td>BANDITRUNNING 트라이얼 세션</td><td>BANDIT · ONYOURMARK · DOWNBEAT</td></tr>
+          <tr><td>2025.11.21</td><td>러닝 트라이얼</td><td>nothing.kr · eyesmag · wellness mate</td></tr>
+          <tr><td>2025.10.09</td><td>애니멀 플로우</td><td>lululemon Korea</td></tr>
+          <tr><td>2025.10.05</td><td>미니록스</td><td>PAPER SEOUL</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="coaches">
+    <div class="head">
+      <div><p class="eyebrow">06 · COACHES</p><h2>COACH POOL</h2></div>
+      <p>스포츠의학, 스피드, 스트렝스, 무브먼트. 숫자로 나온 몸을 사람에게 맞는 훈련 하나로 바꿔 주는 코치들입니다.</p>
+    </div>
+    <div class="coaches">
+      <div class="coach"><img src="media/coach_jung_dw.jpg" alt="정다움 코치"><h3>정다움</h3><a class="handle" href="https://www.instagram.com/dr.jd_speedlab/" target="_blank" rel="noopener">@DR.JD_SPEEDLAB</a><ul><li>스포츠의학 박사 · CSCS</li><li>스피드 · 스프린트 메커닉스</li><li>러닝 역학 세미나 강사</li></ul></div>
+      <div class="coach"><img src="media/coach_lee.jpg" alt="이규대 코치"><h3>이규대</h3><a class="handle" href="https://www.instagram.com/runtents/" target="_blank" rel="noopener">@RUNTENTS</a><ul><li>스포츠의학 기반 러닝 교육</li><li>풀 3:07 · 하프 1:27 · 100K</li><li>lululemon 앰배서더</li></ul></div>
+      <div class="coach"><img src="media/coach_jung_ej.jpg" alt="정의준 코치"><h3>정의준</h3><a class="handle" href="https://www.instagram.com/uizoooon/" target="_blank" rel="noopener">@UIZOOOON</a><ul><li>러닝 코치 · EXNOR 코치</li><li>러닝 자세 분석</li><li>부상 · 재활 러닝</li></ul></div>
+      <div class="coach"><img src="media/coach_woo.jpg" alt="노다웃 우쌤 코치"><h3>노다웃 우쌤</h3><a class="handle" href="https://www.instagram.com/ndp_woosainbolt/" target="_blank" rel="noopener">@NDP_WOOSAINBOLT</a><ul><li>퍼포먼스 S&amp;C 트레이너</li><li>APC · NASM-PES</li><li>스피드 · 파워 · 재활</li></ul></div>
+      <div class="coach"><img src="media/coach/yayong.jpg" alt="임창현 코치 (Übermensch Training)"><h3>임창현</h3><a class="handle" href="https://www.instagram.com/gangster_yayong/" target="_blank" rel="noopener">@GANGSTER_YAYONG</a><ul><li>15년 차 Strength &amp; Movement 코치</li><li>Strength · Mobility · Animal Flow</li><li>기업 강연 · 트레이닝 교육</li></ul></div>
+      <div class="coach"><img src="media/coach/han.jpg" alt="Han 코치"><h3>Han</h3><a class="handle" href="https://www.instagram.com/11heeya/" target="_blank" rel="noopener">@11HEEYA</a><ul><li>러닝 크루 리드</li><li>GARMIN KOREA 협업</li><li>PIHP CLUB</li></ul></div>
+      <div class="coach"><img src="media/coach/layyoung.jpg" alt="레이영 코치"><h3>레이영</h3><a class="handle" href="https://www.instagram.com/layyoung0/" target="_blank" rel="noopener">@LAYYOUNG0</a><ul><li>Running · Hyrox · Wellness</li><li>URBANWAVE 앰배서더</li><li>러닝 크루 리드</li></ul></div>
+      <div class="coach join"><p>MORE<br>COACHES<br>ON CALL</p></div>
+    </div>
+  </section>
+
+  <section id="network">
+    <div class="net">
+      <div>
+        <p class="eyebrow">07 · CREATOR NETWORK</p>
+        <div class="big">32</div>
+        <p style="margin-top:16px;color:var(--bone-dim);max-width:22em">러닝 · 필라테스 · 웰니스 크리에이터. 세션 콘셉트에 맞춰 8–10명을 골라 프라이빗 세션과 사전 바이럴을 함께 만듭니다.</p>
+      </div>
+      <div class="handles" aria-label="크리에이터 계정 목록">
+        <a href="https://www.instagram.com/hhheum/" target="_blank" rel="noopener">@hhheum</a><a href="https://www.instagram.com/partin_ee/" target="_blank" rel="noopener">@partin_ee</a><a href="https://www.instagram.com/ljouens/" target="_blank" rel="noopener">@ljouens</a><a href="https://www.instagram.com/hm_x_0/" target="_blank" rel="noopener">@hm_x_0</a><a href="https://www.instagram.com/alpacamel__/" target="_blank" rel="noopener">@alpacamel__</a><a href="https://www.instagram.com/_e.jo/" target="_blank" rel="noopener">@_e.jo</a><a href="https://www.instagram.com/chowygo/" target="_blank" rel="noopener">@chowygo</a><a href="https://www.instagram.com/j__wwww/" target="_blank" rel="noopener">@j__wwww</a><a href="https://www.instagram.com/pine_a.pple/" target="_blank" rel="noopener">@pine_a.pple</a><a href="https://www.instagram.com/lovely._.s00/" target="_blank" rel="noopener">@lovely._.s00</a><a href="https://www.instagram.com/__zigram/" target="_blank" rel="noopener">@__zigram</a><a href="https://www.instagram.com/hailleyee/" target="_blank" rel="noopener">@hailleyee</a><a href="https://www.instagram.com/hyegyu5/" target="_blank" rel="noopener">@hyegyu5</a><a href="https://www.instagram.com/gniuom7l/" target="_blank" rel="noopener">@gniuom7l</a><a href="https://www.instagram.com/yeonpilates/" target="_blank" rel="noopener">@yeonpilates</a><a href="https://www.instagram.com/j.anagram/" target="_blank" rel="noopener">@j.anagram</a><a href="https://www.instagram.com/chae.are/" target="_blank" rel="noopener">@chae.are</a><a href="https://www.instagram.com/chaechae_unni/" target="_blank" rel="noopener">@chaechae_unni</a><a href="https://www.instagram.com/sr4211/" target="_blank" rel="noopener">@sr4211</a><a href="https://www.instagram.com/juyeon___2/" target="_blank" rel="noopener">@juyeon___2</a><a href="https://www.instagram.com/y_oshy/" target="_blank" rel="noopener">@y_oshy</a><a href="https://www.instagram.com/youkimforever/" target="_blank" rel="noopener">@youkimforever</a><a href="https://www.instagram.com/limangel/" target="_blank" rel="noopener">@limangel</a><a href="https://www.instagram.com/ittav/" target="_blank" rel="noopener">@ittav</a><a href="https://www.instagram.com/borammii_/" target="_blank" rel="noopener">@borammii_</a><a href="https://www.instagram.com/leeujinnn/" target="_blank" rel="noopener">@leeujinnn</a><a href="https://www.instagram.com/by_ssoni/" target="_blank" rel="noopener">@by_ssoni</a><a href="https://www.instagram.com/hajeewon_/" target="_blank" rel="noopener">@hajeewon_</a><a href="https://www.instagram.com/ch.yoooon/" target="_blank" rel="noopener">@ch.yoooon</a><a href="https://www.instagram.com/pila_nyong/" target="_blank" rel="noopener">@pila_nyong</a><a href="https://www.instagram.com/seohyuii/" target="_blank" rel="noopener">@seohyuii</a><a href="https://www.instagram.com/musclemandu_/" target="_blank" rel="noopener">@musclemandu_</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="contact">
+      <h2>RUN<br>WITH <em>US</em></h2>
+      <dl>
+        <dt>CONTACT</dt><dd>Yon · S2:U</dd>
+        <dt>EMAIL</dt><dd><a href="mailto:contact@sustaintoyou.com">contact@sustaintoyou.com</a></dd>
+        <dt>PHONE</dt><dd><a href="tel:+821023364336">010-2336-4336</a></dd>
+        <dt>WEB</dt><dd><a href="https://sustaintoyou.com" target="_blank" rel="noopener">sustaintoyou.com</a></dd>
+        <dt>IG</dt><dd><a href="https://www.instagram.com/s2useoul/" target="_blank" rel="noopener">@s2useoul</a></dd>
+      </dl>
+    </div>
+  </section>
+  <footer><span>S2:U — SUSTAIN TO YOU</span><span>SEOUL, KR</span></footer>
+</div>
+
+<script>
+(function(){
+  var vids=[].slice.call(document.querySelectorAll('.film video'));
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function play(v){var p=v.play();if(p&&p.catch)p.catch(function(){});}
+  if(!reduce&&'IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?play(e.target):e.target.pause();});},{threshold:.35});
+    vids.forEach(function(v){io.observe(v);});
+  }
+  vids.forEach(function(v){v.addEventListener('click',function(){v.paused?play(v):v.pause();});});
+  var btn=document.getElementById('soundToggle');
+  btn.addEventListener('click',function(){
+    var on=btn.getAttribute('aria-pressed')!=='true';
+    btn.setAttribute('aria-pressed',on);btn.textContent=on?'SOUND OFF':'SOUND ON';
+    vids.forEach(function(v){v.muted=!on;if(on&&v.paused)play(v);});
+  });
+  var chips=[].slice.call(document.querySelectorAll('.chip'));
+  var figs=[].slice.call(document.querySelectorAll('#gallery figure'));
+  chips.forEach(function(c){c.addEventListener('click',function(){
+    var f=c.getAttribute('data-f');
+    chips.forEach(function(x){x.setAttribute('aria-pressed',x===c);});
+    figs.forEach(function(g){g.hidden=!(f==='all'||g.getAttribute('data-s')===f);});
+  });});
+})();
+</script>
+</body>
+</html>
