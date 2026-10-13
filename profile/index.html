@@ -10,7 +10,7 @@
 <meta property="og:site_name" content="S2:U Sustain to You">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:title" content="S2:U 회사 소개서 2026">
-<meta property="og:description" content="운동하고, 회복하고, 함께하는 사람들. S2:U 브랜드 세션 · 코치 · 커뮤니티 소개서">
+<meta property="og:description" content="움직임과 문화를 결합한 퍼포먼스 컬처 브랜드. S2:U 브랜드 세션 · 코치 · 커뮤니티 소개서">
 <meta property="og:url" content="https://sustaintoyou.com/profile/">
 <meta property="og:image" content="https://sustaintoyou.com/profile/media/og-profile.jpg">
 <meta property="og:image:width" content="1200">
@@ -123,6 +123,8 @@ section{padding-block:clamp(64px,10vw,128px);border-top:1px solid var(--line)}
 .film{min-width:0;display:flex;flex-direction:column;gap:10px}
 .film .frame{aspect-ratio:9/16;max-width:100%;background:var(--black-2);overflow:hidden;border-radius:2px}
 .film video{width:100%;height:100%;object-fit:cover;display:block;cursor:pointer}
+.film.film-wide{margin-top:clamp(36px,5vw,56px);max-width:760px}
+.film.film-wide .frame{aspect-ratio:640/460}
 .film h3{font-size:17px;font-weight:700}
 .film p{font-size:14px;color:var(--bone-dim)}
 .sound{font-family:var(--display);letter-spacing:.12em;font-size:16px;background:none;border:1px solid var(--line-strong);color:var(--bone);padding:6px 14px;border-radius:999px;cursor:pointer;margin-top:18px}
@@ -221,7 +223,7 @@ footer{padding-block:28px 52px;display:flex;justify-content:space-between;gap:12
         <div class="flow" aria-label="Movement, Recovery, Community, You"><span class="m">MOVEMENT</span><i>→</i><span class="r">RECOVERY</span><i>→</i><span>COMMUNITY</span><i>→</i><span>YOU</span></div>
         <div class="bpm"><strong>62</strong><span>BPM · MOVE TO RAISE YOUR HEART RATE</span></div>
       </div>
-      <p class="lede"><b>운동은 끝나도 삶은 계속됩니다.</b> S2:U는 움직임과 회복, 그리고 그 시간을 함께하는 사람들을 하나의 흐름으로 잇는 퍼포먼스 컬처 브랜드입니다. 함께 달리고, 함께 쉬고, 서로의 리듬을 나누는 순간이 지속 가능한 나를 만듭니다.</p>
+      <p class="lede"><b>운동은 끝나도 삶은 계속됩니다.</b> S2:U는 움직임과 문화를 결합한 퍼포먼스 컬처 브랜드입니다. 함께 달리고, 함께 쉬고, 서로의 리듬을 나누는 순간이 지속 가능한 나를 만듭니다.</p>
     </div>
   </section>
 
@@ -357,6 +359,11 @@ footer{padding-block:28px 52px;display:flex;justify-content:space-between;gap:12
         <p class="with">BANDIT · ONYOURMARK · DOWNBEAT RUNNING</p>
         <p class="desc">뉴욕 러닝 브랜드 밴디트의 국내 트라이얼 세션입니다.<br>한겨울 아침, 러닝 크루들과 함께 제품을 입고 달렸습니다.</p>
       </div>
+    </article>
+
+    <article class="film film-wide">
+      <div class="frame"><video src="media/s2u-goruck.mp4" poster="media/s2u-goruck.jpg" muted loop playsinline preload="metadata" aria-label="S2:U × GORUCK 럭킹 세션 영상"></video></div>
+      <h3>S2:U × GORUCK</h3><p>2026.10.05 · FIRST RUCK SESSION 필름</p>
     </article>
 
     <div class="films">
