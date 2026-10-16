@@ -212,6 +212,8 @@
   .card-desc{font-size:13.5px; color:#b8b8b8; line-height:1.65; margin-top:10px;}
   .card-with{margin-top:16px; padding-top:14px; border-top:1px solid var(--line); font-size:11px; letter-spacing:0.06em; color:var(--bone-dim); text-transform:uppercase;}
   .card-with b{color:var(--bone); font-weight:700;}
+  .card-rsvp{display:inline-block; margin-top:14px; padding:9px 18px; border-radius:999px; background:var(--bone); color:var(--off-black); font-family:'Bebas Neue'; font-size:16px; letter-spacing:0.05em;}
+  .card-rsvp::after{content:' →';}
 
   .join-card{border:1px solid var(--line); border-radius:16px; padding:26px; transition:border-color 0.2s;}
   .join-card:hover{border-color:var(--line-strong);}
@@ -1610,6 +1612,7 @@
     document.querySelectorAll('.join-card').forEach(card => card.classList.toggle('hide', cat !== 'all' && card.dataset.jcat !== cat));
   });
 
+  // rsvp:'<slug>' 를 넣으면 카드에 RSVP 신청 버튼이 생깁니다 (/admin/ 에서 만든 행사 주소).
   const events = [
     {cat:'collab', date:'2026.10.19', title:"RUNNER'S HOUSE · MOVV URBAN 5K RUN", desc:'더샵갤러리 러너스하우스에서 MOVV와 함께 도심 5K를 달리고 회복까지 이어가는 프라이빗 세션을 S2:U가 운영합니다.', with:'MOVV × THE SHARP GALLERY', letter:'M', participants:0},
     {cat:'collab', date:'2026.10.05', title:'FIRST RUCK SESSION', desc:'더템플짐 해방촌에서 출발해 웨이트 베스트를 메고 동네와 숲길을 함께 걷고 오른 S2:U의 첫 럭킹 세션입니다. 15명을 초대했습니다.', with:'S2:U × GORUCK', letter:'G', participants:15},
@@ -1644,6 +1647,7 @@
           <div class="card-title display">${e.title}</div>
           <div class="card-desc">${e.desc}</div>
           <div class="card-with">With <b>${e.with}</b></div>
+          ${e.rsvp ? `<a class="card-rsvp" href="/rsvp/?e=${encodeURIComponent(e.rsvp)}">RSVP · 신청하기</a>` : ''}
         </div>
       </div>
     `).join('');

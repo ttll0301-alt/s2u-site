@@ -90,7 +90,7 @@
   const FLAG = { name_mismatch:'입금자명 불일치', short:'금액 부족', duplicate:'중복 입금', other:'기타' };
   const KINDS = { invite:'초대', received:'신청 접수 안내', waitlist:'대기자 안내', promoted:'대기→자리 안내', confirmed:'참여 확정 안내', unpaid:'미입금 안내' };
   const OUT = { queued:['예약','warn'], sending:['발송 중','warn'], sent:['업체 접수 (수신 보장 아님)','ok'], test_logged:['테스트 기록 (미발송)',''], skipped:['건너뜀',''], failed:['실패','bad'], cancelled:['취소',''] };
-  const AUDIT = { apply:'신청', update:'신청 수정', decline:'불참', host_add:'호스트 등록', host_cancel:'호스트 취소', payment_claimed:'입금 확인 요청', payment_verified:'입금 확인', payment_flag:'입금 확인 필요 표시', payment_unverified:'입금 확인 취소', fee_waived:'참가비 면제', fee_waive_cancelled:'면제 취소', invite_enqueued:'초대 문자 예약', sms_manual_enqueue:'문자 수동 발송 예약', sms_retry:'문자 재시도', sms_live_on:'실발송 켜짐', sms_live_off:'실발송 꺼짐', event_clone:'행사 복제' };
+  const AUDIT = { apply:'신청', update:'신청 수정', decline:'불참', host_add:'호스트 등록', host_cancel:'호스트 취소', payment_claimed:'입금 확인 요청', payment_verified:'입금 확인', payment_flag:'입금 확인 필요 표시', payment_unverified:'입금 확인 취소', fee_waived:'참가비 면제', fee_waive_cancelled:'면제 취소', invite_enqueued:'초대 문자 예약', sms_manual_enqueue:'문자 수동 발송 예약', sms_retry:'문자 재시도', sms_live_on:'실발송 켜짐', host_expire:'운영자 만료 처리', payment_auto:'결제 연동 입금 기록', sms_live_off:'실발송 꺼짐', event_clone:'행사 복제' };
 
   let sb, me, events = [], ev = null, regs = [], outbox = [], audit = [], tab = 'status', filter = 'all', q = '';
 
@@ -199,6 +199,7 @@
     body().innerHTML = `<div class="stats">
       ${[['초대 인원', regs.filter(r => r.source === 'host').length],['신청 인원', attending],['참여 확정', c('confirmed')],['입금 대기', c('payment_pending')],['대기자', c('waitlist')],['불참·취소', c('declined')],['기한 만료', c('expired')]].map(([l,v]) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`).join('')}
       ${ev.is_paid ? `<div class="stat"><b>${won(verifiedAmt)}</b><span>입금 확인 금액</span></div><div class="stat"><b>${won(pendingAmt)}</b><span>미입금 예상 금액</span></div>` : ''}</div>
+      ${regs.some(r => r.status === 'payment_pending' && ev.payment_deadline && new Date(ev.payment_deadline) < new Date()) ? `<div class="note red">입금 기한이 지난 입금 대기 신청이 있습니다.${ev.on_deadline === 'manual' ? ' 마감 정책이 \'운영자 처리\'라 자동 해제되지 않습니다.' : ' 입금 확인 요청·확인 필요 건은 자동 해제되지 않습니다.'} '기한 지남' 표시를 확인해 처리하세요.</div>` : ''}
       ${review ? `<div class="note">입금 확인 요청·확인 필요 ${review}건이 있습니다. 입금 내역과 대조해 처리해 주세요. 자동으로 만료되지 않습니다.</div>` : ''}
       <div class="row" style="margin:18px 0 10px"><input id="q" placeholder="이름·연락처 검색" value="${esc(q)}" style="max-width:240px">
         <select id="flt" style="max-width:200px"><option value="all">전체 상태</option>${Object.entries(STATUS).map(([k,[l]]) => `<option value="${k}" ${filter === k ? 'selected' : ''}>${l}</option>`).join('')}<option value="review" ${filter === 'review' ? 'selected' : ''}>입금 확인 필요</option></select>
@@ -215,14 +216,16 @@
     const list = regs.filter(r => (filter === 'all' || (filter === 'review' ? ['flagged','claimed'].includes(r.payment) : r.status === filter)) && (!t || r.name.toLowerCase().includes(t) || r.phone.includes(t.replace(/\D/g,'') || '\u0000')));
     document.getElementById('rows').innerHTML = list.map(r => {
       const st = STATUS[r.status], paid = ev.is_paid && !r.fee_waived;
+      const overdue = r.status === 'payment_pending' && ((ev.payment_deadline && new Date(ev.payment_deadline) < new Date()) || (r.seat_held_until && new Date(r.seat_held_until) < new Date()));
       const payTxt = !ev.is_paid ? '무료' : r.fee_waived ? '면제' : (r.seat === 'held' || r.payment === 'verified') ? PAY[r.payment] + (r.payment_flag ? ` · ${FLAG[r.payment_flag]}` : '') : '-';
       const payCls = r.payment === 'verified' ? 'ok' : (r.payment === 'flagged' ? 'bad' : r.payment === 'claimed' ? 'warn' : '');
       return `<tr data-id="${r.id}"><td><b>${esc(r.name)}</b>${r.invited_at ? '' : (r.source === 'host' && r.rsvp === 'invited' ? '<div class="muted small">초대 미발송</div>' : '')}</td><td>${esc(r.phone)}</td>
-        <td><span class="pill ${st[1]}">${st[0]}</span></td><td><span class="pill ${payCls}">${esc(payTxt)}</span>${r.claimed_at && r.payment !== 'verified' ? `<div class="muted small">요청 ${esc(kst(r.claimed_at))}</div>` : ''}${r.payment === 'verified' ? `<div class="muted small">${esc(kst(r.verified_at))}</div>` : ''}${r.seat_held_until && r.payment === 'pending' ? `<div class="muted small">~${esc(kst(r.seat_held_until))}</div>` : ''}</td>
+        <td><span class="pill ${st[1]}">${st[0]}</span>${overdue ? '<div><span class="pill bad">기한 지남</span></div>' : ''}</td><td><span class="pill ${payCls}">${esc(payTxt)}</span>${r.claimed_at && r.payment !== 'verified' ? `<div class="muted small">요청 ${esc(kst(r.claimed_at))}</div>` : ''}${r.payment === 'verified' ? `<div class="muted small">${esc(kst(r.verified_at))}${r.payment_method ? ' · ' + esc(r.payment_method) : ''}</div>` : ''}${r.seat_held_until && r.payment === 'pending' ? `<div class="muted small">~${esc(kst(r.seat_held_until))}</div>` : ''}</td>
         <td>${esc(sessLabel(r))}</td><td>${esc(r.depositor_name || '-')}</td><td class="small muted">${esc(kst(r.applied_at))}</td>
         <td><div class="acts">
           ${paid && r.status === 'payment_pending' ? `<button class="sm pri" data-a="verify">입금 확인</button><button class="sm" data-a="flag">확인 필요</button>` : ''}
           ${paid && r.payment === 'verified' ? `<button class="sm" data-a="unverify">입금 확인 취소</button>` : ''}
+          ${overdue ? `<button class="sm danger" data-a="expire">만료 처리</button>` : ''}
           ${ev.is_paid && !r.fee_waived && ['invited','payment_pending','waitlist'].includes(r.status) ? `<button class="sm" data-a="waive">참가비 면제</button>` : ''}
           ${r.fee_waived ? `<button class="sm" data-a="unwaive">면제 취소</button>` : ''}
           <button class="sm" data-a="link">개인 링크</button>
@@ -246,6 +249,8 @@
     if (a === 'cancel') { if (!confirm(`${r.name}님의 신청을 취소할까요? 자리가 해제되고 대기자가 있으면 자동으로 올라갑니다.`)) return;
       await rpc('rsvp_admin_cancel', { p_reg: id }); toast('취소했습니다'); return refresh(); }
     if (a === 'sms') return smsDialog(r);
+    if (a === 'expire') { if (!confirm(`${r.name}님의 신청을 기한 만료로 처리할까요? 자리가 해제되고 대기자가 있으면 자동으로 올라갑니다.`)) return;
+      const res = await rpc('rsvp_admin_expire', { p_reg: id }); toast(res.ok === false ? res.message : '만료 처리했습니다', 4000); return refresh(); }
   }
   function verifyDialog(r) {
     $dlg.innerHTML = `<h2 style="margin-top:0">입금 확인 · ${esc(r.name)}</h2>
@@ -365,6 +370,7 @@
       <div><label class="f">주소 (/rsvp/?e=…)</label><input id="slug" value="${v('slug')}" ${ev.status !== 'draft' ? 'disabled' : ''}></div>
       <div><label class="f">상태</label><select id="status">${[['draft','작성 중 (비공개)'],['open','접수 중'],['closed','마감'],['cancelled','취소']].map(([k,l]) => `<option value="${k}" ${ev.status === k ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
       <div><label class="f">공통 링크 신청</label><select id="open"><option value="1" ${ev.allow_open_signup ? 'selected' : ''}>허용</option><option value="0" ${ev.allow_open_signup ? '' : 'selected'}>개인 초대 링크만</option></select></div>
+      <div><label class="f">공통 링크 신청 속도 제한 (1분당 건수, 0 = 제한 없음)</label><input id="signup_rate_per_min" type="number" min="0" value="${ev.signup_rate_per_min ?? 20}"></div>
       <div><label class="f">대표 이미지 URL</label><input id="hero_image" value="${v('hero_image')}"></div>
       <div><label class="f">주최</label><input id="hosts" value="${v('hosts')}"></div>
       <div><label class="f">협업 브랜드</label><input id="partners" value="${v('partners')}"></div>
@@ -404,7 +410,7 @@
     const consents = [...document.querySelectorAll('[data-ci]')].map((el, i) => { const o = old[i], f = k => el.querySelector(`[data-f=${k}]`).value, bodyNew = f('body');
       const ver = o && o.body === bodyNew && o.label === f('label') ? o.version : 'v' + ((parseInt((o?.version || 'v0').slice(1), 10) || 0) + 1);
       return { key: f('key'), label: f('label'), required: f('required') === '1', body: bodyNew, version: ver }; });
-    const row = { title: g('title'), status: g('status'), allow_open_signup: g('open') === '1', hero_image: t('hero_image'), hosts: t('hosts'), partners: t('partners'),
+    const row = { title: g('title'), status: g('status'), allow_open_signup: g('open') === '1', signup_rate_per_min: n('signup_rate_per_min') ?? 20, hero_image: t('hero_image'), hosts: t('hosts'), partners: t('partners'),
       starts_at: fromLocalInput(g('starts_at')), ends_at: fromLocalInput(g('ends_at')), venue: t('venue'), map_url: t('map_url'), capacity: n('capacity'), apply_deadline: fromLocalInput(g('apply_deadline')), contact: t('contact'),
       intro: t('intro'), sessions, prep: t('prep'), guide: t('guide'), refund_policy: t('refund_policy'), extra_questions: extra,
       is_paid: g('is_paid') === '1', fee: n('fee'), bank_name: t('bank_name'), bank_account: t('bank_account'), account_holder: t('account_holder'),

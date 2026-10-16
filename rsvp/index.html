@@ -232,7 +232,7 @@
       btn.disabled = true; btn.textContent = '처리 중…';
       const r = await sb.rpc('rsvp_submit', { p_slug: slug, p_token: token || null, p_payload: payload });
       btn.disabled = false; btn.textContent = reg ? '응답 저장' : '신청하기';
-      if (r.error || !r.data?.ok) { err.textContent = r.data?.message || '처리에 실패했습니다. 잠시 후 다시 시도해 주세요.'; return; }
+      if (r.error || !r.data?.ok) { err.textContent = r.data?.message || (/rate_limited/.test(r.error?.message || '') ? '신청이 몰리고 있어요. 1분 뒤 다시 시도해 주세요.' : '처리에 실패했습니다. 잠시 후 다시 시도해 주세요.'); return; }
       if (r.data.token && !token) { token = r.data.token; history.replaceState(null, '', `?e=${encodeURIComponent(slug)}&t=${token}`); }
       reg = r.data.registration; payInfo = r.data.payment_info; editing = false;
       render(); window.scrollTo({ top: 0, behavior: 'smooth' });
