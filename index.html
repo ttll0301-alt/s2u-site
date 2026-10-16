@@ -372,6 +372,10 @@
   }
   .auto-notify-badge b{color:var(--bone);}
 
+  .partners{padding:clamp(48px,8vw,96px) clamp(20px,5vw,56px); border-top:1px solid var(--line);}
+  .partners .p-eyebrow{font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:0.14em; color:var(--bone-dim); margin-bottom:28px;}
+  .plogos{display:flex; flex-wrap:wrap; align-items:center; gap:clamp(20px,3.2vw,38px) clamp(28px,4.6vw,60px); font-size:clamp(14px,1.9vw,20px);}
+  .plogos img{width:auto; max-width:100%; display:block; opacity:0.9;}
   footer{padding:32px clamp(20px,5vw,56px) 50px; border-top:1px solid var(--line); font-size:12px; color:var(--bone-dim); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
 
   @media (prefers-reduced-motion: reduce){
@@ -1420,6 +1424,27 @@
     </div>
   </div>
 
+  <section class="partners" id="partners" aria-label="파트너사">
+    <p class="p-eyebrow">PARTNERS</p>
+    <div class="plogos">
+      <img src="profile/media/partners/posco.png?v=6" alt="POSCO" style="height:1.3em" loading="lazy">
+      <img src="profile/media/partners/skt.png?v=6" alt="SK텔레콤" style="height:1.7em" loading="lazy">
+      <img src="profile/media/partners/musinsa.png?v=6" alt="MUSINSA" style="height:1.15em" loading="lazy">
+      <img src="profile/media/partners/garmin.png?v=6" alt="GARMIN" style="height:0.85em" loading="lazy">
+      <img src="profile/media/partners/oursymbol.png?v=6" alt="OUR SYMBOL" style="height:2.6em" loading="lazy">
+      <img src="profile/media/partners/goruck.png?v=6" alt="GORUCK" style="height:0.8em" loading="lazy">
+      <img src="profile/media/partners/stick.png?v=6" alt="STICK MOBILITY" style="height:1.0em" loading="lazy">
+      <img src="profile/media/partners/sunn.svg?v=6" alt="SUNN" style="height:0.7em" loading="lazy">
+      <img src="profile/media/partners/ceiling.png?v=6" alt="ceiling service" style="height:2.2em" loading="lazy">
+      <img src="profile/media/partners/permit.png?v=6" alt="PERMIT" style="height:0.85em" loading="lazy">
+      <img src="profile/media/partners/worthwhile.png?v=6" alt="Worthwhile Movement" style="height:0.85em" loading="lazy">
+      <img src="profile/media/partners/bose.png?v=6" alt="BOSE" style="height:0.75em" loading="lazy">
+      <img src="profile/media/partners/mangosteen.png?v=6" alt="MANGOSTEEN GROUP" style="height:1.5em" loading="lazy">
+      <img src="profile/media/partners/kosmospeople.png?v=6" alt="KOSMOSPEOPLE" style="height:0.8em" loading="lazy">
+      <img src="profile/media/partners/fyf.png?v=6" alt="FYF" style="height:1.9em" loading="lazy">
+    </div>
+  </section>
+
   <footer>
     <span>© 2026 S2:U — SUSTAIN TO YOU · Seoul, Korea · <a href="https://www.instagram.com/s2useoul/" target="_blank" rel="noopener">@s2useoul</a> · <a href="https://www.instagram.com/findurflow__/" target="_blank" rel="noopener">@findurflow__</a></span>
     <span>MOVEMENT → RECOVERY → COMMUNITY → YOU</span>
@@ -1510,6 +1535,11 @@
   });
 
   const events = [
+    {cat:'collab', date:'2026.10.19', title:"RUNNER'S HOUSE · MOVV URBAN 5K RUN", desc:'더샵갤러리 러너스하우스에서 MOVV와 함께 도심 5K를 달리고 회복까지 이어가는 프라이빗 세션을 S2:U가 운영합니다.', with:'MOVV × THE SHARP GALLERY', letter:'M', participants:0},
+    {cat:'collab', date:'2026.10.05', title:'FIRST RUCK SESSION', desc:'더템플짐 해방촌에서 출발해 웨이트 베스트를 메고 동네와 숲길을 함께 걷고 오른 S2:U의 첫 럭킹 세션입니다. 15명을 초대했습니다.', with:'S2:U × GORUCK', letter:'G', participants:15},
+    {cat:'collab', date:'2026.10.03', title:'SUNN FESTIVAL 고성', desc:'고성 세계잼버리수련장에서 열린 SUNN 페스티벌의 웰니스 세션 전체를 기획하고 이틀간 운영했습니다. 숲에서 달리고, 몸을 깨우고, 호흡을 고른 뒤 사우나로 마무리하는 흐름입니다.', with:'SEALING SERVICE · SUNN', letter:'S', participants:0},
+    {cat:'collab', date:'2026.10', title:'서울공예박물관 나이트 세션', desc:'해가 진 박물관 마당에 매트와 무드등을 깔고, 움직임에서 이완까지 이어지는 야간 웰니스 세션을 열었습니다.', with:'SEOUL MUSEUM OF CRAFT ART', letter:'C', participants:0},
+    {cat:'collab', date:'2026.09', title:'헤아림 〈모닝 웰니스〉', desc:'빠르고 자극적인 일상에서 잠시 벗어나, 천천히 움직이고 호흡하며 몸과 마음을 살펴보는 이틀간의 아침 프로그램입니다.', with:'S2:U × OUR SYMBOL', letter:'H', participants:0},
     {cat:'collab', date:'2026.08', title:'FILA × ARC Float TR9', desc:'FILA와 ARC(a running club)가 함께한 러닝 세션. 새 러닝화 Float TR9의 실제 착화 테스트를 겸했습니다.', with:'FILA · ARC · ONYOURMARK', letter:'F', participants:22},
     {cat:'collab', date:'2026.08', title:'Nothing Running Trial', desc:'테크 브랜드 nothing.kr과 함께한 러닝 트라이얼 세션. eyesmag, wellness mate와 공동 기획.', with:'nothing.kr · eyesmag · wellness mate', letter:'N', participants:16},
     {cat:'collab', date:'2026.07', title:'FYF × PAPER SEOUL', desc:'페이퍼서울과 함께한 미니록스(MINIROX) 협업 세션.', with:'PAPER SEOUL', letter:'P', participants:10},
@@ -1534,7 +1564,7 @@
       <div class="card cat-${e.cat}" data-cat="${e.cat}" style="animation-delay:${i * 0.05}s">
         <div class="thumb"><span class="big">${e.letter}</span><span class="cat-tag">${e.cat === 'collab' ? 'Brand Collab' : 'Own Session'}</span></div>
         <div class="card-body">
-          <div class="card-date">${e.date} · 참여 ${e.participants}명</div>
+          <div class="card-date">${e.date}${e.participants ? ' · 참여 ' + e.participants + '명' : ''}</div>
           <div class="card-title display">${e.title}</div>
           <div class="card-desc">${e.desc}</div>
           <div class="card-with">With <b>${e.with}</b></div>
@@ -2033,6 +2063,16 @@ ${pts}
     }
     // date / place 는 비워두면 자동으로 표시되지 않습니다. 값만 채우면 바로 노출됩니다.
     const WORKS = [
+      {v:'profile/media/s2u-goruck.mp4', cat:'BRAND COLLAB', t:'S2:U × GORUCK', date:'2026.10.05', place:'더템플짐 해방촌',
+       w:'GORUCK', ig:'',
+       d:'FIRST RUCK SESSION 필름',
+       long:'더템플짐 해방촌에서 출발해 웨이트 베스트를 메고 동네와 숲길을 함께 걷고 오른 S2:U의 첫 럭킹 세션입니다. 15명을 초대했습니다.'},
+
+      {v:'profile/media/s2u-goruck-dj.mp4', cat:'BRAND COLLAB', t:'S2:U × GORUCK DJ', date:'', place:'',
+       w:'GORUCK', ig:'',
+       d:'GORUCK 럭킹 라이브 DJ 세션',
+       long:'GORUCK 럭킹 라이브 DJ 세션 영상입니다.'},
+
       {v:'', cat:'BRAND COLLAB', t:'THE NORTH FACE', date:'2026.08.29', place:'',
        w:'THE NORTH FACE', ig:'https://www.instagram.com/reel/DcnMirQAvAI/',
        d:'노스페이스와 함께한 나이트 러닝 세션',
