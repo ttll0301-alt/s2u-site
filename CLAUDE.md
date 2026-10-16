@@ -40,6 +40,10 @@ git add -A && git commit -m "<what changed>" && git push
 Push uses the repo deploy key (`~/.ssh/s2u_deploy`, host alias `github-s2u`). Never use or ask for account passwords/tokens.
 After pushing, verify: `curl -s https://sustaintoyou.com | grep -c "<new title>"` (allow ~1 min).
 
+## RSVP (행사 초대·신청·입금 확인·자동 문자)
+
+Separate from the static site: `rsvp/` (participant page), `admin/` (host console), `supabase/` (SQL + Edge Function). Backend is Supabase; setup and rules in `supabase/README.md`. `rsvp/config.js` holds only the public URL/anon key (empty = feature off). SMS keys live in Supabase secrets, never in the repo.
+
 ## Do not touch
 
 - `CNAME` (domain binding), DNS, GitHub Pages settings.

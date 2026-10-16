@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>RSVP — S2:U</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Pretendard:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--off-black:#0c0c0d; --black-2:#141416; --bone:#f4f2ed; --bone-dim:rgba(244,242,237,0.62); --move-red:#ff3d2e; --line:rgba(244,242,237,0.14); --line-strong:rgba(244,242,237,0.28); --ok:#7ddf9b;}
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{background:var(--off-black);}
+  body{background:var(--off-black); color:var(--bone); font-family:'Pretendard',-apple-system,sans-serif; line-height:1.7; font-size:15px; -webkit-text-size-adjust:100%;}
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--move-red); outline-offset:3px;}
+  .top{display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-bottom:1px solid var(--line);}
+  .logo{font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.06em; border:1.5px solid #fff; padding:3px 9px 1px; text-decoration:none;}
+  .top small{font-size:11px; letter-spacing:0.14em; color:var(--bone-dim);}
+  main{max-width:560px; margin:0 auto; padding:0 20px 80px;}
+  .hero{margin:0 -20px 24px; aspect-ratio:4/3; background:var(--black-2) center/cover no-repeat;}
+  .hero:empty{display:none}
+  h1{font-family:'Bebas Neue','Pretendard',sans-serif; font-weight:400; font-size:clamp(40px,11vw,60px); line-height:0.98; letter-spacing:0.02em; margin:28px 0 10px; word-break:keep-all;}
+  .by{font-size:12px; letter-spacing:0.1em; color:var(--bone-dim); text-transform:uppercase;}
+  dl.facts{margin:22px 0; border-top:1px solid var(--line);}
+  dl.facts div{display:flex; gap:16px; padding:12px 0; border-bottom:1px solid var(--line);}
+  dl.facts dt{width:64px; flex:none; font-size:11px; letter-spacing:0.12em; color:var(--bone-dim); padding-top:3px;}
+  dl.facts dd{flex:1;}
+  dl.facts a{text-decoration:underline; text-underline-offset:3px;}
+  .block{margin:30px 0;}
+  .block h2{font-size:11px; letter-spacing:0.16em; color:var(--bone-dim); font-weight:600; margin-bottom:10px; text-transform:uppercase;}
+  .block p, .block li{color:rgba(244,242,237,0.85); white-space:pre-line;}
+  .panel{border:1px solid var(--line-strong); border-radius:16px; padding:22px; background:var(--black-2); margin:26px 0;}
+  .badge{display:inline-block; font-size:11px; letter-spacing:0.12em; padding:5px 12px; border-radius:999px; border:1px solid var(--line-strong); margin-bottom:12px;}
+  .badge.ok{border-color:var(--ok); color:var(--ok);}
+  .badge.warn{border-color:var(--move-red); color:var(--move-red);}
+  .panel h3{font-size:20px; font-weight:800; margin-bottom:6px;}
+  .panel p{color:var(--bone-dim); font-size:14px;}
+  .bank{margin:16px 0 4px; padding:14px 16px; border:1px dashed var(--line-strong); border-radius:12px; font-size:14px;}
+  .bank b{font-size:17px; letter-spacing:0.02em;}
+  form label.f{display:block; font-size:11px; letter-spacing:0.1em; color:var(--bone-dim); margin:18px 0 7px;}
+  input[type=text], input[type=tel], select, textarea{width:100%; background:transparent; border:1px solid var(--line-strong); color:var(--bone); border-radius:10px; padding:13px 14px; font-size:16px; font-family:inherit;}
+  select option{background:#141416;}
+  .seg{display:flex; gap:8px;}
+  .seg label{flex:1; text-align:center; border:1px solid var(--line-strong); border-radius:999px; padding:12px 0; cursor:pointer; font-weight:600;}
+  .seg input{position:absolute; opacity:0; pointer-events:none;}
+  .seg input:checked + span{color:var(--off-black);}
+  .seg label:has(input:checked){background:var(--bone); color:var(--off-black);}
+  .seg label:has(input:focus-visible){outline:2px solid var(--move-red); outline-offset:3px;}
+  .opt{display:flex; gap:10px; align-items:flex-start; padding:12px 14px; border:1px solid var(--line); border-radius:10px; margin-bottom:8px; cursor:pointer;}
+  .opt input{margin-top:4px; accent-color:var(--move-red);}
+  .opt small{display:block; color:var(--bone-dim); font-size:12px;}
+  .consent{margin-top:12px; border:1px solid var(--line); border-radius:12px; padding:14px;}
+  .consent label{display:flex; gap:10px; align-items:flex-start; font-weight:600; cursor:pointer;}
+  .consent input{margin-top:4px; width:18px; height:18px; accent-color:var(--move-red); flex:none;}
+  .consent details{margin:8px 0 0 28px; font-size:12px; color:var(--bone-dim);}
+  .consent details p{white-space:pre-line; margin-top:6px;}
+  .req{color:var(--move-red);}
+  button.cta{width:100%; margin-top:24px; padding:16px; border-radius:999px; border:none; background:var(--bone); color:var(--off-black); font-family:'Bebas Neue','Pretendard'; font-size:20px; letter-spacing:0.05em; cursor:pointer;}
+  button.cta:disabled{opacity:0.5; cursor:default;}
+  button.ghost{background:transparent; color:var(--bone); border:1px solid var(--line-strong); margin-top:14px;}
+  .err{margin-top:14px; color:#ffb3a3; font-size:14px; min-height:1em;}
+  .hp{position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;}
+  .center{text-align:center; padding:80px 0; color:var(--bone-dim);}
+  footer{border-top:1px solid var(--line); padding:26px 20px 40px; text-align:center; font-size:11px; letter-spacing:0.12em; color:var(--bone-dim);}
+</style>
+</head>
+<body>
+<div class="top"><a class="logo" href="/">S2:U</a><small>RSVP</small></div>
+<main id="app"><div class="center">불러오는 중…</div></main>
+<footer>SUSTAIN TO YOU</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" integrity="sha384-GFr3yTh5lJznCbZfpTtXnwboFsxqtTQoeTZCRHhE0579KrRmlCzen5AA8ohaB5ug" crossorigin="anonymous"></script>
+<script src="config.js"></script>
+<script>
+(() => {
+  const $app = document.getElementById('app');
+  const qs = new URLSearchParams(location.search);
+  const slug = qs.get('e') || '';
+  let token = qs.get('t') || '';
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const nl = s => esc(s);   // white-space:pre-line 이 줄바꿈 처리
+  const cfg = window.S2_RSVP || {};
+  const DOW = ['일','월','화','수','목','금','토'];
+  const kst = d => { if (!d) return ''; const t = new Date(new Date(d).getTime() + 9*3600e3);
+    const p = n => String(n).padStart(2,'0');
+    return `${t.getUTCFullYear()}.${p(t.getUTCMonth()+1)}.${p(t.getUTCDate())} (${DOW[t.getUTCDay()]}) ${p(t.getUTCHours())}:${p(t.getUTCMinutes())}`; };
+  const won = n => (n ?? 0).toLocaleString('ko-KR') + '원';
+  const safeUrl = u => /^https?:\/\//i.test(u || '') ? u : '';
+
+  let sb, ev, reg, payInfo, editing = false;
+
+  if (!cfg.url || !cfg.anonKey || !window.supabase) { $app.innerHTML = '<div class="center">RSVP 서비스를 준비 중입니다.</div>'; return; }
+  if (!slug) { $app.innerHTML = '<div class="center">유효하지 않은 링크입니다.</div>'; return; }
+  sb = window.supabase.createClient(cfg.url, cfg.anonKey, { auth: { persistSession: false, autoRefreshToken: false } });
+
+  async function load() {
+    const e = await sb.rpc('rsvp_public_event', { p_slug: slug });
+    if (e.error || !e.data?.ok) { $app.innerHTML = '<div class="center">행사를 찾을 수 없습니다.</div>'; return; }
+    ev = e.data.event; reg = null; payInfo = null;
+    if (token) {
+      const r = await sb.rpc('rsvp_get_registration', { p_slug: slug, p_token: token });
+      if (r.data?.ok) { reg = r.data.registration; payInfo = r.data.payment_info; }
+      else { token = ''; }
+    }
+    render();
+  }
+
+  function head() {
+    const sessions = ev.sessions || [];
+    return `
+      <div class="hero" style="${safeUrl(ev.hero_image) ? `background-image:url('${esc(safeUrl(ev.hero_image))}')` : ''}">${safeUrl(ev.hero_image) ? '' : ''}</div>
+      <h1>${esc(ev.title)}</h1>
+      <div class="by">${esc([ev.hosts, ev.partners].filter(Boolean).join(' × '))}</div>
+      <dl class="facts">
+        <div><dt>DATE</dt><dd>${esc(kst(ev.starts_at))}${ev.ends_at ? ' – ' + esc(kst(ev.ends_at).slice(-5)) : ''}</dd></div>
+        ${ev.venue ? `<div><dt>PLACE</dt><dd>${esc(ev.venue)}${safeUrl(ev.map_url) ? ` · <a href="${esc(safeUrl(ev.map_url))}" target="_blank" rel="noopener">지도</a>` : ''}</dd></div>` : ''}
+        <div><dt>FEE</dt><dd>${ev.is_paid ? esc(won(ev.fee)) : '무료'}</dd></div>
+        ${ev.seats_left !== null ? `<div><dt>SEATS</dt><dd>${ev.seats_left > 0 ? `잔여 ${ev.seats_left}석` : '정원 마감 · 대기 신청 가능'}</dd></div>` : ''}
+        ${ev.apply_deadline ? `<div><dt>CLOSE</dt><dd>${esc(kst(ev.apply_deadline))}</dd></div>` : ''}
+      </dl>
+      ${ev.intro ? `<div class="block"><p>${nl(ev.intro)}</p></div>` : ''}
+      ${sessions.length ? `<div class="block"><h2>Program</h2>${sessions.map(s => `<p>· ${esc(s.label)}${s.starts_at ? ' — ' + esc(kst(s.starts_at)) : ''}</p>`).join('')}</div>` : ''}
+      ${ev.prep ? `<div class="block"><h2>준비물</h2><p>${nl(ev.prep)}</p></div>` : ''}
+      ${ev.guide ? `<div class="block"><h2>참여 안내</h2><p>${nl(ev.guide)}</p></div>` : ''}
+      ${ev.refund_policy ? `<div class="block"><h2>취소 · 환불</h2><p>${nl(ev.refund_policy)}</p></div>` : ''}
+      ${ev.contact ? `<div class="block"><h2>문의</h2><p>${nl(ev.contact)}</p></div>` : ''}`;
+  }
+
+  function statusPanel() {
+    if (!reg) return '';
+    const st = reg.status;
+    if (st === 'confirmed') return `<div class="panel"><span class="badge ok">CONFIRMED</span><h3>참여가 확정되었습니다</h3><p>${esc(reg.name)}님, 현장에서 뵙겠습니다. 일정과 준비물은 위 안내를 확인해 주세요.</p></div>`;
+    if (st === 'payment_pending') {
+      const claimed = reg.payment === 'claimed', flagged = reg.payment === 'flagged';
+      return `<div class="panel"><span class="badge warn">입금 대기 · 아직 확정 아님</span>
+        <h3>신청이 접수되었습니다</h3>
+        <p>입금이 확인되면 참여가 확정되고 확정 문자가 발송됩니다.</p>
+        ${payInfo ? `<div class="bank">참가비 <b>${esc(won(payInfo.fee))}</b><br>${esc([payInfo.bank_name, payInfo.bank_account].filter(Boolean).join(' '))}${payInfo.account_holder ? ` (${esc(payInfo.account_holder)})` : ''}<br>입금자명 <b>${esc(reg.depositor_name || reg.name)}</b>${payInfo.deadline ? `<br>입금 기한 ${esc(kst(payInfo.deadline))}` : ''}</div>` : ''}
+        ${flagged ? `<p style="margin-top:12px;color:#ffb3a3">입금 내역을 확인 중입니다. 필요하면 운영진이 연락드립니다.</p>` : ''}
+        ${claimed ? `<p style="margin-top:12px">입금 확인을 요청하셨습니다. 운영진이 입금 내역을 확인하면 확정됩니다.</p>`
+                  : `<button class="cta ghost" id="claimBtn" type="button">입금했어요 (입금 확인 요청)</button>`}
+      </div>`;
+    }
+    if (st === 'waitlist') return `<div class="panel"><span class="badge">WAITLIST</span><h3>대기자로 등록되었습니다</h3><p>자리가 생기면 문자로 안내드립니다. 그 전까지는 참여가 확정되지 않았습니다.</p></div>`;
+    if (st === 'declined') return `<div class="panel"><span class="badge">DECLINED</span><h3>불참으로 응답하셨습니다</h3><p>마음이 바뀌셨다면 아래에서 다시 신청할 수 있습니다.</p></div>`;
+    if (st === 'expired') return `<div class="panel"><span class="badge warn">EXPIRED</span><h3>입금 기한이 지나 자리가 해제되었습니다</h3><p>자리가 남아 있다면 아래에서 다시 신청할 수 있습니다.</p></div>`;
+    return '';
+  }
+
+  function formHtml() {
+    const personal = !!reg;
+    const sessions = ev.sessions || [];
+    const sel = new Set(reg?.session_ids || []);
+    const cons = reg?.consents || {};
+    const ans = reg?.answers || {};
+    const needDep = ev.is_paid && !(reg?.fee_waived);
+    return `<form id="f" novalidate>
+      <div class="hp"><label>website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+      ${personal ? '' : ''}
+      <label class="f" for="name">이름 <span class="req">*</span></label>
+      <input type="text" id="name" name="name" autocomplete="name" value="${esc(reg?.name || '')}" maxlength="40" required>
+      <label class="f" for="phone">연락처 <span class="req">*</span></label>
+      ${personal ? `<input type="tel" id="phone" value="${esc(reg.phone_masked)}" disabled>` : `<input type="tel" id="phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="010-0000-0000" required>`}
+      <label class="f">참여 여부 <span class="req">*</span></label>
+      <div class="seg">
+        <label><input type="radio" name="rsvp" value="attending" ${reg?.rsvp === 'declined' ? '' : 'checked'}><span>참여할게요</span></label>
+        ${personal ? `<label><input type="radio" name="rsvp" value="declined" ${reg?.rsvp === 'declined' ? 'checked' : ''}><span>못 가요</span></label>` : ''}
+      </div>
+      <div id="attendFields">
+        ${sessions.length ? `<label class="f">회차 선택 <span class="req">*</span></label>` + sessions.map(s => `<label class="opt"><input type="checkbox" name="session" value="${esc(s.id)}" ${sel.has(s.id) ? 'checked' : ''}><span>${esc(s.label)}${s.starts_at ? `<small>${esc(kst(s.starts_at))}</small>` : ''}</span></label>`).join('') : ''}
+        ${needDep ? `<label class="f" for="dep">입금자명 <span class="req">*</span></label><input type="text" id="dep" name="dep" value="${esc(reg?.depositor_name || '')}" maxlength="40" placeholder="입금 시 표시될 이름">` : ''}
+        ${(ev.extra_questions || []).map(q => {
+          const id = 'q_' + esc(q.id), v = ans[q.id] || '', rq = q.required ? ' <span class="req">*</span>' : '';
+          if (q.type === 'select') return `<label class="f" for="${id}">${esc(q.label)}${rq}</label><select id="${id}" data-q="${esc(q.id)}"><option value="">선택</option>${(q.options || []).map(o => `<option ${o === v ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`;
+          if (q.type === 'checkbox') return `<label class="opt"><input type="checkbox" id="${id}" data-q="${esc(q.id)}" data-bool="1" ${v === '예' ? 'checked' : ''}><span>${esc(q.label)}${rq}</span></label>`;
+          return `<label class="f" for="${id}">${esc(q.label)}${rq}</label><input type="text" id="${id}" data-q="${esc(q.id)}" value="${esc(v)}" maxlength="500">`;
+        }).join('')}
+        <label class="f">동의</label>
+        ${(ev.consent_defs || []).map(c => `<div class="consent"><label><input type="checkbox" data-c="${esc(c.key)}" ${cons[c.key] === true ? 'checked' : ''}><span>${esc(c.label)}${c.required ? ' <span class="req">*</span>' : ''}</span></label><details><summary>내용 보기</summary><p>${nl(c.body)}</p></details></div>`).join('')}
+      </div>
+      <div class="err" id="err" role="alert"></div>
+      <button class="cta" id="submitBtn" type="submit">${personal ? '응답 저장' : '신청하기'}</button>
+    </form>`;
+  }
+
+  function render() {
+    document.title = ev.title + ' — S2:U RSVP';
+    const st = reg?.status;
+    let body = head() + statusPanel();
+    const closed = ev.state !== 'open';
+    if (ev.state === 'cancelled') body += `<div class="panel"><span class="badge warn">CANCELLED</span><h3>취소된 행사입니다</h3></div>`;
+    else if (closed && !reg) body += `<div class="panel"><span class="badge">CLOSED</span><h3>신청이 마감되었습니다</h3></div>`;
+    else if (!reg && !ev.allow_open_signup) body += `<div class="panel"><h3>초대받은 분만 신청할 수 있어요</h3><p>문자로 받은 개인 링크로 접속해 주세요.</p></div>`;
+    else if (!closed) {
+      const showForm = !reg || st === 'invited' || st === 'declined' || st === 'expired' || editing;
+      if (showForm) body += `<div class="panel">${formHtml()}</div>`;
+      else if (st === 'confirmed' || st === 'payment_pending' || st === 'waitlist') body += `<button class="cta ghost" id="editBtn" type="button">응답 수정하기</button>`;
+    }
+    $app.innerHTML = body;
+    bind();
+  }
+
+  function bind() {
+    document.getElementById('editBtn')?.addEventListener('click', () => { editing = true; render(); });
+    document.getElementById('claimBtn')?.addEventListener('click', async e => {
+      e.target.disabled = true;
+      const r = await sb.rpc('rsvp_claim_payment', { p_slug: slug, p_token: token });
+      if (r.data?.ok) { reg = r.data.registration; payInfo = r.data.payment_info; render(); } else { e.target.disabled = false; alert('요청에 실패했습니다. 잠시 후 다시 시도해 주세요.'); }
+    });
+    const f = document.getElementById('f'); if (!f) return;
+    const toggle = () => { document.getElementById('attendFields').style.display = f.rsvp.value === 'declined' ? 'none' : ''; };
+    f.addEventListener('change', toggle); toggle();
+    f.addEventListener('submit', async e => {
+      e.preventDefault();
+      const err = document.getElementById('err'), btn = document.getElementById('submitBtn');
+      err.textContent = '';
+      if (f.website.value) return;   // 허니팟
+      const rsvp = f.rsvp.value;
+      const payload = { rsvp, name: f.name.value.trim(), phone: f.phone?.name ? f.phone.value.trim() : undefined };
+      if (rsvp === 'attending') {
+        payload.session_ids = [...f.querySelectorAll('input[name=session]:checked')].map(i => i.value);
+        payload.depositor_name = f.dep?.value.trim() || '';
+        payload.answers = {};
+        f.querySelectorAll('[data-q]').forEach(el => { const v = el.dataset.bool ? (el.checked ? '예' : '') : el.value.trim(); if (v) payload.answers[el.dataset.q] = v; });
+        payload.consents = {};
+        f.querySelectorAll('[data-c]').forEach(el => { payload.consents[el.dataset.c] = el.checked; });
+      }
+      btn.disabled = true; btn.textContent = '처리 중…';
+      const r = await sb.rpc('rsvp_submit', { p_slug: slug, p_token: token || null, p_payload: payload });
+      btn.disabled = false; btn.textContent = reg ? '응답 저장' : '신청하기';
+      if (r.error || !r.data?.ok) { err.textContent = r.data?.message || '처리에 실패했습니다. 잠시 후 다시 시도해 주세요.'; return; }
+      if (r.data.token && !token) { token = r.data.token; history.replaceState(null, '', `?e=${encodeURIComponent(slug)}&t=${token}`); }
+      reg = r.data.registration; payInfo = r.data.payment_info; editing = false;
+      render(); window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  load();
+})();
+</script>
+</body>
+</html>

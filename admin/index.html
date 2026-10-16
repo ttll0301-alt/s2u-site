@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>RSVP 운영 — S2:U</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Pretendard:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--off-black:#0c0c0d; --black-2:#141416; --bone:#f4f2ed; --dim:rgba(244,242,237,0.62); --red:#ff3d2e; --line:rgba(244,242,237,0.14); --line2:rgba(244,242,237,0.28); --ok:#7ddf9b; --warn:#ffcf5c;}
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{background:var(--off-black);}
+  body{background:var(--off-black); color:var(--bone); font-family:'Pretendard',-apple-system,sans-serif; line-height:1.55; font-size:14px;}
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--red); outline-offset:2px;}
+  header{display:flex; justify-content:space-between; align-items:center; padding:14px clamp(16px,3vw,32px); border-bottom:1px solid var(--line); position:sticky; top:0; background:rgba(12,12,13,.94); backdrop-filter:blur(8px); z-index:20;}
+  .logo{font-family:'Bebas Neue'; font-size:22px; letter-spacing:.06em; border:1.5px solid #fff; padding:3px 9px 1px; text-decoration:none;}
+  main{max-width:1180px; margin:0 auto; padding:24px clamp(16px,3vw,32px) 80px;}
+  h1{font-family:'Bebas Neue','Pretendard'; font-weight:400; font-size:36px; letter-spacing:.02em; line-height:1; margin:6px 0 16px;}
+  h2{font-size:12px; letter-spacing:.14em; color:var(--dim); font-weight:600; margin:28px 0 10px; text-transform:uppercase;}
+  .card{border:1px solid var(--line); border-radius:12px; padding:16px; background:var(--black-2);}
+  .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+  .grow{flex:1;}
+  button, .btn{background:transparent; color:var(--bone); border:1px solid var(--line2); border-radius:999px; padding:7px 14px; font:inherit; font-weight:600; cursor:pointer; text-decoration:none; display:inline-block; font-size:13px;}
+  button:hover{border-color:var(--bone);}
+  button.pri{background:var(--bone); color:var(--off-black); border-color:var(--bone);}
+  button.danger{border-color:var(--red); color:#ffb3a3;}
+  button:disabled{opacity:.45; cursor:default;}
+  button.sm{padding:3px 10px; font-size:12px;}
+  input, select, textarea{background:transparent; border:1px solid var(--line2); color:var(--bone); border-radius:8px; padding:8px 10px; font:inherit; width:100%;}
+  textarea{min-height:90px; resize:vertical;}
+  select option{background:#141416;}
+  label.f{display:block; font-size:11px; letter-spacing:.08em; color:var(--dim); margin:12px 0 5px;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:0 16px;}
+  .tabs{display:flex; gap:4px; border-bottom:1px solid var(--line); margin:18px 0; overflow-x:auto;}
+  .tabs button{border:none; border-radius:0; border-bottom:2px solid transparent; padding:10px 14px; color:var(--dim); white-space:nowrap;}
+  .tabs button.on{color:var(--bone); border-bottom-color:var(--red);}
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px;}
+  .stat{border:1px solid var(--line); border-radius:10px; padding:12px 14px; background:var(--black-2);}
+  .stat b{display:block; font-family:'Bebas Neue'; font-size:30px; font-weight:400; line-height:1.1;}
+  .stat span{font-size:11px; letter-spacing:.1em; color:var(--dim);}
+  .tw{overflow-x:auto; border:1px solid var(--line); border-radius:10px;}
+  table{width:100%; border-collapse:collapse; min-width:860px;}
+  th, td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top; font-size:13px;}
+  th{font-size:11px; letter-spacing:.1em; color:var(--dim); font-weight:600; white-space:nowrap; background:var(--black-2);}
+  tr:last-child td{border-bottom:none;}
+  .pill{display:inline-block; font-size:11px; padding:2px 9px; border-radius:999px; border:1px solid var(--line2); white-space:nowrap;}
+  .pill.ok{border-color:var(--ok); color:var(--ok);} .pill.warn{border-color:var(--warn); color:var(--warn);} .pill.bad{border-color:var(--red); color:#ffb3a3;}
+  .muted{color:var(--dim);} .small{font-size:12px;}
+  .acts{display:flex; gap:6px; flex-wrap:wrap;}
+  .note{border-left:3px solid var(--warn); background:rgba(255,207,92,.07); padding:10px 14px; border-radius:0 8px 8px 0; margin:12px 0; font-size:13px;}
+  .note.red{border-left-color:var(--red); background:rgba(255,61,46,.07);}
+  .toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--bone); color:var(--off-black); padding:11px 20px; border-radius:999px; font-weight:700; z-index:200; display:none; max-width:90vw;}
+  dialog{background:var(--black-2); color:var(--bone); border:1px solid var(--line2); border-radius:14px; padding:22px; width:min(440px,92vw);}
+  dialog::backdrop{background:rgba(0,0,0,.7);}
+  pre.sms{white-space:pre-wrap; background:#000; border:1px solid var(--line); border-radius:10px; padding:12px; font-family:inherit; font-size:13px; margin-top:8px;}
+  .hidden{display:none !important;}
+  .center{max-width:380px; margin:12vh auto; text-align:center;}
+  @media (max-width:640px){ h1{font-size:30px;} }
+</style>
+</head>
+<body>
+<header><a class="logo" href="/">S2:U</a><div class="row"><span id="who" class="muted small"></span><button id="logout" class="sm hidden">로그아웃</button></div></header>
+<main id="app"><div class="muted">불러오는 중…</div></main>
+<div class="toast" id="toast" role="status"></div>
+<dialog id="dlg"></dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" integrity="sha384-GFr3yTh5lJznCbZfpTtXnwboFsxqtTQoeTZCRHhE0579KrRmlCzen5AA8ohaB5ug" crossorigin="anonymous"></script>
+<script src="../rsvp/config.js"></script>
+<script>
+(() => {
+  const $app = document.getElementById('app'), $toast = document.getElementById('toast'), $dlg = document.getElementById('dlg');
+  const cfg = window.S2_RSVP || {};
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const DOW = ['일','월','화','수','목','금','토'];
+  const p2 = n => String(n).padStart(2,'0');
+  const kst = d => { if (!d) return '-'; const t = new Date(new Date(d).getTime()+9*3600e3); return `${t.getUTCFullYear()}.${p2(t.getUTCMonth()+1)}.${p2(t.getUTCDate())} (${DOW[t.getUTCDay()]}) ${p2(t.getUTCHours())}:${p2(t.getUTCMinutes())}`; };
+  const toLocalInput = d => { if (!d) return ''; const t = new Date(new Date(d).getTime()+9*3600e3); return `${t.getUTCFullYear()}-${p2(t.getUTCMonth()+1)}-${p2(t.getUTCDate())}T${p2(t.getUTCHours())}:${p2(t.getUTCMinutes())}`; };
+  const fromLocalInput = s => s ? new Date(s + ':00+09:00').toISOString() : null;
+  const won = n => (n ?? 0).toLocaleString('ko-KR') + '원';
+  const toast = (m, ms = 2600) => { $toast.textContent = m; $toast.style.display = 'block'; clearTimeout(toast.t); toast.t = setTimeout(() => $toast.style.display = 'none', ms); };
+  const base = location.origin;
+
+  const STATUS = { invited:['초대·미응답',''], payment_pending:['입금 대기','warn'], confirmed:['참여 확정','ok'], waitlist:['대기자',''], declined:['불참·취소','bad'], expired:['기한 만료','bad'] };
+  const PAY = { not_required:'-', pending:'미입금', claimed:'입금 확인 요청', verified:'입금 확인', flagged:'확인 필요' };
+  const FLAG = { name_mismatch:'입금자명 불일치', short:'금액 부족', duplicate:'중복 입금', other:'기타' };
+  const KINDS = { invite:'초대', received:'신청 접수 안내', waitlist:'대기자 안내', promoted:'대기→자리 안내', confirmed:'참여 확정 안내', unpaid:'미입금 안내' };
+  const OUT = { queued:['예약','warn'], sending:['발송 중','warn'], sent:['업체 접수 (수신 보장 아님)','ok'], test_logged:['테스트 기록 (미발송)',''], skipped:['건너뜀',''], failed:['실패','bad'], cancelled:['취소',''] };
+  const AUDIT = { apply:'신청', update:'신청 수정', decline:'불참', host_add:'호스트 등록', host_cancel:'호스트 취소', payment_claimed:'입금 확인 요청', payment_verified:'입금 확인', payment_flag:'입금 확인 필요 표시', payment_unverified:'입금 확인 취소', fee_waived:'참가비 면제', fee_waive_cancelled:'면제 취소', invite_enqueued:'초대 문자 예약', sms_manual_enqueue:'문자 수동 발송 예약', sms_retry:'문자 재시도', sms_live_on:'실발송 켜짐', sms_live_off:'실발송 꺼짐', event_clone:'행사 복제' };
+
+  let sb, me, events = [], ev = null, regs = [], outbox = [], audit = [], tab = 'status', filter = 'all', q = '';
+
+  if (!cfg.url || !cfg.anonKey || !window.supabase) { $app.innerHTML = '<div class="center"><h1>RSVP</h1><p class="muted">rsvp/config.js 에 Supabase URL과 anon 키를 넣으면 사용할 수 있어요.</p></div>'; return; }
+  sb = window.supabase.createClient(cfg.url, cfg.anonKey);
+
+  const rpc = async (fn, args) => { const r = await sb.rpc(fn, args); if (r.error) { toast('오류: ' + r.error.message, 5000); throw r.error; } return r.data; };
+
+  // ---------- auth ----------
+  async function boot() {
+    const { data } = await sb.auth.getSession();
+    if (!data.session) return loginView();
+    const { data: st } = await sb.from('rsvp_staff').select('role,name').eq('user_id', data.session.user.id).maybeSingle();
+    document.getElementById('who').textContent = data.session.user.email;
+    const lo = document.getElementById('logout'); lo.classList.remove('hidden'); lo.onclick = async () => { await sb.auth.signOut(); location.reload(); };
+    if (!st) { $app.innerHTML = '<div class="center"><h1>권한 없음</h1><p class="muted">이 계정은 RSVP 운영 권한이 없습니다. 운영자에게 담당 행사 권한을 요청하세요.</p></div>'; return; }
+    me = { id: data.session.user.id, role: st.role };
+    const hash = new URLSearchParams(location.hash.slice(1));
+    await listView(hash.get('e'));
+  }
+  function loginView() {
+    $app.innerHTML = `<div class="center"><h1>RSVP 운영</h1><p class="muted small" style="margin-bottom:16px">권한이 부여된 이메일로 로그인 링크를 보내드립니다.</p>
+      <input type="email" id="em" placeholder="email@example.com" autocomplete="email"><button class="pri" id="go" style="margin-top:12px;width:100%">로그인 링크 받기</button></div>`;
+    document.getElementById('go').onclick = async () => {
+      const email = document.getElementById('em').value.trim(); if (!email) return;
+      const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + location.pathname, shouldCreateUser: true } });
+      toast(error ? '전송 실패: ' + error.message : '메일을 확인해 주세요.', 4000);
+    };
+  }
+
+  // ---------- event list ----------
+  async function listView(openId) {
+    const { data, error } = await sb.from('rsvp_events').select('*').order('starts_at', { ascending: false });
+    if (error) { toast(error.message, 5000); return; }
+    events = data;
+    if (openId && events.find(e => e.id === openId)) return openEvent(openId);
+    $app.innerHTML = `<div class="row"><h1 class="grow">Events</h1>${me.role === 'admin' ? '<button class="pri" id="newEv">+ 새 행사</button>' : ''}</div>
+      <div class="tw"><table><thead><tr><th>행사</th><th>일시</th><th>상태</th><th>유형</th><th></th></tr></thead><tbody>
+      ${events.map(e => `<tr><td><b>${esc(e.title)}</b><div class="muted small">/${esc(e.slug)}</div></td><td>${esc(kst(e.starts_at))}</td><td><span class="pill ${e.status === 'open' ? 'ok' : ''}">${{draft:'작성 중',open:'접수 중',closed:'마감',cancelled:'취소'}[e.status]}</span></td><td>${e.is_paid ? '유료 ' + won(e.fee) : '무료'}</td>
+      <td class="acts"><button class="sm" data-open="${e.id}">관리</button>${me.role === 'admin' ? `<button class="sm" data-clone="${e.id}">복제</button>` : ''}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">행사가 없습니다.</td></tr>'}
+      </tbody></table></div>`;
+    $app.querySelectorAll('[data-open]').forEach(b => b.onclick = () => openEvent(b.dataset.open));
+    $app.querySelectorAll('[data-clone]').forEach(b => b.onclick = () => cloneDialog(b.dataset.clone));
+    document.getElementById('newEv')?.addEventListener('click', newEventDialog);
+  }
+  function slugify(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 50); }
+  function newEventDialog() {
+    $dlg.innerHTML = `<h2 style="margin-top:0">새 행사</h2><label class="f">행사명</label><input id="t"><label class="f">주소(영문 소문자·숫자·-)</label><input id="s" placeholder="runmate-camp-2611"><label class="f">일시</label><input id="d" type="datetime-local"><div class="row" style="margin-top:16px"><button id="x">취소</button><button class="pri" id="ok">만들기</button></div>`;
+    $dlg.showModal();
+    $dlg.querySelector('#x').onclick = () => $dlg.close();
+    $dlg.querySelector('#ok').onclick = async () => {
+      const row = { title: $dlg.querySelector('#t').value.trim(), slug: $dlg.querySelector('#s').value.trim() || slugify($dlg.querySelector('#t').value), starts_at: fromLocalInput($dlg.querySelector('#d').value) };
+      if (!row.title || !row.starts_at) return toast('행사명과 일시를 입력하세요');
+      const { data, error } = await sb.from('rsvp_events').insert(row).select().single();
+      if (error) return toast(error.message, 5000);
+      $dlg.close(); await listView(); openEvent(data.id); tab = 'settings'; renderEvent();
+    };
+  }
+  function cloneDialog(id) {
+    const src = events.find(e => e.id === id);
+    $dlg.innerHTML = `<h2 style="margin-top:0">행사 복제</h2><p class="muted small">설정·문구·동의 항목을 복사합니다. 참여자와 자동 발송/실발송 설정은 복사하지 않고 꺼진 상태로 시작합니다.</p>
+      <label class="f">새 행사명</label><input id="t" value="${esc(src.title)} (복사본)"><label class="f">새 주소</label><input id="s" placeholder="new-event-slug"><div class="row" style="margin-top:16px"><button id="x">취소</button><button class="pri" id="ok">복제</button></div>`;
+    $dlg.showModal();
+    $dlg.querySelector('#x').onclick = () => $dlg.close();
+    $dlg.querySelector('#ok').onclick = async () => {
+      const t = $dlg.querySelector('#t').value.trim(), s = $dlg.querySelector('#s').value.trim() || slugify(t);
+      const nid = await rpc('rsvp_admin_clone_event', { p_id: id, p_title: t, p_slug: s });
+      $dlg.close(); await listView(); await openEvent(nid); tab = 'settings'; renderEvent(); toast('복제했습니다. 날짜와 문구를 확인하세요.');
+    };
+  }
+
+  // ---------- event ----------
+  async function openEvent(id) {
+    ev = events.find(e => e.id === id); history.replaceState(null, '', '#e=' + id);
+    const [r, o, a] = await Promise.all([
+      sb.from('rsvp_registrations').select('*').eq('event_id', id).order('created_at'),
+      sb.from('rsvp_outbox').select('*, rsvp_registrations(name)').eq('event_id', id).order('created_at', { ascending: false }).limit(300),
+      sb.from('rsvp_audit').select('*, rsvp_registrations(name)').eq('event_id', id).order('at', { ascending: false }).limit(300)]);
+    regs = r.data || []; outbox = o.data || []; audit = a.data || [];
+    renderEvent();
+  }
+  const refresh = async () => { const { data } = await sb.from('rsvp_events').select('*').order('starts_at', { ascending: false }); events = data || events; await openEvent(ev.id); };
+
+  function renderEvent() {
+    const link = `${base}/rsvp/?e=${ev.slug}`;
+    $app.innerHTML = `<div class="row"><button class="sm" id="back">← 목록</button></div>
+      <div class="row"><h1 class="grow">${esc(ev.title)}</h1><span class="pill ${ev.status === 'open' ? 'ok' : ''}">${{draft:'작성 중',open:'접수 중',closed:'마감',cancelled:'취소'}[ev.status]}</span></div>
+      <div class="row small muted"><span>${esc(kst(ev.starts_at))}</span><span>·</span><span>${ev.is_paid ? '유료 ' + won(ev.fee) : '무료'}</span><span>·</span><a href="${esc(link)}" target="_blank" rel="noopener">${esc(link)}</a><button class="sm" id="copyCommon">공통 링크 복사</button></div>
+      <div class="tabs">${[['status','현황'],['add','참여자 추가·초대'],['sms','문자'],['settings','행사 설정'],['audit','이력']].map(([k,l]) => `<button data-tab="${k}" class="${tab === k ? 'on' : ''}">${l}</button>`).join('')}</div>
+      <div id="tabBody"></div>`;
+    document.getElementById('back').onclick = () => { history.replaceState(null, '', location.pathname); listView(); };
+    document.getElementById('copyCommon').onclick = () => copy(link);
+    $app.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { tab = b.dataset.tab; renderEvent(); });
+    ({ status: statusTab, add: addTab, sms: smsTab, settings: settingsTab, audit: auditTab })[tab]();
+  }
+  const copy = async t => { try { await navigator.clipboard.writeText(t); toast('복사했습니다'); } catch { prompt('복사하세요', t); } };
+  const body = () => document.getElementById('tabBody');
+
+  // ---------- status tab ----------
+  function statusTab() {
+    const c = s => regs.filter(r => r.status === s).length;
+    const attending = regs.filter(r => r.rsvp === 'attending').length;
+    const verifiedAmt = regs.filter(r => r.payment === 'verified').reduce((n, r) => n + (r.paid_amount || 0), 0);
+    const pendingAmt = ev.is_paid ? regs.filter(r => r.status === 'payment_pending').length * (ev.fee || 0) : 0;
+    const review = regs.filter(r => r.payment === 'flagged' || r.payment === 'claimed').length;
+    body().innerHTML = `<div class="stats">
+      ${[['초대 인원', regs.filter(r => r.source === 'host').length],['신청 인원', attending],['참여 확정', c('confirmed')],['입금 대기', c('payment_pending')],['대기자', c('waitlist')],['불참·취소', c('declined')],['기한 만료', c('expired')]].map(([l,v]) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`).join('')}
+      ${ev.is_paid ? `<div class="stat"><b>${won(verifiedAmt)}</b><span>입금 확인 금액</span></div><div class="stat"><b>${won(pendingAmt)}</b><span>미입금 예상 금액</span></div>` : ''}</div>
+      ${review ? `<div class="note">입금 확인 요청·확인 필요 ${review}건이 있습니다. 입금 내역과 대조해 처리해 주세요. 자동으로 만료되지 않습니다.</div>` : ''}
+      <div class="row" style="margin:18px 0 10px"><input id="q" placeholder="이름·연락처 검색" value="${esc(q)}" style="max-width:240px">
+        <select id="flt" style="max-width:200px"><option value="all">전체 상태</option>${Object.entries(STATUS).map(([k,[l]]) => `<option value="${k}" ${filter === k ? 'selected' : ''}>${l}</option>`).join('')}<option value="review" ${filter === 'review' ? 'selected' : ''}>입금 확인 필요</option></select>
+        <span class="grow"></span><button id="csv">CSV 다운로드</button></div>
+      <div class="tw"><table><thead><tr><th>이름</th><th>연락처</th><th>상태</th><th>입금</th><th>회차</th><th>입금자명</th><th>신청</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>`;
+    document.getElementById('q').oninput = e => { q = e.target.value; rows(); };
+    document.getElementById('flt').onchange = e => { filter = e.target.value; rows(); };
+    document.getElementById('csv').onclick = csv;
+    rows();
+  }
+  const sessLabel = r => (r.session_ids || []).map(id => (ev.sessions || []).find(s => s.id === id)?.label || id).join(', ') || '-';
+  function rows() {
+    const t = q.trim().toLowerCase();
+    const list = regs.filter(r => (filter === 'all' || (filter === 'review' ? ['flagged','claimed'].includes(r.payment) : r.status === filter)) && (!t || r.name.toLowerCase().includes(t) || r.phone.includes(t.replace(/\D/g,'') || '\u0000')));
+    document.getElementById('rows').innerHTML = list.map(r => {
+      const st = STATUS[r.status], paid = ev.is_paid && !r.fee_waived;
+      const payTxt = !ev.is_paid ? '무료' : r.fee_waived ? '면제' : (r.seat === 'held' || r.payment === 'verified') ? PAY[r.payment] + (r.payment_flag ? ` · ${FLAG[r.payment_flag]}` : '') : '-';
+      const payCls = r.payment === 'verified' ? 'ok' : (r.payment === 'flagged' ? 'bad' : r.payment === 'claimed' ? 'warn' : '');
+      return `<tr data-id="${r.id}"><td><b>${esc(r.name)}</b>${r.invited_at ? '' : (r.source === 'host' && r.rsvp === 'invited' ? '<div class="muted small">초대 미발송</div>' : '')}</td><td>${esc(r.phone)}</td>
+        <td><span class="pill ${st[1]}">${st[0]}</span></td><td><span class="pill ${payCls}">${esc(payTxt)}</span>${r.claimed_at && r.payment !== 'verified' ? `<div class="muted small">요청 ${esc(kst(r.claimed_at))}</div>` : ''}${r.payment === 'verified' ? `<div class="muted small">${esc(kst(r.verified_at))}</div>` : ''}${r.seat_held_until && r.payment === 'pending' ? `<div class="muted small">~${esc(kst(r.seat_held_until))}</div>` : ''}</td>
+        <td>${esc(sessLabel(r))}</td><td>${esc(r.depositor_name || '-')}</td><td class="small muted">${esc(kst(r.applied_at))}</td>
+        <td><div class="acts">
+          ${paid && r.status === 'payment_pending' ? `<button class="sm pri" data-a="verify">입금 확인</button><button class="sm" data-a="flag">확인 필요</button>` : ''}
+          ${paid && r.payment === 'verified' ? `<button class="sm" data-a="unverify">입금 확인 취소</button>` : ''}
+          ${ev.is_paid && !r.fee_waived && ['invited','payment_pending','waitlist'].includes(r.status) ? `<button class="sm" data-a="waive">참가비 면제</button>` : ''}
+          ${r.fee_waived ? `<button class="sm" data-a="unwaive">면제 취소</button>` : ''}
+          <button class="sm" data-a="link">개인 링크</button>
+          <button class="sm" data-a="sms">문자</button>
+          ${!['declined','expired'].includes(r.status) ? `<button class="sm danger" data-a="cancel">취소</button>` : ''}
+        </div></td></tr>`;
+    }).join('') || '<tr><td colspan="8" class="muted">해당하는 참여자가 없습니다.</td></tr>';
+    document.querySelectorAll('#rows [data-a]').forEach(b => b.onclick = () => rowAction(b.closest('tr').dataset.id, b.dataset.a));
+  }
+
+  async function rowAction(id, a) {
+    const r = regs.find(x => x.id === id);
+    if (a === 'link') return copy(`${base}/rsvp/?e=${ev.slug}&t=${r.token}`);
+    if (a === 'verify') return verifyDialog(r);
+    if (a === 'flag') return flagDialog(r);
+    if (a === 'unverify') { if (!confirm(`${r.name}님의 입금 확인을 취소할까요?\n이미 발송된 확정 문자는 회수되지 않습니다.`)) return;
+      await rpc('rsvp_admin_payment', { p_reg: id, p_action: 'unverify' }); toast('입금 확인을 취소했습니다'); return refresh(); }
+    if (a === 'waive') { if (!confirm(`${r.name}님의 참가비를 면제하고 참여를 확정할까요?${r.status === 'payment_pending' ? '\n확정 문자가 자동 발송됩니다.' : ''}`)) return;
+      await rpc('rsvp_admin_waive_fee', { p_reg: id, p_waive: true }); toast('참가비를 면제했습니다'); return refresh(); }
+    if (a === 'unwaive') { await rpc('rsvp_admin_waive_fee', { p_reg: id, p_waive: false }); return refresh(); }
+    if (a === 'cancel') { if (!confirm(`${r.name}님의 신청을 취소할까요? 자리가 해제되고 대기자가 있으면 자동으로 올라갑니다.`)) return;
+      await rpc('rsvp_admin_cancel', { p_reg: id }); toast('취소했습니다'); return refresh(); }
+    if (a === 'sms') return smsDialog(r);
+  }
+  function verifyDialog(r) {
+    $dlg.innerHTML = `<h2 style="margin-top:0">입금 확인 · ${esc(r.name)}</h2>
+      <p class="muted small">통장 내역을 확인한 뒤 누르세요. 확인하면 참여가 확정되고 확정 문자가 자동 발송됩니다. (신청자의 '입금했어요' 버튼은 확정 근거가 아닙니다)</p>
+      <label class="f">입금 금액 (참가비 ${won(ev.fee)})</label><input id="amt" type="number" value="${ev.fee ?? ''}">
+      <label class="f">통장에 찍힌 입금자명 (선택, 신청 시: ${esc(r.depositor_name || r.name)})</label><input id="seen" value="${esc(r.depositor_name || '')}">
+      <label class="f">메모 (선택)</label><input id="note">
+      <label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="force" style="width:auto"> 금액 부족·이름 불일치여도 확인 처리</label>
+      <div class="row" style="margin-top:16px"><button id="x">닫기</button><button class="pri" id="ok">입금 확인</button></div>`;
+    $dlg.showModal();
+    $dlg.querySelector('#x').onclick = () => $dlg.close();
+    $dlg.querySelector('#ok').onclick = async () => {
+      const res = await rpc('rsvp_admin_payment', { p_reg: r.id, p_action: 'verify', p_amount: +$dlg.querySelector('#amt').value || null, p_seen_name: $dlg.querySelector('#seen').value, p_note: $dlg.querySelector('#note').value || null, p_force: $dlg.querySelector('#force').checked });
+      $dlg.close();
+      if (res.flagged) toast(`${FLAG[res.flagged]}으로 확인 필요 처리했습니다. 확정되지 않았습니다.`, 5000);
+      else if (res.ok === false) toast(res.message, 5000); else toast('입금 확인 완료 · 확정 문자 예약됨');
+      refresh();
+    };
+  }
+  function flagDialog(r) {
+    $dlg.innerHTML = `<h2 style="margin-top:0">확인 필요 표시 · ${esc(r.name)}</h2><label class="f">사유</label><select id="fl">${Object.entries(FLAG).map(([k,l]) => `<option value="${k}">${l}</option>`).join('')}</select><label class="f">메모</label><input id="note"><div class="row" style="margin-top:16px"><button id="x">닫기</button><button class="pri" id="ok">표시</button></div>`;
+    $dlg.showModal(); $dlg.querySelector('#x').onclick = () => $dlg.close();
+    $dlg.querySelector('#ok').onclick = async () => { await rpc('rsvp_admin_payment', { p_reg: r.id, p_action: 'flag', p_flag: $dlg.querySelector('#fl').value, p_note: $dlg.querySelector('#note').value || null }); $dlg.close(); refresh(); };
+  }
+  function smsDialog(r) {
+    $dlg.innerHTML = `<h2 style="margin-top:0">문자 발송 · ${esc(r.name)}</h2><p class="muted small">발송 직전에 현재 상태를 다시 확인하며, 조건이 맞지 않으면 건너뜁니다. 행사의 '실발송'이 꺼져 있으면 기록만 남습니다.</p>
+      <label class="f">종류</label><select id="k">${Object.entries(KINDS).map(([k,l]) => `<option value="${k}">${l}</option>`).join('')}</select><button id="pv" class="sm" style="margin-top:10px">미리보기</button><pre class="sms hidden" id="pre"></pre>
+      <div class="row" style="margin-top:16px"><button id="x">닫기</button><button class="pri" id="ok">발송 예약</button></div>`;
+    $dlg.showModal(); $dlg.querySelector('#x').onclick = () => $dlg.close();
+    $dlg.querySelector('#pv').onclick = async () => { const t = await rpc('rsvp_admin_preview_sms', { p_event: ev.id, p_kind: $dlg.querySelector('#k').value, p_reg: r.id }); const pre = $dlg.querySelector('#pre'); pre.textContent = t; pre.classList.remove('hidden'); };
+    $dlg.querySelector('#ok').onclick = async () => { await rpc('rsvp_admin_enqueue', { p_reg: r.id, p_kind: $dlg.querySelector('#k').value }); $dlg.close(); toast('예약했습니다 (5분 이내 처리)'); refresh(); };
+  }
+  function csv() {
+    const cdefs = ev.consent_defs || [];
+    const head = ['이름','연락처','상태','입금상태','입금자명','회차','참가비면제','입금확인금액','입금확인시각','신청시각','확정시각', ...(ev.extra_questions || []).map(x => x.label), ...cdefs.map(c => '동의:' + c.label)];
+    const cell = v => { v = String(v ?? ''); if (/^[=+\-@\t\r]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; };
+    const lines = regs.map(r => [r.name, r.phone, STATUS[r.status][0], PAY[r.payment] + (r.payment_flag ? '/' + FLAG[r.payment_flag] : ''), r.depositor_name, sessLabel(r), r.fee_waived ? 'Y' : '', r.paid_amount, r.verified_at ? kst(r.verified_at) : '', r.applied_at ? kst(r.applied_at) : '', r.confirmed_at ? kst(r.confirmed_at) : '',
+      ...(ev.extra_questions || []).map(x => r.answers?.[x.id] || ''), ...cdefs.map(c => r.consents?.[c.key]?.accepted ? `동의(${r.consents[c.key].version})` : '미동의')].map(cell).join(','));
+    const blob = new Blob(['﻿' + [head.map(cell).join(','), ...lines].join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${ev.slug}-participants.csv`; a.click(); URL.revokeObjectURL(a.href);
+  }
+
+  // ---------- add / invite ----------
+  function addTab() {
+    const noInvite = regs.filter(r => r.rsvp === 'invited' && !r.invited_at && r.source === 'host').length;
+    body().innerHTML = `<div class="card"><h2 style="margin-top:0">명단 등록</h2>
+      <p class="muted small">한 줄에 한 명: <code>이름, 연락처</code> (엑셀에서 복사해도 됩니다). 참가비를 면제할 게스트는 줄 끝에 <code>, 면제</code>를 붙이세요. 이미 등록된 번호는 건너뜁니다.</p>
+      <textarea id="bulk" placeholder="홍길동, 010-1234-5678&#10;김초대, 010-2222-3333, 면제" style="min-height:140px"></textarea>
+      <div class="row" style="margin-top:10px"><button class="pri" id="addBtn">등록</button></div><div id="addRes" class="small" style="margin-top:10px"></div></div>
+      <div class="card" style="margin-top:16px"><h2 style="margin-top:0">초대 문자 발송</h2>
+      <p class="muted small">아직 초대 문자를 받지 않은 미응답자 <b>${noInvite}</b>명. 행사 상태가 '접수 중'이어야 발송됩니다. 실발송이 꺼져 있으면 기록만 남고 실제로 보내지 않습니다.</p>
+      <div class="row"><button id="prevInv">문구 미리보기</button><button class="pri" id="sendInv" ${noInvite ? '' : 'disabled'}>미발송 ${noInvite}명에게 초대 문자 예약</button></div><pre class="sms hidden" id="pre"></pre></div>
+      <div class="card" style="margin-top:16px"><h2 style="margin-top:0">링크</h2>
+      <p class="muted small">공통 링크는 이름·연락처를 직접 입력해 신청합니다${ev.allow_open_signup ? '' : ' (현재 꺼짐: 행사 설정에서 공통 신청을 끈 상태)'}. 개인 링크는 참여자 목록의 '개인 링크' 버튼으로 복사합니다.</p></div>`;
+    document.getElementById('addBtn').onclick = async () => {
+      const rowsIn = document.getElementById('bulk').value.split('\n').map(l => l.trim()).filter(Boolean).map(l => { const p = l.split(/[,\t]/).map(s => s.trim()); return { name: p[0], phone: p[1], waive_fee: /면제|free|y/i.test(p[2] || '') }; });
+      if (!rowsIn.length) return;
+      const res = await rpc('rsvp_admin_add_registrations', { p_event: ev.id, p_rows: rowsIn });
+      document.getElementById('addRes').innerHTML = `등록 ${res.added}명${res.duplicates.length ? ` · 중복 ${res.duplicates.length}명(${res.duplicates.map(d => esc(d.name)).join(', ')})` : ''}${res.invalid.length ? ` · <span style="color:#ffb3a3">형식 오류 ${res.invalid.length}건(${res.invalid.map(d => esc(d.name || '?')).join(', ')})</span>` : ''}`;
+      const { data } = await sb.from('rsvp_registrations').select('*').eq('event_id', ev.id).order('created_at'); regs = data || regs;
+    };
+    document.getElementById('prevInv').onclick = async () => { const t = await rpc('rsvp_admin_preview_sms', { p_event: ev.id, p_kind: 'invite' }); const pre = document.getElementById('pre'); pre.textContent = t; pre.classList.remove('hidden'); };
+    document.getElementById('sendInv').onclick = async () => {
+      if (!confirm(`${noInvite}명에게 초대 문자를 예약합니다.${ev.sms_live ? '\n실발송이 켜져 있어 실제로 발송됩니다.' : '\n실발송이 꺼져 있어 기록만 남습니다.'}`)) return;
+      const n = await rpc('rsvp_admin_send_invites', { p_event: ev.id, p_ids: null, p_resend: false }); toast(`${n}명 예약됨 (5분 이내 처리)`); refresh();
+    };
+  }
+
+  // ---------- sms tab ----------
+  async function smsTab() {
+    const targets = ev.is_paid ? await rpc('rsvp_admin_reminder_targets', { p_event: ev.id }) : 0;
+    const sched = (ev.reminder_offsets || []).map(d => { const day = new Date(new Date(ev.starts_at).getTime() + 9*3600e3); day.setUTCDate(day.getUTCDate() - d); return `${day.getUTCFullYear()}.${p2(day.getUTCMonth()+1)}.${p2(day.getUTCDate())} ${p2(ev.reminder_hour)}:00 (D-${d})`; });
+    body().innerHTML = `
+      <div class="note ${ev.sms_live ? 'red' : ''}">${ev.sms_live ? '<b>실발송이 켜져 있습니다.</b> 서버 설정(SMS_MODE=live)과 업체 키가 갖춰져 있을 때만 실제 문자가 나갑니다.' : '<b>테스트 모드</b>입니다. 문구와 대상은 이력에 기록되지만 실제로 발송되지 않습니다.'}
+        <div class="row" style="margin-top:8px"><button id="live" class="${ev.sms_live ? '' : 'pri'}">${ev.sms_live ? '실발송 끄기' : '대상·문구 확인 후 실발송 켜기'}</button></div></div>
+      <h2>자동 문자 문구</h2>
+      <p class="muted small">치환어: {이름} {행사명} {일시} {장소} {참가비} {계좌} {입금기한} {준비물} {문의} {링크} · 90바이트(한글 약 45자)를 넘으면 LMS로 발송되어 단가가 올라갑니다.</p>
+      ${Object.entries(KINDS).map(([k,l]) => `<label class="f">${l}${k === 'received' ? ' — 참여 확정이 아님을 명시' : ''}</label><textarea data-tpl="${k}">${esc(ev.sms_templates?.[k] || '')}</textarea><div class="row"><button class="sm" data-pv="${k}">미리보기</button></div><pre class="sms hidden" data-pre="${k}"></pre>`).join('')}
+      <div class="row" style="margin-top:14px"><button class="pri" id="saveTpl">문구 저장</button></div>
+      <h2>미입금 안내 자동 발송</h2>
+      <div class="card"><div class="grid">
+        <div><label class="f">자동 발송</label><select id="rEn"><option value="1" ${ev.reminder_enabled ? 'selected' : ''}>켜기</option><option value="0" ${ev.reminder_enabled ? '' : 'selected'}>끄기</option></select></div>
+        <div><label class="f">행사 며칠 전 (쉼표로 구분)</label><input id="rOff" value="${esc((ev.reminder_offsets || []).join(', '))}"></div>
+        <div><label class="f">발송 시각 (한국 시간, 시)</label><input id="rHr" type="number" min="0" max="23" value="${ev.reminder_hour}"></div>
+        <div><label class="f">문자 간 최소 간격 (분)</label><input id="rGap" type="number" min="0" value="${ev.min_sms_gap_minutes}"></div></div>
+        <p class="small muted" style="margin-top:12px">예정: ${ev.reminder_enabled ? esc(sched.join(' / ')) : '자동 발송 꺼짐'}<br>
+        현재 대상(입금 대기·기한 남음): <b>${targets}명</b> — 입금 확인 요청·확인 필요 상태와 확정·면제·불참·대기자·만료는 제외됩니다. 정해진 시각 이후에 신청한 사람은 그 회차를 건너뛰고 다음 회차부터 받습니다.</p>
+        <div class="row" style="margin-top:10px"><button class="pri" id="saveRem">저장</button></div></div>
+      <h2>발송 이력</h2>
+      <div class="tw"><table><thead><tr><th>예약 시각</th><th>대상</th><th>종류</th><th>회차</th><th>상태</th><th>비고</th><th></th></tr></thead><tbody>
+      ${outbox.map(o => { const s = OUT[o.status]; return `<tr><td class="small">${esc(kst(o.sent_at || o.scheduled_at))}</td><td>${esc(o.rsvp_registrations?.name || '-')}</td><td>${KINDS[o.kind]}</td><td class="small muted">${esc(o.slot)}</td><td><span class="pill ${s[1]}">${s[0]}</span></td>
+        <td class="small muted">${esc(o.skip_reason || o.last_error || '')}${o.attempts > 1 ? ` · 시도 ${o.attempts}회` : ''}</td><td>${['failed','skipped'].includes(o.status) ? `<button class="sm" data-retry="${o.id}">재시도</button>` : ''}</td></tr>`; }).join('') || '<tr><td colspan="7" class="muted">이력이 없습니다.</td></tr>'}
+      </tbody></table></div>`;
+    document.getElementById('live').onclick = async () => {
+      if (!ev.sms_live) { if (!confirm(`실발송을 켭니다.\n\n· 문구 6종과 대상(미응답/입금 대기 ${targets}명)을 확인하셨나요?\n· 켜는 즉시 초대·접수·확정 문자가 실제 번호로 나갑니다.`)) return; }
+      await rpc('rsvp_admin_set_sms_live', { p_event: ev.id, p_live: !ev.sms_live }); await refresh();
+    };
+    const getTpls = () => Object.fromEntries([...document.querySelectorAll('[data-tpl]')].map(t => [t.dataset.tpl, t.value]));
+    document.querySelectorAll('[data-pv]').forEach(b => b.onclick = async () => { const k = b.dataset.pv; const t = await rpc('rsvp_admin_preview_sms', { p_event: ev.id, p_kind: k, p_template: getTpls()[k] }); const pre = document.querySelector(`[data-pre="${k}"]`); pre.textContent = t; pre.classList.remove('hidden'); });
+    document.getElementById('saveTpl').onclick = async () => { const { error } = await sb.from('rsvp_events').update({ sms_templates: getTpls() }).eq('id', ev.id); toast(error ? error.message : '문구를 저장했습니다'); if (!error) refresh(); };
+    document.getElementById('saveRem').onclick = async () => {
+      const offs = document.getElementById('rOff').value.split(',').map(s => parseInt(s, 10)).filter(n => n >= 0 && n <= 60);
+      const { error } = await sb.from('rsvp_events').update({ reminder_enabled: document.getElementById('rEn').value === '1', reminder_offsets: offs, reminder_hour: +document.getElementById('rHr').value, min_sms_gap_minutes: +document.getElementById('rGap').value }).eq('id', ev.id);
+      toast(error ? error.message : '저장했습니다'); if (!error) refresh();
+    };
+    document.querySelectorAll('[data-retry]').forEach(b => b.onclick = async () => { await rpc('rsvp_admin_retry', { p_outbox: b.dataset.retry }); toast('재시도 예약됨'); refresh(); });
+  }
+
+  // ---------- settings tab ----------
+  const sessToText = ss => (ss || []).map(s => [s.label, toLocalInput(s.starts_at).replace('T', ' '), s.capacity ?? ''].join(' | ')).join('\n');
+  const qToText = qs => (qs || []).map(x => [x.label, x.type, x.required ? 'Y' : '', (x.options || []).join(',')].join(' | ')).join('\n');
+  function settingsTab() {
+    const v = k => esc(ev[k] ?? ''), dt = k => toLocalInput(ev[k]);
+    const cons = ev.consent_defs || [];
+    body().innerHTML = `<div class="card"><div class="grid">
+      <div><label class="f">행사명</label><input id="title" value="${v('title')}"></div>
+      <div><label class="f">주소 (/rsvp/?e=…)</label><input id="slug" value="${v('slug')}" ${ev.status !== 'draft' ? 'disabled' : ''}></div>
+      <div><label class="f">상태</label><select id="status">${[['draft','작성 중 (비공개)'],['open','접수 중'],['closed','마감'],['cancelled','취소']].map(([k,l]) => `<option value="${k}" ${ev.status === k ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+      <div><label class="f">공통 링크 신청</label><select id="open"><option value="1" ${ev.allow_open_signup ? 'selected' : ''}>허용</option><option value="0" ${ev.allow_open_signup ? '' : 'selected'}>개인 초대 링크만</option></select></div>
+      <div><label class="f">대표 이미지 URL</label><input id="hero_image" value="${v('hero_image')}"></div>
+      <div><label class="f">주최</label><input id="hosts" value="${v('hosts')}"></div>
+      <div><label class="f">협업 브랜드</label><input id="partners" value="${v('partners')}"></div>
+      <div><label class="f">시작 (한국 시간)</label><input id="starts_at" type="datetime-local" value="${dt('starts_at')}"></div>
+      <div><label class="f">종료</label><input id="ends_at" type="datetime-local" value="${dt('ends_at')}"></div>
+      <div><label class="f">장소</label><input id="venue" value="${v('venue')}"></div>
+      <div><label class="f">지도 링크</label><input id="map_url" value="${v('map_url')}"></div>
+      <div><label class="f">정원 (비우면 무제한)</label><input id="capacity" type="number" min="0" value="${v('capacity')}"></div>
+      <div><label class="f">신청 마감</label><input id="apply_deadline" type="datetime-local" value="${dt('apply_deadline')}"></div>
+      <div><label class="f">문의 연락처</label><input id="contact" value="${v('contact')}"></div></div>
+      <label class="f">소개</label><textarea id="intro">${v('intro')}</textarea>
+      <label class="f">프로그램 · 회차 (한 줄에 하나: 이름 | 2026-11-07 14:00 | 회차 정원(선택)) — 순서를 바꾸면 기존 신청의 회차가 어긋날 수 있으니 신청 후에는 끝에만 추가하세요</label><textarea id="sessions">${esc(sessToText(ev.sessions))}</textarea>
+      <label class="f">준비물</label><textarea id="prep">${v('prep')}</textarea>
+      <label class="f">참여 안내</label><textarea id="guide">${v('guide')}</textarea>
+      <label class="f">취소 · 환불 안내</label><textarea id="refund_policy">${v('refund_policy')}</textarea>
+      <label class="f">추가 질문 (한 줄에 하나: 질문 | text/select/checkbox | 필수는 Y | 선택지(쉼표))</label><textarea id="questions">${esc(qToText(ev.extra_questions))}</textarea></div>
+      <h2>참가비 · 입금</h2><div class="card"><div class="grid">
+      <div><label class="f">구분</label><select id="is_paid"><option value="0" ${ev.is_paid ? '' : 'selected'}>무료</option><option value="1" ${ev.is_paid ? 'selected' : ''}>유료</option></select></div>
+      <div><label class="f">참가비 (원)</label><input id="fee" type="number" min="0" value="${v('fee')}"></div>
+      <div><label class="f">은행</label><input id="bank_name" value="${v('bank_name')}"></div>
+      <div><label class="f">계좌번호</label><input id="bank_account" value="${v('bank_account')}"></div>
+      <div><label class="f">예금주</label><input id="account_holder" value="${v('account_holder')}"></div>
+      <div><label class="f">입금 기한</label><input id="payment_deadline" type="datetime-local" value="${dt('payment_deadline')}"></div>
+      <div><label class="f">입금 대기자 자리 확보 시간 (신청 후 N시간, 비우면 기한까지)</label><input id="hold_hours" type="number" min="1" value="${v('hold_hours')}"></div>
+      <div><label class="f">기한이 지나면</label><select id="on_deadline"><option value="expire" ${ev.on_deadline === 'expire' ? 'selected' : ''}>미입금 자리 자동 해제 · 대기자 승급</option><option value="manual" ${ev.on_deadline === 'manual' ? 'selected' : ''}>자동 해제 없이 운영자가 처리</option></select></div></div>
+      <div class="note">입금 확인은 운영자가 '입금 확인' 버튼을 눌러야 합니다. 결제(PG)·가상계좌 연동은 아직 붙어 있지 않아 자동 입금 확인은 되지 않습니다. 신청자의 '입금했어요'는 확인 요청으로만 기록됩니다.</div></div>
+      <h2>동의 문구</h2><div class="card"><p class="muted small">필수/선택을 구분해 따로 받습니다. 선택 동의를 거절해도 신청할 수 있습니다. 본문을 고치면 버전이 올라가고, 신청자별로 동의한 버전·내용 해시·시각이 기록됩니다. 기본 문구는 초안이므로 법률 검토 후 사용하세요.</p>
+      <div id="consents">${cons.map((c, i) => `<div class="card" style="margin-top:10px" data-ci="${i}"><div class="grid"><div><label class="f">항목 이름</label><input data-f="label" value="${esc(c.label)}"></div><div><label class="f">구분</label><select data-f="required"><option value="1" ${c.required ? 'selected' : ''}>필수</option><option value="0" ${c.required ? '' : 'selected'}>선택</option></select></div></div><label class="f">내용 (현재 ${esc(c.version)})</label><textarea data-f="body">${esc(c.body)}</textarea><input type="hidden" data-f="key" value="${esc(c.key)}"></div>`).join('')}</div></div>
+      <div class="row" style="margin-top:16px"><button class="pri" id="save">저장</button><span class="muted small">저장하면 공개 페이지에 바로 반영됩니다.</span></div>`;
+    document.getElementById('save').onclick = saveSettings;
+  }
+  async function saveSettings() {
+    const g = id => document.getElementById(id).value.trim(), n = id => g(id) === '' ? null : +g(id), t = id => g(id) || null;
+    const sessions = g('sessions').split('\n').map(l => l.trim()).filter(Boolean).map((l, i) => { const [label, when, cap] = l.split('|').map(s => s.trim()); return { id: 's' + (i + 1), label, starts_at: when ? fromLocalInput(when.replace(' ', 'T')) : null, capacity: cap ? +cap : null }; });
+    const extra = g('questions').split('\n').map(l => l.trim()).filter(Boolean).map((l, i) => { const [label, type, req, opts] = l.split('|').map(s => s.trim()); return { id: 'q' + (i + 1), label, type: ['text','select','checkbox'].includes(type) ? type : 'text', required: /^y/i.test(req || ''), options: opts ? opts.split(',').map(s => s.trim()).filter(Boolean) : [] }; });
+    const old = ev.consent_defs || [];
+    const consents = [...document.querySelectorAll('[data-ci]')].map((el, i) => { const o = old[i], f = k => el.querySelector(`[data-f=${k}]`).value, bodyNew = f('body');
+      const ver = o && o.body === bodyNew && o.label === f('label') ? o.version : 'v' + ((parseInt((o?.version || 'v0').slice(1), 10) || 0) + 1);
+      return { key: f('key'), label: f('label'), required: f('required') === '1', body: bodyNew, version: ver }; });
+    const row = { title: g('title'), status: g('status'), allow_open_signup: g('open') === '1', hero_image: t('hero_image'), hosts: t('hosts'), partners: t('partners'),
+      starts_at: fromLocalInput(g('starts_at')), ends_at: fromLocalInput(g('ends_at')), venue: t('venue'), map_url: t('map_url'), capacity: n('capacity'), apply_deadline: fromLocalInput(g('apply_deadline')), contact: t('contact'),
+      intro: t('intro'), sessions, prep: t('prep'), guide: t('guide'), refund_policy: t('refund_policy'), extra_questions: extra,
+      is_paid: g('is_paid') === '1', fee: n('fee'), bank_name: t('bank_name'), bank_account: t('bank_account'), account_holder: t('account_holder'),
+      payment_deadline: fromLocalInput(g('payment_deadline')), hold_hours: n('hold_hours'), on_deadline: g('on_deadline'), consent_defs: consents };
+    if (ev.status === 'draft') row.slug = g('slug');
+    if (row.is_paid && (!row.fee || !row.bank_account)) return toast('유료 행사는 참가비와 계좌를 입력하세요', 4000);
+    if (row.status === 'open' && ev.status !== 'open' && !confirm('접수 중으로 바꾸면 링크를 아는 누구나 신청할 수 있습니다. 계속할까요?')) return;
+    if (row.status === 'cancelled' && ev.status !== 'cancelled' && !confirm('행사를 취소하면 예약된 안내 문자가 모두 취소됩니다. 계속할까요?')) return;
+    const { error } = await sb.from('rsvp_events').update(row).eq('id', ev.id);
+    if (error) return toast(error.message, 5000);
+    toast('저장했습니다'); await refresh();
+  }
+
+  // ---------- audit ----------
+  function auditTab() {
+    body().innerHTML = `<div class="tw"><table><thead><tr><th>시각</th><th>대상</th><th>내용</th><th>세부</th></tr></thead><tbody>
+      ${audit.map(a => `<tr><td class="small">${esc(kst(a.at))}</td><td>${esc(a.rsvp_registrations?.name || '-')}</td><td>${esc(AUDIT[a.action] || a.action)}${a.actor ? '' : ' <span class="muted small">(참여자/시스템)</span>'}</td><td class="small muted">${esc(a.detail ? JSON.stringify(a.detail) : '')}</td></tr>`).join('') || '<tr><td colspan="4" class="muted">이력이 없습니다.</td></tr>'}
+      </tbody></table></div>`;
+  }
+
+  sb.auth.onAuthStateChange((evt) => { if (evt === 'SIGNED_IN' && !me) boot(); });
+  boot();
+})();
+</script>
+</body>
+</html>

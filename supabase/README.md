@@ -1,0 +1,70 @@
+# S2:U RSVP · 입금 확인 · 자동 문자
+
+홈페이지(GitHub Pages)는 서버가 없는 정적 사이트라서 신청·정원·입금 상태·예약 문자는 **Supabase**에서 처리합니다.
+이 저장소는 공개이므로 `rsvp/config.js`에는 공개용 anon 키만 넣고, 문자 업체 키·service_role 키는 Supabase Secrets에만 둡니다.
+
+| 파일 | 역할 |
+|---|---|
+| `rsvp/index.html` | 참여자용 초대·신청 페이지 (`/rsvp/?e=<주소>` 공통 링크, `&t=<토큰>` 개인 링크) |
+| `admin/index.html` | 운영·호스트 화면 (`/admin/`, 이메일 로그인 링크) |
+| `supabase/migrations/0001_rsvp.sql` | 테이블, 정원 잠금, 상태 계산, 문자 예약·발송 로직, RLS 권한 |
+| `supabase/functions/sms-dispatch` | 5분마다 실행되어 예약 문자를 처리하는 Edge Function |
+| `supabase/functions/_shared/sms.ts` | 문자 업체 어댑터 (Solapi, 개발용 console) |
+
+## 설정 순서 (직접 해주셔야 하는 부분)
+
+1. **Supabase 프로젝트 생성** (supabase.com, 리전은 Seoul 권장).
+2. **DB 적용**: SQL Editor에 `migrations/0001_rsvp.sql` 전체를 붙여 실행.
+3. **Auth 설정** (Authentication → Providers/URL):
+   - Site URL: `https://sustaintoyou.com`, Redirect URLs에 `https://sustaintoyou.com/admin/` 추가.
+   - 첫 로그인을 마친 뒤 **Allow new users to sign up 끄기**. 이후 담당자는 Dashboard → Authentication → Users → Invite user로 추가합니다. (가입해도 `rsvp_staff`에 없으면 아무 데이터도 볼 수 없지만, 불필요한 계정을 막기 위함)
+4. **첫 관리자 지정**: `/admin/`에서 본인 이메일로 로그인 링크를 받아 한 번 로그인한 뒤 SQL Editor에서
+   ```sql
+   insert into rsvp_staff (user_id, role, name)
+   select id, 'admin', '대표' from auth.users where email = 'you@example.com';
+   ```
+5. **사이트 연결**: Project Settings → API의 `Project URL`과 `anon public` 키를 `rsvp/config.js`에 넣고 커밋·푸시. (`service_role` 키는 절대 넣지 않음)
+6. **Edge Function 배포** (Supabase CLI 필요, 이 PC에는 아직 없음):
+   ```bash
+   supabase functions deploy sms-dispatch --no-verify-jwt
+   supabase secrets set CRON_SECRET=<긴 임의 문자열> SMS_MODE=test SMS_PROVIDER=solapi
+   ```
+   `--no-verify-jwt`는 함수가 `x-cron-secret` 헤더로 자체 인증하기 때문입니다.
+7. **5분 주기 실행** (SQL Editor, `<ref>`와 시크릿을 채워서):
+   ```sql
+   create extension if not exists pg_cron;
+   create extension if not exists pg_net;
+   select cron.schedule('rsvp-dispatch', '*/5 * * * *', $$
+     select net.http_post(
+       url := 'https://<ref>.supabase.co/functions/v1/sms-dispatch',
+       headers := jsonb_build_object('x-cron-secret', '<CRON_SECRET>'),
+       body := '{}'::jsonb) $$);
+   ```
+8. **담당자 권한**: 행사 담당자는 로그인 후 관리자가 `select rsvp_admin_grant('host@example.com', '<행사 id>');`로 행사별 권한을 부여합니다. 담당자는 배정된 행사만 보입니다(RLS).
+
+## 실제 문자 발송을 켜기까지 (모두 만족해야 발송됨)
+
+1. Solapi 가입, 발신번호 등록(통신사 인증), 충전.
+2. `supabase secrets set SMS_MODE=live SOLAPI_API_KEY=… SOLAPI_API_SECRET=… SMS_FROM=<등록한 발신번호>`
+3. 운영 화면 → 해당 행사 → 문자 탭에서 문구·대상 확인 후 **실발송 켜기** (행사별).
+
+셋 중 하나라도 빠지면 문자는 만들어져 이력에 `테스트 기록 (미발송)`으로만 남습니다.
+처음에는 본인 번호만 등록한 행사로 초대 → 신청 → 입금 확인 → 확정 문자까지 한 번 돌려 보세요.
+
+## 동작 규칙 요약
+
+- **확정 조건**: 참여 신청 + 필수 동의 + 자리 확보 + (무료 | 참가비 면제 | 운영자 입금 확인). 신청자의 "입금했어요"는 `입금 확인 요청`으로만 기록됩니다.
+- **정원**: 신청·취소·만료 처리는 행사 행을 잠근 뒤 진행해 동시 신청에도 정원을 넘지 않습니다. 입금 대기자 자리는 `입금 기한`과 `확보 시간(N시간)` 중 이른 시점까지 유지되고, 이후 자동 해제되어 대기자가 순서대로 올라옵니다. 단 `입금 확인 요청`·`확인 필요` 상태는 운영자 검토 대상이라 자동 해제하지 않습니다.
+- **미입금 안내**: 기본 D-3·D-2·D-1 오전 10시(KST). 5분마다 "지금 보낼 회차가 있는지"를 계산하므로 행사 일정을 바꾸면 자동으로 새 일정이 반영됩니다. 정해진 시각 이후에 신청한 사람은 그 회차를 건너뛰고, 서버가 멈췄다가 돌아와도 3시간이 지난 회차는 보내지 않습니다. 접수 안내와의 최소 간격(기본 6시간) 안이면 그 회차는 건너뜁니다.
+- **발송 안전장치**: 동일 행사·참여자·종류·회차는 `dedupe_key`로 중복 방지, 발송 직전 최신 상태 재확인, 실패 시 5·15·60분 간격 재시도 후 `failed`, 운영 화면에서 수동 재시도.
+- **`업체 접수`는 수신 보장이 아닙니다.** 이력의 `sent`는 문자 업체가 요청을 받았다는 뜻이며, 단말기 도착 여부(수신 결과)는 아직 조회하지 않습니다.
+
+## 아직 검증하지 못했거나 구현하지 않은 것
+
+- 실제 Supabase 프로젝트에 올려 본 적이 없습니다. SQL은 문법 검사만 했고(트리거 함수 4개는 검사 도구 한계로 눈으로만 검토), 화면은 가짜 응답으로 렌더링만 확인했습니다. 첫 배포 후 위 순서로 종단 테스트가 필요합니다.
+- Solapi 연동 코드는 공개 문서 기준으로 작성했고 실제 계정으로 호출해 보지 않았습니다.
+- **결제(PG)·가상계좌 자동 입금 확인은 없습니다.** `rsvp_admin_payment`를 호출하는 입금 확인 웹훅을 추가하면 같은 흐름으로 확장할 수 있습니다.
+- 스팸·봇 방어는 허니팟뿐입니다. 공통 링크를 SNS에 공개하면 Cloudflare Turnstile 같은 캡차를 추가하세요.
+- 신청 확인 링크(토큰)는 평문으로 DB에 저장됩니다(전화번호와 같은 수준으로 보호됨). 문자로 받은 링크를 가진 사람은 그 신청을 보고 고칠 수 있습니다.
+- 동의 문구 기본값은 초안입니다. 개인정보 보유기간·위탁(문자 업체) 고지 등은 법률 검토 후 수정하세요. 광고성 문자 발송 동의(선택)는 기록만 하며 이 시스템은 광고성 문자를 보내지 않습니다.
+- 요청서의 "8. 구현 우선순위" 이후 내용이 붙여넣기에서 잘려 있어 반영하지 못했습니다.
