@@ -245,6 +245,23 @@
 
   .join-pay-btn.deduct{position:relative;}
   .join-pay-btn.deduct:disabled{opacity:0.4; pointer-events:none;}
+
+  /* booking modal (Google Form intake) */
+  .bk-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; padding:20px; z-index:1000;}
+  .bk-overlay.show{display:flex;}
+  .bk-box{background:var(--black-2); border:1px solid var(--line-strong); border-radius:16px; padding:28px; width:100%; max-width:420px; max-height:90vh; overflow:auto;}
+  .bk-title{font-family:'Bebas Neue'; font-size:26px; letter-spacing:0.03em; margin-bottom:4px;}
+  .bk-sub{font-size:13px; color:var(--bone-dim); margin-bottom:18px;}
+  .bk-box label{display:block; font-size:11px; letter-spacing:0.1em; color:var(--bone-dim); margin:12px 0 6px;}
+  .bk-box input[type=text], .bk-box input[type=tel]{width:100%; background:transparent; border:1px solid var(--line-strong); color:var(--bone); border-radius:10px; padding:12px 14px; font-size:15px; font-family:inherit;}
+  .bk-consent{display:flex; gap:10px; align-items:flex-start; margin-top:16px; font-size:12px; line-height:1.6; color:var(--bone-dim);}
+  .bk-consent input{margin-top:3px;}
+  .bk-consent a{color:var(--bone); text-decoration:underline;}
+  .bk-actions{display:flex; gap:10px; margin-top:20px;}
+  .bk-actions button{flex:1; padding:13px; border-radius:999px; font-family:'Bebas Neue'; font-size:16px; letter-spacing:0.04em; cursor:pointer;}
+  .bk-cancel{background:transparent; border:1px solid var(--line); color:var(--bone);}
+  .bk-submit{background:var(--bone); border:none; color:var(--off-black);}
+  .bk-submit:disabled{opacity:0.5; cursor:default;}
   .toast{
     position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(20px);
     background:var(--bone); color:var(--off-black); padding:14px 24px; border-radius:999px;
@@ -1518,12 +1535,71 @@
       window.open(MONTHLY_URL, '_blank', 'noopener');
       return;
     }
+    if(bookingOn()){
+      bkSession = btn.dataset.session;
+      document.getElementById('bkTitle').textContent = bkSession;
+      bkOverlay.classList.add('show');
+      return;
+    }
     sessionBalance -= 1;
     balanceNum.textContent = sessionBalance;
     showToast(`${btn.dataset.session} 예약 완료 · 잔여 ${sessionBalance}회`);
     if(sessionBalance === 0){
       document.querySelectorAll('.join-pay-btn.deduct').forEach(b => { b.disabled = true; b.querySelector('span').textContent = '잔여 없음'; });
     }
+  });
+
+  // ---- booking intake -> Google Form (fill in after creating the form; empty = feature off) ----
+  // FORM_ACTION: the form's "formResponse" URL. ENTRY_*: field ids ("entry.123456789") from the pre-filled link.
+  const BOOKING_FORM = {
+    action: '',
+    name: '', phone: '', session: '', consent: ''
+  };
+  const bookingOn = () => BOOKING_FORM.action && BOOKING_FORM.name && BOOKING_FORM.phone && BOOKING_FORM.session && BOOKING_FORM.consent;
+  const bkOverlay = document.createElement('div');
+  bkOverlay.className = 'bk-overlay';
+  bkOverlay.innerHTML = `
+    <form class="bk-box" id="bkForm" autocomplete="on">
+      <div class="bk-title display" id="bkTitle"></div>
+      <div class="bk-sub">예약 확인을 위해 아래 정보를 남겨주세요.</div>
+      <label for="bkName">이름</label>
+      <input type="text" id="bkName" name="name" required maxlength="30" autocomplete="name">
+      <label for="bkPhone">연락처</label>
+      <input type="tel" id="bkPhone" name="phone" required maxlength="20" placeholder="010-0000-0000" autocomplete="tel">
+      <label class="bk-consent"><input type="checkbox" id="bkConsent" required>
+        <span>[필수] 개인정보 수집·이용에 동의합니다. 수집 항목: 이름, 연락처 / 목적: 예약 확인, 재방문 분석, 프로그램 안내 / 보유 기간: 수집일로부터 1년 후 파기. 자세한 내용은 <a href="terms.html" target="_blank" rel="noopener">약관</a>을 확인하세요.</span></label>
+      <div class="bk-actions">
+        <button type="button" class="bk-cancel" id="bkCancel">취소</button>
+        <button type="submit" class="bk-submit" id="bkSubmit">예약하기</button>
+      </div>
+    </form>`;
+  document.body.appendChild(bkOverlay);
+  let bkSession = null;
+  const bkClose = () => { bkOverlay.classList.remove('show'); bkSession = null; };
+  document.getElementById('bkCancel').addEventListener('click', bkClose);
+  bkOverlay.addEventListener('click', (ev) => { if(ev.target === bkOverlay) bkClose(); });
+  document.getElementById('bkForm').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const submit = document.getElementById('bkSubmit');
+    submit.disabled = true;
+    const data = new URLSearchParams();
+    data.append(BOOKING_FORM.name, document.getElementById('bkName').value.trim());
+    data.append(BOOKING_FORM.phone, document.getElementById('bkPhone').value.trim());
+    data.append(BOOKING_FORM.session, bkSession);
+    data.append(BOOKING_FORM.consent, '동의함');
+    try {
+      // no-cors: Google Forms does not send CORS headers; the response is opaque, so success = request sent.
+      await fetch(BOOKING_FORM.action, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:data.toString()});
+      const name = bkSession;
+      bkClose();
+      document.getElementById('bkForm').reset();
+      sessionBalance -= 1;
+      balanceNum.textContent = sessionBalance;
+      showToast(`${name} 예약 신청 완료`);
+    } catch(e) {
+      showToast('전송에 실패했어요 — 잠시 후 다시 시도해주세요');
+    }
+    submit.disabled = false;
   });
   document.getElementById('joinFilter').addEventListener('click', (ev) => {
     const btn = ev.target.closest('.filter-btn');
