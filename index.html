@@ -1552,8 +1552,8 @@
   // ---- booking intake -> Google Form (fill in after creating the form; empty = feature off) ----
   // FORM_ACTION: the form's "formResponse" URL. ENTRY_*: field ids ("entry.123456789") from the pre-filled link.
   const BOOKING_FORM = {
-    action: '',
-    name: '', phone: '', session: '', consent: ''
+    action: 'https://docs.google.com/forms/d/e/1FAIpQLSfzmyUpDpXmTpQozVatWO4QpiRqyKPwJZQGXMcsWL9swqxoSQ/formResponse',
+    name: 'entry.468022505', phone: 'entry.205003160', session: 'entry.1746039205', consent: 'entry.874556690'
   };
   const bookingOn = () => BOOKING_FORM.action && BOOKING_FORM.name && BOOKING_FORM.phone && BOOKING_FORM.session && BOOKING_FORM.consent;
   const bkOverlay = document.createElement('div');
