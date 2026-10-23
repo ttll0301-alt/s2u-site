@@ -94,28 +94,27 @@
 
   <fieldset><legend>ITEM<small>아이템 · 컬러</small></legend>
     <label>아이템</label>
-    <div class="seg" id="item"><button type="button" data-v="hoodie" aria-pressed="true">후디</button><button type="button" data-v="tee" aria-pressed="false">티셔츠</button></div>
+    <select id="itemSel" aria-label="아이템"></select>
     <label>바디 컬러</label><div class="sw" id="body"></div>
     <label>프린트(잉크) 컬러</label><div class="sw" id="ink"></div>
     <div class="row"><div><label>제품명</label><input id="name" value="S2:U SYMBOL HOODIE"></div><div><label>품번</label><input id="code" value="S2U-HD-01"></div></div>
     <div class="row"><div><label>시즌</label><input id="season" value="2026 FW"></div><div><label>시안 제목 (두 줄은 / 로)</label><input id="title" value="SYMBOL / HOODIE"></div></div>
   </fieldset>
 
-  <fieldset><legend>A · FRONT<small>앞판 그래픽</small></legend>
+  <fieldset><legend>A<small id="aLeg">앞판 그래픽</small></legend>
     <div class="seg" id="aArt"></div>
     <div id="aTextWrap" hidden><label>문구 (줄바꿈 가능)</label><textarea id="aText">S2:U</textarea></div>
     <div id="aUpWrap" hidden><label>이미지 올리기 (PNG 권장, 배경 투명)</label><input type="file" id="aUp" accept="image/*"></div>
-    <label>위치</label>
-    <div class="seg" id="aPos"><button type="button" data-v="left" aria-pressed="true">가슴 왼쪽</button><button type="button" data-v="center" aria-pressed="false">가슴 중앙</button></div>
-    <div class="row"><div><label>가로 (mm)</label><input id="aW" type="number" min="10" max="400" value="45"></div><div><label>가공</label><select id="aMethod"><option>실크스크린 1도</option><option>자수</option><option>DTF 전사</option><option>고주파 / 실리콘</option></select></div></div>
+    <div id="aPosWrap"><label>위치</label><div class="seg" id="aPos"></div></div>
+    <div class="row"><div><label>가로 (mm)</label><input id="aW" type="number" min="10" max="400" value="45"></div><div><label>가공</label><select id="aMethod"></select></div></div>
   </fieldset>
 
-  <fieldset><legend>B · BACK<small>뒷판 그래픽</small></legend>
+  <fieldset><legend>B<small id="bLeg">뒷판 그래픽</small></legend>
     <div class="seg" id="bArt"></div>
     <div id="bTextWrap" hidden><label>문구 (줄바꿈 가능)</label><textarea id="bText">SUSTAIN
 TO YOU</textarea></div>
     <div id="bUpWrap" hidden><label>이미지 올리기 (PNG 권장, 배경 투명)</label><input type="file" id="bUp" accept="image/*"></div>
-    <div class="row"><div><label>가로 (mm)</label><input id="bW" type="number" min="10" max="400" value="280"></div><div><label>가공</label><select id="bMethod"><option>실크스크린 1도</option><option>자수</option><option>DTF 전사</option><option>고주파 / 실리콘</option></select></div></div>
+    <div class="row"><div><label>가로 (mm)</label><input id="bW" type="number" min="10" max="400" value="280"></div><div><label>가공</label><select id="bMethod"></select></div></div>
   </fieldset>
 
   <fieldset><legend>WORK ORDER<small>작업지시서 · 비우면 "확인 필요"</small></legend>
@@ -158,32 +157,116 @@ TO YOU</textarea></div>
   const INK = [{n:'Bone', h:'#F4F2ED'}, {n:'Black', h:'#0C0C0D'}, {n:'S2:U Red', h:'#FF3D2E'}, {n:'Recovery Blue', h:'#2B6CB0'}];
   const ARTS_A = [['symbol','심볼'],['wordmark','워드마크'],['text','문구'],['upload','이미지'],['none','없음']];
   const ARTS_B = [['programs','프로그램 S2:1–4'],['symbol','심볼'],['wordmark','워드마크'],['text','문구'],['upload','이미지'],['none','없음']];
-  const SIZES = ['S','M','L','XL'];
-  const SPEC = {
-    hoodie: [['총장 (HPS–밑단)',[66,69,72,75]],['가슴 단면',[56,59,62,65]],['어깨 너비',[50,52,54,56]],['소매 길이',[58,59,60,61]],['밑단 단면 (시보리)',[48,51,54,57]],['후드 높이',[35,36,37,38]]],
-    tee: [['총장 (HPS–밑단)',[68,71,74,77]],['가슴 단면',[53,56,59,62]],['어깨 너비',[47,49,51,53]],['소매 길이',[21,22,23,24]],['밑단 단면',[53,56,59,62]],['넥 너비',[18,18.5,19,19.5]]]
+  const st = {item:'hoodie', body:'#0C0C0D', ink:'#F4F2ED', aArt:'symbol', bArt:'programs', aPos:'left', aImg:null, bImg:null, spec:null, qty:{}};
+  // ---- items: flat sketch (viewBox 400×460), print positions, sizes, suggested specs ----
+  // kinds: b=body fill, s=shade fill, l=seam line, d=dashed stitch, z=zip/heavy line
+  const mirror = d => d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (m, x, y) => `${400 - +x} ${y}`);
+  const mir = parts => parts.map(([d, k]) => [mirror(d), k]);
+  const P = {
+    hSleeve:[['M112 92 L64 120 L30 372 L76 384 L112 200 Z','b'],['M288 92 L336 120 L370 372 L324 384 L288 200 Z','b'],['M30 372 L76 384 L73 402 L27 390 Z','b'],['M370 372 L324 384 L327 402 L373 390 Z','b']],
+    hBody:[['M112 92 Q200 70 288 92 L298 206 L300 410 Q200 420 100 410 L102 206 Z','b'],['M100 410 Q200 420 300 410 L300 436 Q200 446 100 436 Z','b']],
+    hoodF:[['M142 84 Q150 26 200 22 Q250 26 258 84 Q236 128 200 132 Q164 128 142 84 Z','b'],['M160 86 Q168 46 200 44 Q232 46 240 86 Q224 116 200 118 Q176 116 160 86 Z','s']],
+    hoodB:[['M138 92 Q144 30 200 24 Q256 30 262 92 Q232 104 200 104 Q168 104 138 92 Z','b'],['M200 26 L200 102','l']],
+    tSleeve:[['M120 70 L52 104 L26 186 L84 204 L104 156 Z','b'],['M280 70 L348 104 L374 186 L316 204 L296 156 Z','b']],
+    lSleeve:[['M120 70 L52 104 L30 398 L72 406 L104 156 Z','b'],['M30 398 L72 406 L69 426 L27 418 Z','b'],['M280 70 L348 104 L370 398 L328 406 L296 156 Z','b'],['M370 398 L328 406 L331 426 L373 418 Z','b']],
+    tBodyF:[['M120 70 Q160 60 168 62 Q200 96 232 62 Q240 60 280 70 L296 156 L300 430 Q200 440 100 430 L104 156 Z','b'],['M168 62 Q200 96 232 62 Q226 84 200 92 Q174 84 168 62 Z','s']],
+    tBodyB:[['M120 70 Q160 60 168 62 Q200 70 232 62 Q240 60 280 70 L296 156 L300 430 Q200 440 100 430 L104 156 Z','b']],
+    pantsLeg:[['M120 40 L280 40 L282 64 L118 64 Z','b'],['M118 64 L282 64 L300 424 L222 424 L200 160 L178 424 L100 424 Z','b'],['M100 424 L178 424 L178 446 L100 446 Z','b'],['M222 424 L300 424 L300 446 L222 446 Z','b']],
+    shortsLeg:[['M108 80 L292 80 L294 106 L106 106 Z','b'],['M106 106 L294 106 L314 302 L214 316 L200 210 L186 316 L86 302 Z','b'],['M88 286 L100 300 M312 286 L300 300','l']],
+    capCrown:[['M90 250 Q96 104 200 96 Q304 104 310 250 Z','b'],['M193 97 Q200 86 207 97 Z','s']],
+    beanie:[['M104 320 L104 196 Q104 84 200 80 Q296 84 296 196 L296 320 Z','b'],['M200 82 L200 300','d'],['M92 300 L308 300 L308 396 L92 396 Z','b'],['M122 304 L122 392 M152 304 L152 392 M182 304 L182 392 M218 304 L218 392 M248 304 L248 392 M278 304 L278 392','d']],
+    glove:[['M140 440 L140 300 L120 200 Q114 180 130 176 Q146 176 150 200 L160 250 L156 110 Q156 92 172 92 Q188 92 188 110 L190 240 L196 90 Q198 72 214 72 Q230 74 230 92 L226 240 L240 110 Q244 94 258 96 Q272 100 270 116 L258 250 L278 160 Q284 146 298 150 Q310 156 306 172 L282 300 L276 440 Z','b'],['M140 400 L276 400 L276 440 L140 440 Z','b'],['M150 408 L150 434 M170 408 L170 434 M190 408 L190 434 M210 408 L210 434 M230 408 L230 434 M250 408 L250 434 M268 408 L268 434','d']],
+    sock:[['M150 40 L250 40 L250 300 Q250 340 290 360 L330 380 Q360 395 350 425 Q342 446 310 446 L170 446 Q130 446 132 400 L150 300 Z','b'],['M150 40 L250 40 L250 92 L150 92 Z','b'],['M166 44 L166 88 M184 44 L184 88 M200 44 L200 88 M216 44 L216 88 M234 44 L234 88','d'],['M132 400 Q130 446 170 446 L190 446 Q160 420 160 395 Z','s'],['M310 446 Q342 446 350 425 Q345 410 330 402 Q320 430 300 446 Z','s']],
+    tote:[['M140 150 L140 70 Q140 52 160 52 L240 52 Q260 52 260 70 L260 150 L246 150 L246 72 Q246 66 240 66 L160 66 Q154 66 154 72 L154 150 Z','b'],['M100 150 L300 150 L310 440 L90 440 Z','b'],['M101 166 L299 166','d']],
+    towel:[['M80 60 L320 60 L320 440 L80 440 Z','b'],['M80 88 L320 88 M80 412 L320 412','d']]
   };
-  const st = {item:'hoodie', body:'#0C0C0D', ink:'#F4F2ED', aArt:'symbol', bArt:'programs', aPos:'left', aImg:null, bImg:null, spec:null};
-
-  // ---- flat sketches (viewBox 400×460) ----
-  const SK = {
-    hoodie:{
-      front:[['M112 92 L64 120 L30 372 L76 384 L112 200 Z','b'],['M288 92 L336 120 L370 372 L324 384 L288 200 Z','b'],['M30 372 L76 384 L73 402 L27 390 Z','b'],['M370 372 L324 384 L327 402 L373 390 Z','b'],
-        ['M112 92 Q200 70 288 92 L298 206 L300 410 Q200 420 100 410 L102 206 Z','b'],['M100 410 Q200 420 300 410 L300 436 Q200 446 100 436 Z','b'],
-        ['M142 84 Q150 26 200 22 Q250 26 258 84 Q236 128 200 132 Q164 128 142 84 Z','b'],['M160 86 Q168 46 200 44 Q232 46 240 86 Q224 116 200 118 Q176 116 160 86 Z','s'],
-        ['M186 118 L182 176 M214 118 L218 176','l'],['M140 300 L260 300 L282 384 L118 384 Z','d']],
-      back:[['M112 92 L64 120 L30 372 L76 384 L112 200 Z','b'],['M288 92 L336 120 L370 372 L324 384 L288 200 Z','b'],['M30 372 L76 384 L73 402 L27 390 Z','b'],['M370 372 L324 384 L327 402 L373 390 Z','b'],
-        ['M112 92 Q200 70 288 92 L298 206 L300 410 Q200 420 100 410 L102 206 Z','b'],['M100 410 Q200 420 300 410 L300 436 Q200 446 100 436 Z','b'],
-        ['M138 92 Q144 30 200 24 Q256 30 262 92 Q232 104 200 104 Q168 104 138 92 Z','b'],['M200 26 L200 102','l']],
-      a:{y:142}, b:{y:112}},
-    tee:{
-      front:[['M120 70 L52 104 L26 186 L84 204 L104 156 Z','b'],['M280 70 L348 104 L374 186 L316 204 L296 156 Z','b'],
-        ['M120 70 Q160 60 168 62 Q200 96 232 62 Q240 60 280 70 L296 156 L300 430 Q200 440 100 430 L104 156 Z','b'],['M168 62 Q200 96 232 62 Q226 84 200 92 Q174 84 168 62 Z','s']],
-      back:[['M120 70 L52 104 L26 186 L84 204 L104 156 Z','b'],['M280 70 L348 104 L374 186 L316 204 L296 156 Z','b'],
-        ['M120 70 Q160 60 168 62 Q200 70 232 62 Q240 60 280 70 L296 156 L300 430 Q200 440 100 430 L104 156 Z','b']],
-      a:{y:120}, b:{y:100}}
+  const APP = ['S','M','L','XL'];
+  const M_APP = ['실크스크린 1도','실크스크린 2도','자수','DTF 전사','고주파 / 실리콘'];
+  const ITEMS = {
+    hoodie:{label:'후디', en:'HOODIE', code:'HD', group:'상의', sizes:APP, upm:200/590, methods:M_APP,
+      front:[...P.hSleeve, ...P.hBody, ...P.hoodF, ['M186 118 L182 176 M214 118 L218 176','l'], ['M140 300 L260 300 L282 384 L118 384 Z','d']],
+      back:[...P.hSleeve, ...P.hBody, ...P.hoodB],
+      a:[{v:'left', label:'가슴 (착용자 왼쪽)', cx:200 + 85*200/590, y:142, pos:'HPS에서 아래 170mm · 앞중심에서 착용자 왼쪽 85mm'},
+         {v:'center', label:'가슴 중앙', cx:200, y:142, pos:'HPS에서 아래 170mm · 앞중심 정렬'}],
+      b:{label:'등 중앙', cx:200, y:112, pos:'뒷목 시접에서 아래 120mm · 뒤중심 정렬'}, aDef:['symbol',45], bDef:['programs',280],
+      spec:[['총장 (HPS–밑단)',[66,69,72,75]],['가슴 단면',[56,59,62,65]],['어깨 너비',[50,52,54,56]],['소매 길이',[58,59,60,61]],['밑단 단면 (시보리)',[48,51,54,57]],['후드 높이',[35,36,37,38]]]},
+    tee:{label:'티셔츠', en:'TEE', code:'TS', group:'상의', sizes:APP, upm:200/560, methods:M_APP,
+      front:[...P.tSleeve, ...P.tBodyF], back:[...P.tSleeve, ...P.tBodyB],
+      a:[{v:'left', label:'가슴 (착용자 왼쪽)', cx:200 + 80*200/560, y:120, pos:'HPS에서 아래 150mm · 앞중심에서 착용자 왼쪽 80mm'},
+         {v:'center', label:'가슴 중앙', cx:200, y:120, pos:'HPS에서 아래 150mm · 앞중심 정렬'}],
+      b:{label:'등 중앙', cx:200, y:100, pos:'뒷목 시접에서 아래 80mm · 뒤중심 정렬'}, aDef:['symbol',40], bDef:['programs',260],
+      spec:[['총장 (HPS–밑단)',[68,71,74,77]],['가슴 단면',[53,56,59,62]],['어깨 너비',[47,49,51,53]],['소매 길이',[21,22,23,24]],['밑단 단면',[53,56,59,62]],['넥 너비',[18,18.5,19,19.5]]]},
+    longsleeve:{label:'롱슬리브', en:'LONG SLEEVE', code:'LS', group:'상의', sizes:APP, upm:200/560, methods:M_APP,
+      front:[...P.lSleeve, ...P.tBodyF], back:[...P.lSleeve, ...P.tBodyB],
+      a:[{v:'left', label:'가슴 (착용자 왼쪽)', cx:200 + 80*200/560, y:120, pos:'HPS에서 아래 150mm · 앞중심에서 착용자 왼쪽 80mm'},
+         {v:'center', label:'가슴 중앙', cx:200, y:120, pos:'HPS에서 아래 150mm · 앞중심 정렬'}],
+      b:{label:'등 중앙', cx:200, y:100, pos:'뒷목 시접에서 아래 80mm · 뒤중심 정렬'}, aDef:['symbol',40], bDef:['programs',260],
+      spec:[['총장 (HPS–밑단)',[68,71,74,77]],['가슴 단면',[53,56,59,62]],['어깨 너비',[47,49,51,53]],['소매 길이',[60,61,62,63]],['소매단 단면',[9,9.5,10,10.5]]]},
+    crewneck:{label:'맨투맨', en:'CREWNECK', code:'CN', group:'상의', sizes:APP, upm:200/590, methods:M_APP,
+      front:[...P.hSleeve, ...P.hBody, ['M160 84 Q200 112 240 84 Q236 100 200 108 Q164 100 160 84 Z','s'], ['M150 82 Q200 126 250 82','l']],
+      back:[...P.hSleeve, ...P.hBody, ['M156 84 Q200 96 244 84','l']],
+      a:[{v:'center', label:'가슴 중앙', cx:200, y:150, pos:'HPS에서 아래 140mm · 앞중심 정렬'},
+         {v:'left', label:'가슴 (착용자 왼쪽)', cx:200 + 85*200/590, y:142, pos:'HPS에서 아래 170mm · 앞중심에서 착용자 왼쪽 85mm'}],
+      b:{label:'등 중앙', cx:200, y:118, pos:'뒷목 시접에서 아래 100mm · 뒤중심 정렬'}, aDef:['wordmark',120], bDef:['programs',280],
+      spec:[['총장 (HPS–밑단)',[65,68,71,74]],['가슴 단면',[56,59,62,65]],['어깨 너비',[50,52,54,56]],['소매 길이',[58,59,60,61]],['밑단 단면 (시보리)',[47,50,53,56]]]},
+    fleece:{label:'후리스 (하프집)', en:'FLEECE', code:'FL', group:'아우터', sizes:APP, upm:200/600, methods:['자수','우븐 패치','실리콘 패치','실크스크린 1도'],
+      front:[...P.hSleeve, ...P.hBody, ['M150 92 L152 50 Q200 42 248 50 L250 92 Q200 82 150 92 Z','b'], ['M200 46 L200 210','z'], ['M195 60 L205 60 L205 78 L195 78 Z','s']],
+      back:[...P.hSleeve, ...P.hBody, ['M150 92 L152 52 Q200 46 248 52 L250 92 Q200 86 150 92 Z','b']],
+      a:[{v:'left', label:'가슴 (착용자 왼쪽)', cx:200 + 90*200/600, y:140, pos:'HPS에서 아래 170mm · 지퍼에서 착용자 왼쪽 90mm'}],
+      b:{label:'등 상단', cx:200, y:118, pos:'칼라 시접에서 아래 100mm · 뒤중심 정렬'}, aDef:['symbol',40], bDef:['wordmark',180],
+      spec:[['총장 (HPS–밑단)',[66,69,72,75]],['가슴 단면',[57,60,63,66]],['어깨 너비',[49,51,53,55]],['소매 길이',[61,62,63,64]],['지퍼 길이',[22,22,24,24]],['칼라 높이',[7,7,7,7]]]},
+    windbreaker:{label:'바람막이', en:'WINDBREAKER', code:'WB', group:'아우터', sizes:APP, upm:200/610, methods:['실크스크린 1도','고주파 / 실리콘','반사 프린트','DTF 전사'],
+      front:[...P.hSleeve, ...P.hBody, ...P.hoodF, ['M200 120 L200 436','z'], ['M110 424 L290 424','d'], ['M118 300 L150 362 M282 300 L250 362','l']],
+      back:[...P.hSleeve, ...P.hBody, ...P.hoodB, ['M104 172 Q200 190 296 172','d']],
+      a:[{v:'left', label:'가슴 (착용자 왼쪽)', cx:200 + 95*200/610, y:150, pos:'HPS에서 아래 180mm · 지퍼에서 착용자 왼쪽 95mm'}],
+      b:{label:'등 중앙 (벤트 아래)', cx:200, y:192, pos:'뒷목 시접에서 아래 200mm · 뒤중심 정렬'}, aDef:['symbol',40], bDef:['programs',260],
+      spec:[['총장 (HPS–밑단)',[70,73,76,79]],['가슴 단면',[58,61,64,67]],['어깨 너비',[49,51,53,55]],['소매 길이',[62,63,64,65]],['후드 높이',[36,37,38,39]]]},
+    pants:{label:'기능성 팬츠', en:'TRAINING PANTS', code:'PT', group:'하의', sizes:APP, upm:82/300, methods:['실크스크린 1도','고주파 / 실리콘','반사 프린트','자수'],
+      front:[...P.pantsLeg, ['M200 64 L200 160','l'], ['M130 64 Q144 108 122 124 M270 64 Q256 108 278 124','d'], ['M194 50 L188 92 M206 50 L212 92','l']],
+      back:[...P.pantsLeg, ['M118 96 Q200 116 282 96','d'], ['M222 126 L266 122 L268 150 L224 154 Z','d']],
+      a:[{v:'thigh', label:'왼쪽 허벅지', cx:248, y:112, pos:'허리 밴드 아래 120mm · 왼쪽 다리 중앙'}],
+      b:{label:'뒤 허리 중앙', cx:200, y:70, pos:'허리 밴드 아래 15mm · 뒤중심 정렬'}, aDef:['symbol',30], bDef:['wordmark',60],
+      spec:[['허리 단면 (밴딩 이완)',[35,37,39,41]],['엉덩이 단면',[50,52,54,56]],['허벅지 단면',[30,31,32,33]],['밑위',[27,28,29,30]],['총장',[98,100,102,104]],['밑단 단면',[14,14.5,15,15.5]]]},
+    shorts:{label:'러닝 쇼츠', en:'RUNNING SHORTS', code:'SH', group:'하의', sizes:APP, upm:95/320, methods:['실크스크린 1도','고주파 / 실리콘','반사 프린트','DTF 전사'],
+      front:[...P.shortsLeg, ['M90 292 Q136 300 188 304 M212 304 Q264 300 310 292','d'], ['M194 92 L190 128 M206 92 L210 128','l']],
+      back:[...P.shortsLeg, ['M170 140 L230 140','z']],
+      a:[{v:'hem', label:'왼쪽 다리 밑단', cx:262, y:244, pos:'밑단에서 위 40mm · 왼쪽 다리 바깥쪽'}],
+      b:{label:'뒤 허리 중앙', cx:200, y:112, pos:'허리 밴드 아래 15mm · 뒤중심 정렬'}, aDef:['symbol',30], bDef:['wordmark',50],
+      spec:[['허리 단면 (밴딩 이완)',[34,36,38,40]],['엉덩이 단면',[52,54,56,58]],['허벅지 단면',[31,32,33,34]],['총장',[38,40,42,44]],['안감 이너 길이',[10,10,11,11]]]},
+    cap:{label:'볼캡', en:'BALL CAP', code:'CP', group:'액세서리', sizes:['FREE'], upm:1.1, methods:['자수','3D 입체 자수','우븐 패치','러버 패치','실크스크린 1도'],
+      front:[...P.capCrown, ['M200 98 L200 250 M200 98 Q150 140 140 250 M200 98 Q250 140 260 250','l'], ['M66 250 Q200 226 334 250 Q326 302 200 312 Q74 302 66 250 Z','b'], ['M86 258 Q200 238 314 258','d']],
+      back:[...P.capCrown, ['M200 98 L200 250','l'], ['M150 252 Q200 196 250 252 Z','s'], ['M146 236 L254 236 L254 252 L146 252 Z','b'], ['M190 232 L210 232 L210 256 L190 256 Z','s']],
+      a:[{v:'front', label:'앞판 중앙', cx:200, y:142, pos:'챙 봉제선에서 위 15mm · 앞중심 정렬'}],
+      b:{label:'뒷판 (스트랩 위)', cx:200, y:170, pos:'스트랩에서 위 10mm · 뒤중심 정렬'}, aDef:['symbol',40], bDef:['wordmark',35],
+      spec:[['머리 둘레 (조절)',['56–60']],['크라운 높이',[12]],['챙 길이',[7]],['챙 너비',[18]]]},
+    beanie:{label:'비니', en:'BEANIE', code:'BN', group:'액세서리', sizes:['FREE'], upm:0.95, methods:['자수','우븐 라벨','실리콘 패치','자카드 편직'],
+      front:[...P.beanie], back:[...P.beanie],
+      a:[{v:'cuff', label:'커프 정면', cx:200, y:316, pos:'커프 아래단에서 위 20mm · 정면 중앙'}],
+      b:{label:'커프 뒷면', cx:200, y:316, pos:'커프 아래단에서 위 20mm · 뒤중심'}, aDef:['symbol',30], bDef:['none',30],
+      spec:[['길이 (접기 전)',[30]],['너비',[22]],['커프 높이',[8]]]},
+    gloves:{label:'장갑', en:'RUNNING GLOVES', code:'GL', group:'액세서리', sizes:['S/M','L/XL'], upm:1.4, methods:['실리콘 프린트','실크스크린 1도','자수','반사 프린트'],
+      front:[...P.glove], back:mir(P.glove),
+      a:[{v:'back', label:'손등', cx:205, y:262, pos:'손등 중앙 · 커프에서 위 60mm'}],
+      b:{label:'손바닥 (그립)', cx:195, y:262, pos:'손바닥 중앙 · 미끄럼 방지 그립'}, aDef:['symbol',30], bDef:['none',40],
+      spec:[['총장',[22,24]],['손바닥 너비',[8.5,9.5]],['커프 길이',[6,6]]]},
+    socks:{label:'양말', en:'SOCKS', code:'SK', group:'액세서리', sizes:['230–250','260–280'], upm:1.1, methods:['자카드 편직','실리콘 프린트','자수'],
+      front:[...P.sock], back:mir(P.sock),
+      a:[{v:'out', label:'바깥 발목', cx:200, y:110, pos:'커프 아래 20mm · 바깥쪽 중앙'}],
+      b:{label:'안쪽 발목', cx:200, y:110, pos:'커프 아래 20mm · 안쪽 중앙'}, aDef:['symbol',25], bDef:['symbol',25],
+      spec:[['발 길이',[23,26]],['목 길이 (발목–커프)',[15,16]],['커프 높이',[4,4]]]},
+    tote:{label:'토트백', en:'TOTE BAG', code:'TB', group:'액세서리', sizes:['FREE'], upm:0.55, methods:['실크스크린 1도','실크스크린 2도','자수','DTF 전사'],
+      front:[...P.tote], back:[...P.tote],
+      a:[{v:'front', label:'앞면 중앙', cx:200, y:206, pos:'입구에서 아래 80mm · 중앙 정렬'}],
+      b:{label:'뒷면 중앙', cx:200, y:206, pos:'입구에서 아래 80mm · 중앙 정렬'}, aDef:['wordmark',200], bDef:['programs',240],
+      spec:[['가로',[38]],['세로',[42]],['마치 (바닥 폭)',[10]],['손잡이 길이',[60]],['손잡이 너비',[2.5]]]},
+    towel:{label:'타월', en:'GYM TOWEL', code:'TW', group:'액세서리', sizes:['FREE'], upm:0.6, methods:['자수','자카드 직조','실크스크린 1도'],
+      front:[...P.towel], back:[...P.towel],
+      a:[{v:'corner', label:'앞면 하단 코너', cx:262, y:354, pos:'아래단·오른단에서 각 40mm'}],
+      b:{label:'뒷면 중앙', cx:200, y:180, pos:'윗단에서 아래 200mm · 중앙 정렬'}, aDef:['symbol',40], bDef:['wordmark',200],
+      spec:[['가로',[40]],['세로',[80]],['밴드 폭',[5]]]}
   };
-  const UNIT_PER_MM = 200 / 590;   // body width ≈ 200 units ≈ 59cm chest
+  const IT = () => ITEMS[st.item];
+  const aOpt = () => IT().a.find(o => o.v === st.aPos) || IT().a[0];
 
   // ---- assets ----
   const IMG = {};
@@ -233,7 +316,7 @@ TO YOU</textarea></div>
 
   // ---- garment ----
   function drawGarment(ctx, view, ox, oy, scale, opts){
-    const sk = SK[st.item], dark = luminance(st.body) < 0.5;
+    const sk = IT(), dark = luminance(st.body) < 0.5;
     const line = opts.line || (dark ? 'rgba(244,242,237,.22)' : 'rgba(12,12,13,.35)');
     const shade = dark ? '#000' : 'rgba(0,0,0,.12)';
     ctx.save(); ctx.translate(ox, oy); ctx.scale(scale, scale); ctx.lineJoin = 'round';
@@ -248,9 +331,8 @@ TO YOU</textarea></div>
     // artwork
     const place = view === 'front' ? 'a' : 'b'; const kind = st[place + 'Art'];
     if(kind !== 'none'){
-      const wmm = +$(place + 'W').value || 0, w = wmm * UNIT_PER_MM;
-      const cx = view === 'front' ? (st.aPos === 'left' ? 200 + 85 * UNIT_PER_MM : 200) : 200;
-      const top = sk[place].y;
+      const wmm = +$(place + 'W').value || 0, w = wmm * sk.upm;
+      const pl = place === 'a' ? aOpt() : sk.b, cx = pl.cx, top = pl.y;
       drawArt(ctx, kind, place, cx, top, w, st.ink);
       if(opts.pins){ ctx.fillStyle = '#ff3d2e'; ctx.beginPath(); ctx.arc(cx + w/2 + 9, top + 2, 7, 0, 7); ctx.fill();
         ctx.fillStyle = '#fff'; ctx.font = 'bold 9px Pretendard'; ctx.textAlign = 'center'; ctx.fillText(place.toUpperCase(), cx + w/2 + 9, top + 5.5); ctx.textAlign = 'left'; }
@@ -268,16 +350,16 @@ TO YOU</textarea></div>
     const [t1, t2] = ($('title').value || '').split('/').map(s => s.trim());
     ctx.font = '96px "Bebas Neue"'; ctx.fillStyle = '#f4f2ed'; ctx.fillText(t1 || '', 72, 180); ctx.fillStyle = '#ff3d2e'; ctx.fillText(t2 || '', 72, 268);
     ctx.fillStyle = 'rgba(244,242,237,.75)'; ctx.font = '15px Pretendard';
-    ctx.fillText(`${$('code').value} · ${st.item === 'hoodie' ? '후디 (Hoodie)' : '티셔츠 (T-shirt)'}`, 72, 318);
+    ctx.fillText(`${$('code').value} · ${IT().label} (${IT().en})`, 72, 318);
     ctx.fillText(($('fabric').value || '원단 확정 전'), 72, 344);
     const chips = [['Body · ' + nameOf(BODY, st.body), st.body], ['Print · ' + nameOf(INK, st.ink), st.ink]];
     chips.forEach(([n, h], i) => { const y = 400 + i*50; ctx.beginPath(); ctx.arc(89, y, 17, 0, 7); ctx.fillStyle = h; ctx.fill(); ctx.strokeStyle = 'rgba(244,242,237,.35)'; ctx.stroke();
       ctx.fillStyle = '#f4f2ed'; ctx.font = '700 14px Pretendard'; ctx.fillText(n, 118, y + 5); ctx.fillStyle = 'rgba(244,242,237,.5)'; ctx.font = '12px "JetBrains Mono"'; ctx.fillText(h.toUpperCase(), 118 + ctx.measureText(n).width + 80, y + 5); });
     let ly = 530;
-    [['a','A','앞판'],['b','B','뒷판']].forEach(([p, L, lab]) => { if(st[p + 'Art'] === 'none') return;
+    [['a','A',aOpt().label],['b','B',IT().b.label]].forEach(([p, L, lab]) => { if(st[p + 'Art'] === 'none') return;
       ctx.beginPath(); ctx.arc(83, ly, 11, 0, 7); ctx.fillStyle = '#ff3d2e'; ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = 'bold 12px Pretendard'; ctx.textAlign = 'center'; ctx.fillText(L, 83, ly + 4); ctx.textAlign = 'left';
       ctx.fillStyle = '#f4f2ed'; ctx.font = '700 14px Pretendard'; ctx.fillText(lab, 102, ly + 5);
-      ctx.fillStyle = 'rgba(244,242,237,.8)'; ctx.font = '14px Pretendard'; ctx.fillText(`${$(p + 'Method').value} · ${sizeMM(p)}`, 140, ly + 5); ly += 36; });
+      const lw = ctx.measureText(lab).width; ctx.fillStyle = 'rgba(244,242,237,.8)'; ctx.font = '14px Pretendard'; ctx.fillText(`${$(p + 'Method').value} · ${sizeMM(p)}`, 112 + lw, ly + 5); ly += 36; });
     const sym = tinted('symbol', '#f4f2ed'); if(sym) ctx.drawImage(sym, 72, 980, 36, 64);
     drawGarment(ctx, 'front', 470, 150, 1.38, {shadow:true, pins:true});
     drawGarment(ctx, 'back', 1020, 150, 1.38, {shadow:true, pins:true});
@@ -351,15 +433,15 @@ TO YOU</textarea></div>
   function docNo(){ const d = new Date(); const p = n => String(n).padStart(2, '0'); return `S2U-G-${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-01`; }
   function today(){ const d = new Date(); const p = n => String(n).padStart(2, '0'); return `${d.getFullYear()}.${p(d.getMonth()+1)}.${p(d.getDate())}`; }
   function renderWO(){
-    const item = st.item === 'hoodie' ? '후디 (Hoodie)' : '티셔츠 (T-shirt)';
+    const item = `${IT().label} (${IT().en})`; const SIZES = IT().sizes;
     const info = [['품명', $('name').value], ['품번', $('code').value], ['아이템', item], ['시즌', $('season').value],
       ['바디 컬러', `${nameOf(BODY, st.body)} ${st.body}`], ['원단', $('fabric').value], ['거래처(공장)', $('vendor').value], ['담당', $('owner').value]];
-    const pos = {a: st.aPos === 'left' ? 'HPS에서 아래 170mm · 앞중심에서 착용자 왼쪽 85mm' : 'HPS에서 아래 170mm · 앞중심 정렬', b: '뒷목 시접에서 아래 120mm · 뒤중심 정렬'};
+    const pos = {a: aOpt().pos, b: IT().b.pos};
     const rows = ['a','b'].filter(p => st[p + 'Art'] !== 'none').map(p => `<tr><td class="c"><span class="pin">${p.toUpperCase()}</span></td>
-      <td class="l">${p === 'a' ? (st.aPos === 'left' ? '가슴 (착용자 왼쪽)' : '가슴 중앙') : '등 중앙'}</td><td><img class="art" src="${artURL(p)}" alt=""></td>
+      <td class="l">${p === 'a' ? aOpt().label : IT().b.label}</td><td><img class="art" src="${artURL(p)}" alt=""></td>
       <td class="num">${sizeMM(p).replace('×', ' × ')}</td><td>${pos[p]}</td><td>${esc($(p + 'Method').value)}</td><td>${esc(nameOf(INK, st.ink))} ${st.ink}</td></tr>`).join('');
     const specRows = st.spec.map((r, i) => `<tr><td class="l">${esc(r[0])}</td>${r[1].map(n => `<td class="num">${v(n)}</td>`).join('')}</tr>`).join('');
-    const q = SIZES.map(s => $('q' + s).value.trim()); const allNum = q.every(n => /^\d+$/.test(n));
+    const q = SIZES.map(s => String(st.qty[s] || '').trim()); const allNum = q.every(n => /^\d+$/.test(n));
     const total = allNum ? q.reduce((a, n) => a + +n, 0) : '';
     const fmt = d => d ? d.replace(/-/g, '.') : '';
     const trims = [['넥 라벨', $('tNeck').value], ['케어 라벨', $('tCare').value], ['행택', $('tTag').value], ['포장', $('tPack').value]];
@@ -397,35 +479,50 @@ TO YOU</textarea></div>
     $(id).addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; st[key] = b.dataset.v; sync(); render(); });
   }
   function sync(){
-    [['item','item'],['aArt','aArt'],['bArt','bArt'],['aPos','aPos'],['body','body'],['ink','ink']].forEach(([id, key]) =>
+    [['aArt','aArt'],['bArt','bArt'],['aPos','aPos'],['body','body'],['ink','ink']].forEach(([id, key]) =>
       $(id).querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === st[key])));
     $('aTextWrap').hidden = st.aArt !== 'text'; $('aUpWrap').hidden = st.aArt !== 'upload';
     $('bTextWrap').hidden = st.bArt !== 'text'; $('bUpWrap').hidden = st.bArt !== 'upload';
   }
   function buildSpecInputs(){
-    st.spec = SPEC[st.item].map(r => [r[0], r[1].map(String)]);
-    $('spec').innerHTML = st.spec.map((r, i) => `<div style="display:grid;grid-template-columns:1.6fr repeat(4,1fr);gap:4px;margin-bottom:4px;align-items:center">
-      <span style="font-size:11.5px;color:var(--dim)">${r[0]}</span>${r[1].map((n, j) => `<input data-r="${i}" data-c="${j}" value="${n}" aria-label="${r[0]} ${SIZES[j]}" style="padding:6px">`).join('')}</div>`).join('');
+    const sz = IT().sizes; st.spec = IT().spec.map(r => [r[0], r[1].map(String)]);
+    $('spec').innerHTML = st.spec.map((r, i) => `<div style="display:grid;grid-template-columns:1.6fr repeat(${sz.length},1fr);gap:4px;margin-bottom:4px;align-items:center">
+      <span style="font-size:11.5px;color:var(--dim)">${r[0]}</span>${r[1].map((n, j) => `<input data-r="${i}" data-c="${j}" value="${n}" aria-label="${r[0]} ${sz[j]}" style="padding:6px">`).join('')}</div>`).join('');
   }
   $('spec').addEventListener('input', e => { const t = e.target; if(t.dataset.r == null) return; st.spec[+t.dataset.r][1][+t.dataset.c] = t.value; save(); if(tab === 'tabWo') renderWO(); });
-  $('qty').innerHTML = SIZES.map(s => `<div><input id="q${s}" inputmode="numeric" placeholder="${s}" aria-label="${s} 수량"></div>`).join('');
-
-  seg('item', null, 'item', () => { buildSpecInputs();
-    if($('name').value.match(/HOODIE|T-SHIRT|TEE/)) $('name').value = $('name').value.replace(/HOODIE|T-SHIRT|TEE/, st.item === 'hoodie' ? 'HOODIE' : 'TEE');
-    if($('title').value.match(/HOODIE|TEE/)) $('title').value = $('title').value.replace(/HOODIE|TEE/, st.item === 'hoodie' ? 'HOODIE' : 'TEE');
-    $('code').value = $('code').value.replace(/-(HD|TS)-/, st.item === 'hoodie' ? '-HD-' : '-TS-'); });
+  function buildQty(){
+    const sz = IT().sizes; $('qty').style.gridTemplateColumns = `repeat(${Math.min(sz.length, 4)},1fr)`;
+    $('qty').innerHTML = sz.map(s => `<div><input data-s="${s}" inputmode="numeric" placeholder="${s}" aria-label="${s} 수량" value="${esc(st.qty[s] || '')}"></div>`).join('');
+  }
+  $('qty').addEventListener('input', e => { const s = e.target.dataset.s; if(!s) return; st.qty[s] = e.target.value; });
+  function buildItemUI(){
+    const it = IT();
+    $('aPos').innerHTML = it.a.map(o => `<button type="button" data-v="${o.v}" aria-pressed="false">${o.label}</button>`).join('');
+    $('aPosWrap').hidden = it.a.length < 2;
+    ['a','b'].forEach(p => { const cur = $(p + 'Method').value; $(p + 'Method').innerHTML = it.methods.map(m => `<option${m === cur ? ' selected' : ''}>${m}</option>`).join(''); });
+    $('aLeg').textContent = it.a.length < 2 ? `${it.a[0].label}` : '앞면 그래픽'; $('bLeg').textContent = it.b.label;
+  }
+  const groups = {}; Object.entries(ITEMS).forEach(([k, it]) => (groups[it.group] = groups[it.group] || []).push([k, it]));
+  $('itemSel').innerHTML = Object.entries(groups).map(([g, list]) => `<optgroup label="${g}">${list.map(([k, it]) => `<option value="${k}">${it.label}</option>`).join('')}</optgroup>`).join('');
+  $('itemSel').addEventListener('change', () => {
+    st.item = $('itemSel').value; const it = IT();
+    st.aPos = it.a[0].v; st.aArt = it.aDef[0]; st.bArt = it.bDef[0]; $('aW').value = it.aDef[1]; $('bW').value = it.bDef[1];
+    $('name').value = `S2:U SYMBOL ${it.en}`; $('code').value = `S2U-${it.code}-01`; $('title').value = `SYMBOL / ${it.en}`;
+    st.qty = {}; $('aMethod').value = ''; $('bMethod').value = '';
+    buildItemUI(); buildSpecInputs(); buildQty(); sync(); render();
+  });
   seg('aArt', ARTS_A, 'aArt', () => { if(st.aArt === 'symbol' && +$('aW').value > 120) $('aW').value = 45; });
   seg('bArt', ARTS_B, 'bArt'); seg('aPos', null, 'aPos');
   swatches('body', BODY, 'body'); swatches('ink', INK, 'ink');
   ['aUp','bUp'].forEach(id => $(id).addEventListener('change', e => { const f = e.target.files[0]; if(!f) return;
     const r = new FileReader(); r.onload = () => load(r.result).then(im => { st[id[0] + 'Img'] = im; render(); }); r.readAsDataURL(f); }));
 
-  const FIELDS = ['name','code','season','title','aText','bText','aW','bW','aMethod','bMethod','fabric','vendor','owner','tNeck','tCare','tTag','tPack','dReq','dOk','dDue','dest','notes', ...SIZES.map(s => 'q' + s)];
+  const FIELDS = ['name','code','season','title','aText','bText','aW','bW','fabric','vendor','owner','tNeck','tCare','tTag','tPack','dReq','dOk','dDue','dest','notes'];
   document.querySelector('aside').addEventListener('input', e => { if(e.target.closest('#spec')) return; render(); });
   document.querySelector('aside').addEventListener('change', () => render());
 
-  const KEY = 's2u-goods-v1';
-  function save(){ try{ localStorage.setItem(KEY, JSON.stringify({st:{item:st.item, body:st.body, ink:st.ink, aArt:st.aArt, bArt:st.bArt, aPos:st.aPos, spec:st.spec},
+  const KEY = 's2u-goods-v2';
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify({st:{item:st.item, body:st.body, ink:st.ink, aArt:st.aArt, bArt:st.bArt, aPos:st.aPos, spec:st.spec, qty:st.qty, aMethod:$('aMethod').value, bMethod:$('bMethod').value},
     f:Object.fromEntries(FIELDS.map(k => [k, $(k).value]))})); }catch(e){} }
   function restore(){ try{ const d = JSON.parse(localStorage.getItem(KEY) || 'null'); if(!d) return false;
     Object.assign(st, d.st); FIELDS.forEach(k => { if(d.f && k in d.f) $(k).value = d.f[k]; }); return true; }catch(e){ return false; } }
@@ -445,8 +542,13 @@ TO YOU</textarea></div>
     if(tab === 'tabMock') drawMock(); else if(tab === 'tabShot') drawShots(); else renderWO(); }); }
 
   const restored = restore();
+  const qItem = new URLSearchParams(location.search).get('item');   // ?item=cap 으로 품목 바로 열기
+  if(!ITEMS[st.item]) st.item = 'hoodie';
+  $('itemSel').value = st.item; buildItemUI();
+  if(restored){ ['aMethod','bMethod'].forEach(k => { if(st[k]) $(k).value = st[k]; }); }
   if(!restored || !st.spec) buildSpecInputs(); else {
-    const keep = st.spec; buildSpecInputs(); if(keep.length === st.spec.length){ st.spec = keep; document.querySelectorAll('#spec input').forEach(i => i.value = st.spec[+i.dataset.r][1][+i.dataset.c]); } }
+    const keep = st.spec; buildSpecInputs(); if(keep.length === st.spec.length && keep[0][1].length === st.spec[0][1].length){ st.spec = keep; document.querySelectorAll('#spec input').forEach(i => i.value = st.spec[+i.dataset.r][1][+i.dataset.c]); } }
+  st.qty = st.qty || {}; buildQty();
   sync();
   Promise.all([
     load('assets/symbol.png').then(i => IMG.symbol = i), load('assets/wordmark.png').then(i => IMG.wordmark = i),
@@ -454,6 +556,7 @@ TO YOU</textarea></div>
     document.fonts.load('96px "Bebas Neue"'), document.fonts.load('15px Pretendard'), document.fonts.load('12px "JetBrains Mono"')
   ]).then(() => document.fonts.ready).then(() => {
     const h = {'#studio':'tabShot', '#wo':'tabWo'}[location.hash];
+    if(qItem && ITEMS[qItem] && qItem !== st.item){ $('itemSel').value = qItem; $('itemSel').dispatchEvent(new Event('change')); }
     renderWO();
     if(h) document.querySelector(`.tabs button[data-t="${h}"]`).click(); else render();
   });
