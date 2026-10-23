@@ -1059,6 +1059,7 @@
       <button type="button" data-go="club">클럽</button>
       <button type="button" data-go="membership">멤버십</button>
       <button type="button" data-go="location">센터</button>
+      <button type="button" data-go="playlist">플레이리스트</button>
       <button type="button" data-go="play">플레이</button>
       <button type="button" data-go="journal">저널</button>
     </div>
@@ -1410,7 +1411,7 @@
     </div>
   </section>
 
-  <section class="brand view" data-view="play" id="lifestyle">
+  <section class="brand view" data-view="playlist" id="lifestyle">
     <div class="brand-sec">
       <div class="eyebrow">06 · LIFESTYLE</div>
       <h2 class="brand-h">Playlist</h2>
@@ -2809,7 +2810,7 @@ ${pts}
 
     // 메뉴·히어로 링크도 뷰 전환에 연결
     const MAP = {programs:'programs', about:'about', club:'club', membership:'membership', location:'location',
-                 lifestyle:'play', cadence:'play', journal:'journal'};
+                 lifestyle:'playlist', cadence:'play', journal:'journal'};
     document.querySelectorAll('a[href^="#"]').forEach(function(a){
       const id = a.getAttribute('href').slice(1);
       if(!MAP[id]) return;
