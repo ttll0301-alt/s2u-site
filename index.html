@@ -820,7 +820,8 @@
     input, textarea{cursor:none;}
     .cur, .cur-run{position:fixed; top:0; left:0; z-index:9999; pointer-events:none;
       will-change:transform;}
-    .cur{width:6px; height:6px; margin:-3px 0 0 -3px; border-radius:50%; background:#f4f2ed;
+    .cur{width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; background:#f4f2ed;
+      border:2px solid #0c0c0d; box-shadow:0 0 0 1.5px rgba(244,242,237,0.95), 0 2px 10px rgba(0,0,0,0.45);
       transition:opacity 0.25s ease;}
     .cur-run{width:90px; height:90px; margin:-45px 0 0 -45px; transition:opacity 0.25s ease;}
     .cur.off, .cur-run.off{opacity:0;}
@@ -3104,7 +3105,7 @@ ${pts}
       speed = speed * 0.86 + Math.hypot(vx, vy) * 0.14;
       vx *= 0.9; vy *= 0.9;
 
-      dot.style.transform = `translate3d(${mx}px, ${my}px, 0) scale(${down ? 0.6 : 1})`;
+      dot.style.transform = `translate3d(${mx}px, ${my}px, 0) scale(${down ? 0.7 : (state.hot ? 1.5 : 1)})`;
       dot.style.background = `rgb(${c[0]},${c[1]},${c[2]})`;
 
       // 보속에 따라 케이던스가 오름 — 멈추면 제자리 걸음
