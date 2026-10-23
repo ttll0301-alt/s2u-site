@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@800&family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{--black:#0c0c0d; --black-2:#141416; --bone:#f4f2ed; --dim:rgba(244,242,237,.6); --line:rgba(244,242,237,.14);
     --line-2:rgba(244,242,237,.28); --red:#ff3d2e; --print-red:#c0281f;}
@@ -41,6 +41,17 @@
   .sw button{width:30px; height:30px; border-radius:50%; border:1px solid var(--line-2); cursor:pointer}
   .sw button[aria-pressed="true"]{outline:2px solid var(--red); outline-offset:2px}
   .hint{font-size:11.5px; color:var(--dim); margin-top:6px; line-height:1.5}
+  .refThumbs{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px} .refThumbs img{width:52px; height:52px; object-fit:cover; border-radius:6px; border:1px solid var(--line)}
+  .pal{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+  .pal div{display:flex; flex-direction:column; align-items:center; gap:4px}
+  .pal i{width:38px; height:38px; border-radius:8px; border:1px solid var(--line-2); display:block}
+  .pal span{display:flex; gap:2px} .pal button{background:none; border:1px solid var(--line-2); color:var(--dim); font:600 10px Pretendard; border-radius:4px; padding:2px 4px; cursor:pointer}
+  .pal button:hover{color:var(--bone); border-color:var(--bone)}
+  .apply{margin-top:10px; width:100%; background:var(--bone); color:var(--black); border:none; border-radius:999px; padding:10px; font:700 13px Pretendard; cursor:pointer}
+  .seg button.rec::after{content:' 추천'; color:var(--red); font-size:10.5px}
+  .cc{width:30px; height:30px; border-radius:50%; overflow:hidden; border:1px dashed var(--line-2); position:relative; display:inline-block}
+  .cc input{position:absolute; inset:-8px; width:46px; height:46px; padding:0; border:none; cursor:pointer}
+  .chk{display:flex; gap:8px; align-items:center; font-size:12px; color:var(--dim); margin-top:8px} .chk input{width:auto}
   main{min-width:0; padding:20px 28px 60px}
   .bar{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px}
   .tabs{display:flex; gap:6px}
@@ -101,6 +112,18 @@
     <div class="row"><div><label>시즌</label><input id="season" value="2026 FW"></div><div><label>시안 제목 (두 줄은 / 로)</label><input id="title" value="SYMBOL / HOODIE"></div></div>
   </fieldset>
 
+  <fieldset><legend>BRAND<small>감도 · 콜라보</small></legend>
+    <label>브랜드 / 콜라보 이름</label><input id="brand" placeholder="예: MOVV (비우면 S2:U 단독)">
+    <label>레퍼런스 이미지 (룩북 · 인스타 캡처 · 제품 사진, 여러 장 가능)</label><input type="file" id="refUp" accept="image/*" multiple>
+    <div id="refOut" hidden><div class="refThumbs" id="refThumbs"></div><div class="pal" id="pal"></div><p class="hint" id="refRead"></p></div>
+    <label>감도</label><div class="seg" id="mood"></div>
+    <p class="hint" id="moodHint"></p>
+    <button type="button" class="apply" id="moodApply">이 감도로 컬러 · 서체 · 가공 적용</button>
+    <label>협업사 로고 (PNG · 투명 배경 권장)</label><input type="file" id="partnerUp" accept="image/*">
+    <label class="chk"><input type="checkbox" id="partnerTint" checked> 로고를 잉크 색으로 맞추기</label>
+    <p class="hint">로고를 올리면 A·B 그래픽에서 '콜라보'를 고를 수 있어요. 레퍼런스·로고 이미지는 이 브라우저 안에서만 분석되고 어디에도 올라가지 않아요.</p>
+  </fieldset>
+
   <fieldset><legend>A<small id="aLeg">앞판 그래픽</small></legend>
     <div class="seg" id="aArt"></div>
     <div id="aTextWrap" hidden><label>문구 (줄바꿈 가능)</label><textarea id="aText">S2:U</textarea></div>
@@ -155,9 +178,26 @@ TO YOU</textarea></div>
   const $ = id => document.getElementById(id);
   const BODY = [{n:'Black', h:'#0C0C0D'}, {n:'Off White', h:'#EEEAE2'}, {n:'Heather Gray', h:'#9C9C9E'}, {n:'Navy', h:'#1C2433'}, {n:'Olive', h:'#4A4D3A'}];
   const INK = [{n:'Bone', h:'#F4F2ED'}, {n:'Black', h:'#0C0C0D'}, {n:'S2:U Red', h:'#FF3D2E'}, {n:'Recovery Blue', h:'#2B6CB0'}];
-  const ARTS_A = [['symbol','심볼'],['wordmark','워드마크'],['text','문구'],['upload','이미지'],['none','없음']];
-  const ARTS_B = [['programs','프로그램 S2:1–4'],['symbol','심볼'],['wordmark','워드마크'],['text','문구'],['upload','이미지'],['none','없음']];
-  const st = {item:'hoodie', body:'#0C0C0D', ink:'#F4F2ED', aArt:'symbol', bArt:'programs', aPos:'left', aImg:null, bImg:null, spec:null, qty:{}};
+  const ARTS_A = [['symbol','심볼'],['wordmark','워드마크'],['collab','콜라보'],['text','문구'],['upload','이미지'],['none','없음']];
+  const ARTS_B = [['programs','프로그램 S2:1–4'],['symbol','심볼'],['wordmark','워드마크'],['collab','콜라보'],['text','문구'],['upload','이미지'],['none','없음']];
+  // 감도 presets: typeface, colours, suggested finishing. 'tone' ink = tone-on-tone of the body.
+  const MOODS = {
+    sport:{label:'스포츠 퍼포먼스', font:s => `400 ${s}px "Bebas Neue"`, accent:'#FF3D2E', body:'#0C0C0D', ink:'#F4F2ED', light:false,
+      kw:['속도','심박','에너지','대비'], methods:['고주파 / 실리콘','반사 프린트','실크스크린 1도'], tip:'S2:U 기본 감도 — 콘덴스드 서체, 블랙 바디, 레드 포인트.'},
+    tech:{label:'미니멀 테크', font:s => `500 ${s}px "JetBrains Mono"`, accent:'#9C9C9E', body:'#0C0C0D', ink:'#9C9C9E', light:false,
+      kw:['모노톤','정밀','데이터','저채도'], methods:['고주파 / 실리콘','반사 프린트','실크스크린 1도'], tip:'작은 로고와 넓은 여백, 반사·실리콘 같은 기능성 가공.'},
+    outdoor:{label:'아웃도어 유틸리티', font:s => `800 ${s}px Archivo`, accent:'#C8642B', body:'#4A4D3A', ink:'#F4F2ED', light:false,
+      kw:['기능성','어스톤','내구성','유틸리티'], methods:['우븐 패치','러버 패치','반사 프린트','자수'], tip:'어스톤 바디, 패치·반사 디테일, 굵은 그로테스크 서체.'},
+    street:{label:'스트릿 그래픽', font:s => `400 ${s}px Anton`, accent:'#FF3D2E', body:'#0C0C0D', ink:'#FF3D2E', light:false,
+      kw:['볼드','대비','그래픽','레이어'], methods:['실크스크린 2도','DTF 전사','실크스크린 1도'], tip:'큰 등판 그래픽, 강한 대비, 2도 이상 실크.'},
+    luxury:{label:'콰이어트 럭셔리', font:s => `400 ${s}px "Instrument Serif"`, accent:'#B8A88A', body:'#EEEAE2', ink:'tone', light:true,
+      kw:['절제','톤온톤','소재감','여백'], methods:['자수','우븐 라벨','자카드 직조','자카드 편직'], tip:'톤온톤 자수, 작은 로고, 그래픽보다 소재와 라벨.'},
+    wellness:{label:'웰니스 내추럴', font:s => `italic 400 ${s}px "Instrument Serif"`, accent:'#2B6CB0', body:'#EEEAE2', ink:'#2B6CB0', light:true,
+      kw:['호흡','회복','부드러움','자연광'], methods:['자수','실크스크린 1도','자카드 직조'], tip:'밝은 바디, 블루 계열 잉크, 부드러운 세리프.'}
+  };
+  const MD = () => MOODS[st.mood] || MOODS.sport;
+  const fnt = size => MD().font(size);
+  const st = {item:'hoodie', body:'#0C0C0D', ink:'#F4F2ED', aArt:'symbol', bArt:'programs', aPos:'left', aImg:null, bImg:null, spec:null, qty:{}, mood:'sport', rec:null, palette:[]};
   // ---- items: flat sketch (viewBox 400×460), print positions, sizes, suggested specs ----
   // kinds: b=body fill, s=shade fill, l=seam line, d=dashed stitch, z=zip/heavy line
   const mirror = d => d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (m, x, y) => `${400 - +x} ${y}`);
@@ -275,7 +315,7 @@ TO YOU</textarea></div>
   function tinted(key, color){
     const k = key + color; if(tintCache[k]) return tintCache[k];
     const im = IMG[key]; if(!im) return null;
-    const c = document.createElement('canvas'); c.width = im.naturalWidth; c.height = im.naturalHeight;
+    const c = document.createElement('canvas'); c.width = im.naturalWidth || im.width; c.height = im.naturalHeight || im.height;
     const x = c.getContext('2d'); x.drawImage(im, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = color; x.fillRect(0, 0, c.width, c.height);
     return tintCache[k] = c;
   }
@@ -286,6 +326,7 @@ TO YOU</textarea></div>
     if(kind === 'symbol') return 768/428;
     if(kind === 'wordmark') return 770/1098;
     if(kind === 'programs') return 210/280;
+    if(kind === 'collab') return 1 / (1.257 + 0.62 * partnerAspect());
     if(kind === 'upload'){ const im = st[which + 'Img']; return im ? im.naturalHeight / im.naturalWidth : 0.6; }
     if(kind === 'text'){ const lines = ($(which + 'Text').value || ' ').split('\n'); return Math.max(.25, lines.length * 0.42 / Math.max(...lines.map(l => Math.max(l.length, 3) * 0.42))); }
     return 0;
@@ -298,9 +339,16 @@ TO YOU</textarea></div>
       const s = w / 280; ctx.save(); ctx.translate(x, top); ctx.scale(s, s); ctx.fillStyle = ink;
       fitText(ctx, 'SUSTAIN TO YOU', 0, 48, 280, 56); ctx.fillRect(0, 62, 280, 2);
       [['S2:1','GROUND MOVEMENT'],['S2:2','STRENGTH CAPACITY'],['S2:3','HYBRID ENGINE'],['S2:4','RECOVERY & LIFESTYLE']].forEach((r, i) => {
-        ctx.font = '28px "Bebas Neue"'; ctx.fillText(r[0], 0, 100 + i*36); fitText(ctx, r[1], 64, 100 + i*36, 216, 28, true);
+        ctx.font = fnt(28); ctx.fillText(r[0], 0, 100 + i*36); fitText(ctx, r[1], 64, 100 + i*36, 216, 28, true);
       });
       ctx.restore();
+    } else if(kind === 'collab'){
+      let x0 = x; const sym = tinted('symbol', ink); if(sym) ctx.drawImage(sym, x0, top, h * 428/768, h); x0 += h * .557 + h * .22;
+      const m = h * .26, my = top + h/2; ctx.save(); ctx.strokeStyle = ink; ctx.lineWidth = Math.max(1, h * .045); ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(x0, my - m/2); ctx.lineTo(x0 + m, my + m/2); ctx.moveTo(x0 + m, my - m/2); ctx.lineTo(x0, my + m/2); ctx.stroke(); ctx.restore();
+      x0 += m + h * .22; const ph = h * .62, pw = ph * partnerAspect();
+      if(IMG.partnerMask){ const im = $('partnerTint').checked ? tinted('partnerMask', ink) : IMG.partner; if(im) ctx.drawImage(im, x0, top + (h - ph)/2, pw, ph); }
+      else { ctx.save(); ctx.fillStyle = ink; fitText(ctx, ($('brand').value || 'BRAND').toUpperCase(), x0, top + h/2 + ph*.35, pw, ph); ctx.restore(); }
     } else if(kind === 'text'){
       const lines = ($(which + 'Text').value || '').split('\n'); const lh = h / lines.length;
       ctx.save(); ctx.fillStyle = ink; lines.forEach((l, i) => fitText(ctx, l, x, top + lh*(i+1) - lh*0.12, w, lh*0.95, false, true)); ctx.restore();
@@ -308,11 +356,14 @@ TO YOU</textarea></div>
     return h;
   }
   function fitText(ctx, txt, x, y, maxW, size, shrinkOnly, center){
-    ctx.font = size + 'px "Bebas Neue"'; let tw = ctx.measureText(txt).width;
+    ctx.font = fnt(size); let tw = ctx.measureText(txt).width;
     if(!shrinkOnly || tw > maxW){ ctx.save(); const sx = tw > 0 ? maxW / tw : 1; const k = shrinkOnly ? Math.min(1, sx) : sx;
       ctx.translate(x, y); ctx.scale(k, 1); ctx.fillText(txt, 0, 0); ctx.restore(); }
     else ctx.fillText(txt, center ? x + (maxW - tw)/2 : x, y);
   }
+
+  function partnerAspect(){ const p = IMG.partnerMask; if(p) return p.width / p.height; return Math.max(1.5, ($('brand').value || 'BRAND').length * .5); }
+  function hexA(h, a){ const n = parseInt(h.slice(1), 16); return `rgba(${n>>16 & 255},${n>>8 & 255},${n & 255},${a})`; }
 
   // ---- garment ----
   function drawGarment(ctx, view, ox, oy, scale, opts){
@@ -344,11 +395,11 @@ TO YOU</textarea></div>
   function drawMock(){
     const c = $('cvMock'), ctx = c.getContext('2d');
     ctx.fillStyle = '#0c0c0d'; ctx.fillRect(0, 0, c.width, c.height);
-    const g = ctx.createRadialGradient(1100, 440, 40, 1100, 440, 760); g.addColorStop(0, 'rgba(255,61,46,.10)'); g.addColorStop(1, 'rgba(255,61,46,0)');
+    const g = ctx.createRadialGradient(1100, 440, 40, 1100, 440, 760); g.addColorStop(0, hexA(MD().accent, .12)); g.addColorStop(1, hexA(MD().accent, 0));
     ctx.fillStyle = g; ctx.fillRect(0, 0, c.width, c.height);
-    ctx.fillStyle = 'rgba(244,242,237,.6)'; ctx.font = '600 13px Pretendard'; spaced(ctx, `S2:U GOODS · ${$('season').value} · DESIGN DRAFT`, 72, 80, 3);
+    ctx.fillStyle = 'rgba(244,242,237,.6)'; ctx.font = '600 13px Pretendard'; spaced(ctx, `S2:U${brandX()} GOODS · ${$('season').value} · DESIGN DRAFT`, 72, 80, 3);
     const [t1, t2] = ($('title').value || '').split('/').map(s => s.trim());
-    ctx.font = '96px "Bebas Neue"'; ctx.fillStyle = '#f4f2ed'; ctx.fillText(t1 || '', 72, 180); ctx.fillStyle = '#ff3d2e'; ctx.fillText(t2 || '', 72, 268);
+    ctx.fillStyle = '#f4f2ed'; fitText(ctx, t1 || '', 72, 180, 340, 96, true); ctx.fillStyle = MD().accent; fitText(ctx, t2 || '', 72, 268, 340, 96, true);
     ctx.fillStyle = 'rgba(244,242,237,.75)'; ctx.font = '15px Pretendard';
     ctx.fillText(`${$('code').value} · ${IT().label} (${IT().en})`, 72, 318);
     ctx.fillText(($('fabric').value || '원단 확정 전'), 72, 344);
@@ -360,6 +411,12 @@ TO YOU</textarea></div>
       ctx.beginPath(); ctx.arc(83, ly, 11, 0, 7); ctx.fillStyle = '#ff3d2e'; ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = 'bold 12px Pretendard'; ctx.textAlign = 'center'; ctx.fillText(L, 83, ly + 4); ctx.textAlign = 'left';
       ctx.fillStyle = '#f4f2ed'; ctx.font = '700 14px Pretendard'; ctx.fillText(lab, 102, ly + 5);
       const lw = ctx.measureText(lab).width; ctx.fillStyle = 'rgba(244,242,237,.8)'; ctx.font = '14px Pretendard'; ctx.fillText(`${$(p + 'Method').value} · ${sizeMM(p)}`, 112 + lw, ly + 5); ly += 36; });
+    // brand · 감도 block
+    ly += 14; ctx.fillStyle = 'rgba(244,242,237,.55)'; ctx.font = '600 12px Pretendard'; spaced(ctx, 'BRAND · 감도', 72, ly, 2.5);
+    ctx.fillStyle = '#f4f2ed'; ctx.font = '700 15px Pretendard'; ctx.fillText(`S2:U${brandX()}`, 72, ly + 26);
+    ctx.fillStyle = MD().accent; ctx.fillText(MD().label, 72, ly + 50);
+    ctx.fillStyle = 'rgba(244,242,237,.7)'; ctx.font = '13px Pretendard'; ctx.fillText(MD().kw.join(' · '), 72, ly + 72);
+    (st.palette || []).slice(0, 5).forEach((h, i) => { ctx.fillStyle = h; roundRect(ctx, 72 + i*40, ly + 88, 32, 32, 6); ctx.fill(); ctx.strokeStyle = 'rgba(244,242,237,.3)'; ctx.stroke(); });
     const sym = tinted('symbol', '#f4f2ed'); if(sym) ctx.drawImage(sym, 72, 980, 36, 64);
     drawGarment(ctx, 'front', 470, 150, 1.38, {shadow:true, pins:true});
     drawGarment(ctx, 'back', 1020, 150, 1.38, {shadow:true, pins:true});
@@ -395,9 +452,9 @@ TO YOU</textarea></div>
     const ctx = c.getContext('2d'); ctx.fillStyle = '#0c0c0d'; ctx.fillRect(0, 0, c.width, c.height);
     $('shotNote').textContent = ok ? 'AI로 만든 무지 제품 사진 위에 지금 설정한 그래픽을 합성한 참고용 이미지예요. 원단 질감·핏은 실물 샘플로 확인하세요.'
       : `스튜디오 뷰 사진은 지금 블랙 ${SHOT_ITEMS}만 준비돼 있어요. 다른 품목·컬러 사진은 Claude에게 요청하면 추가할 수 있어요.`;
-    ctx.fillStyle = 'rgba(244,242,237,.6)'; ctx.font = '600 13px Pretendard'; spaced(ctx, `S2:U GOODS · ${$('season').value} · STUDIO VIEW`, 64, 70, 3);
-    ctx.font = '64px "Bebas Neue"'; const [t1, t2] = ($('title').value || '').split('/').map(s => s.trim());
-    ctx.fillStyle = '#f4f2ed'; ctx.fillText(t1 || '', 64, 140); ctx.fillStyle = '#ff3d2e'; ctx.fillText(t2 || '', 64 + ctx.measureText((t1 || '') + ' ').width, 140);
+    ctx.fillStyle = 'rgba(244,242,237,.6)'; ctx.font = '600 13px Pretendard'; spaced(ctx, `S2:U${brandX()} GOODS · ${$('season').value} · STUDIO VIEW`, 64, 70, 3);
+    ctx.font = fnt(64); const [t1, t2] = ($('title').value || '').split('/').map(s => s.trim());
+    ctx.fillStyle = '#f4f2ed'; ctx.fillText(t1 || '', 64, 140); ctx.fillStyle = MD().accent; ctx.fillText(t2 || '', 64 + ctx.measureText((t1 || '') + ' ').width, 140);
     if(!ok){ ctx.fillStyle = 'rgba(244,242,237,.5)'; ctx.font = '20px Pretendard'; ctx.fillText(`블랙 ${SHOT_ITEMS}를 고르면 스튜디오 뷰가 보여요.`, 64, 260); return; }
     const cells = set.length === 2 ? [[64, 180, 728, 910], [808, 180, 728, 910]]
       : [[64, 180, 480, 600], [560, 180, 480, 600], [1056, 180, 480, 600], [64, 796, 1472, 640]];
@@ -448,7 +505,7 @@ TO YOU</textarea></div>
   function today(){ const d = new Date(); const p = n => String(n).padStart(2, '0'); return `${d.getFullYear()}.${p(d.getMonth()+1)}.${p(d.getDate())}`; }
   function renderWO(){
     const item = `${IT().label} (${IT().en})`; const SIZES = IT().sizes;
-    const info = [['품명', $('name').value], ['품번', $('code').value], ['아이템', item], ['시즌', $('season').value],
+    const info = [['브랜드', `S2:U${brandX()}`], ['디자인 감도', `${MD().label} — ${MD().kw.join(' · ')}`], ['품명', $('name').value], ['품번', $('code').value], ['아이템', item], ['시즌', $('season').value],
       ['바디 컬러', `${nameOf(BODY, st.body)} ${st.body}`], ['원단', $('fabric').value], ['거래처(공장)', $('vendor').value], ['담당', $('owner').value]];
     const pos = {a: aOpt().pos, b: IT().b.pos};
     const rows = ['a','b'].filter(p => st[p + 'Art'] !== 'none').map(p => `<tr><td class="c"><span class="pin">${p.toUpperCase()}</span></td>
@@ -489,7 +546,9 @@ TO YOU</textarea></div>
     host.addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; st[key] = b.dataset.v; sync(); if(after) after(); render(); });
   }
   function swatches(id, list, key){
-    $(id).innerHTML = list.map(c => `<button type="button" title="${c.n}" aria-label="${c.n}" data-v="${c.h}" style="background:${c.h}" aria-pressed="false"></button>`).join('');
+    $(id).innerHTML = list.map(c => `<button type="button" title="${c.n}" aria-label="${c.n}" data-v="${c.h}" style="background:${c.h}" aria-pressed="false"></button>`).join('')
+      + `<label class="cc" title="직접 고르기"><input type="color" aria-label="직접 고르기" data-k="${key}"></label>`;
+    $(id).querySelector('input').addEventListener('input', e => { st[key] = e.target.value.toUpperCase(); sync(); render(); });
     $(id).addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; st[key] = b.dataset.v; sync(); render(); });
   }
   function sync(){
@@ -525,18 +584,117 @@ TO YOU</textarea></div>
     st.qty = {}; $('aMethod').value = ''; $('bMethod').value = '';
     buildItemUI(); buildSpecInputs(); buildQty(); sync(); render();
   });
+  // ---- BRAND · 감도 ----
+  function brandX(){ const b = ($('brand').value || '').trim(); return b ? ` × ${b.toUpperCase()}` : ''; }
+  $('mood').innerHTML = Object.entries(MOODS).map(([k, m]) => `<button type="button" data-v="${k}" aria-pressed="false">${m.label}</button>`).join('');
+  $('mood').addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; st.mood = b.dataset.v; syncMood(); render(); });
+  function syncMood(){
+    $('mood').querySelectorAll('button').forEach(b => { b.setAttribute('aria-pressed', b.dataset.v === st.mood); b.classList.toggle('rec', b.dataset.v === st.rec); });
+    $('moodHint').textContent = `${MD().tip} 추천 가공: ${MD().methods.slice(0, 3).join(', ')}.`;
+  }
+  const lum = h => luminance(h);
+  function shade(h, d){ const n = parseInt(h.slice(1), 16); const f = c => Math.max(0, Math.min(255, Math.round(c + d * 255)));
+    return '#' + [f(n>>16 & 255), f(n>>8 & 255), f(n & 255)].map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase(); }
+  $('moodApply').addEventListener('click', () => {
+    const m = MD(), pal = st.palette || [];
+    let body = m.body, ink = m.ink;
+    if(pal.length){   // brand palette wins: lightest/darkest neutral for the body, most saturated colour with enough contrast for ink
+      const byL = [...pal].sort((a, b) => lum(a) - lum(b)); body = m.light ? byL[byL.length - 1] : byL[0];
+      const sat = h => { const n = parseInt(h.slice(1), 16), r = (n>>16 & 255)/255, g = (n>>8 & 255)/255, b = (n & 255)/255; const mx = Math.max(r, g, b), mn = Math.min(r, g, b); return mx === 0 ? 0 : (mx - mn) / mx; };
+      const cands = pal.filter(h => Math.abs(lum(h) - lum(body)) > .35).sort((a, b) => sat(b) - sat(a));
+      ink = m.ink === 'tone' ? null : (cands[0] || (lum(body) < .5 ? '#F4F2ED' : '#0C0C0D'));
+    }
+    if(ink === 'tone' || ink === null) ink = shade(body, lum(body) > .5 ? -.14 : .16);
+    st.body = body; st.ink = ink;
+    ['a','b'].forEach(p => { const opt = m.methods.find(x => IT().methods.includes(x)); if(opt) $(p + 'Method').value = opt; });
+    sync(); render();
+  });
+  // reference images → palette + 감도 추천 (all in-browser)
+  function rgbToHsl(r, g, b){ r /= 255; g /= 255; b /= 255; const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn)/2; let h = 0, s2 = 0;
+    if(mx !== mn){ const d = mx - mn; s2 = l > .5 ? d / (2 - mx - mn) : d / (mx + mn);
+      h = mx === r ? (g - b)/d + (g < b ? 6 : 0) : mx === g ? (b - r)/d + 2 : (r - g)/d + 4; h *= 60; } return [h, s2, l]; }
+  function analyze(imgs){
+    const px = [];
+    imgs.forEach(im => { const c = document.createElement('canvas'), k = 72 / Math.max(im.naturalWidth, im.naturalHeight);
+      c.width = Math.max(1, Math.round(im.naturalWidth * k)); c.height = Math.max(1, Math.round(im.naturalHeight * k));
+      const x = c.getContext('2d'); x.drawImage(im, 0, 0, c.width, c.height); const d = x.getImageData(0, 0, c.width, c.height).data;
+      for(let i = 0; i < d.length; i += 4) if(d[i+3] > 200) px.push([d[i], d[i+1], d[i+2]]); });
+    if(!px.length) return null;
+    // k-means (k=5) on RGB
+    let cent = Array.from({length:5}, (_, i) => px[Math.floor((i + .5) * px.length / 5)].slice()), asg = new Array(px.length).fill(0);
+    for(let it = 0; it < 12; it++){
+      px.forEach((p, i) => { let bi = 0, bd = 1e9; cent.forEach((c, j) => { const dd = (p[0]-c[0])**2 + (p[1]-c[1])**2 + (p[2]-c[2])**2; if(dd < bd){ bd = dd; bi = j; } }); asg[i] = bi; });
+      const sum = cent.map(() => [0, 0, 0, 0]); px.forEach((p, i) => { const s3 = sum[asg[i]]; s3[0] += p[0]; s3[1] += p[1]; s3[2] += p[2]; s3[3]++; });
+      cent = sum.map((s3, j) => s3[3] ? [s3[0]/s3[3], s3[1]/s3[3], s3[2]/s3[3]] : cent[j]);
+    }
+    const counts = cent.map((_, j) => asg.filter(a => a === j).length);
+    const palette = cent.map((c, j) => [c, counts[j]]).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1])
+      .map(([c]) => '#' + c.map(v => Math.round(v).toString(16).padStart(2, '0')).join('').toUpperCase());
+    // metrics
+    let L = 0, S = 0, L2 = 0, warm = 0, earth = 0, cool = 0, red = 0;
+    px.forEach(([r, g, b]) => { const [h, s2, l] = rgbToHsl(r, g, b); L += l; L2 += l*l; S += s2;
+      if(s2 > .15){ if(h < 50 || h > 330) warm += s2; if(h >= 190 && h <= 260) cool += s2; if(h < 15 || h > 345) red += s2; }
+      if(h >= 25 && h <= 150 && s2 > .08 && s2 < .5 && l > .15 && l < .65) earth++; });
+    const n = px.length; L /= n; S /= n; const std = Math.sqrt(Math.max(0, L2/n - L*L)); warm /= n; cool /= n; red /= n; earth /= n;
+    const sc = {
+      tech: (1 - S*3) + (L < .4 ? .6 : 0) + (std > .22 ? .3 : 0) + cool,
+      outdoor: earth * 3 + (S > .1 && S < .4 ? .3 : 0),
+      street: S * 2.2 + std * 1.5 + red,
+      luxury: (L > .62 ? .8 : 0) + (1 - S*3) * .7 + (std < .2 ? .4 : 0) + warm * .5,
+      sport: red * 3 + (L < .45 ? .4 : 0) + std,
+      wellness: (L > .6 ? .6 : 0) + cool * 2 + (std < .22 ? .3 : 0) + (S > .08 && S < .35 ? .3 : 0)
+    };
+    const rec = Object.entries(sc).sort((a, b) => b[1] - a[1])[0][0];
+    const pct = v => Math.round(v * 100);
+    const read = `밝기 ${pct(L)}% · 채도 ${pct(S)}% · 대비 ${std > .22 ? '높음' : std > .14 ? '보통' : '낮음'} · ${warm > cool ? '따뜻한 톤' : cool > warm ? '차가운 톤' : '중성 톤'}${earth > .25 ? ' · 어스톤 많음' : ''} → ${MOODS[rec].label} 추천`;
+    return {palette, rec, read};
+  }
+  function showPalette(){
+    $('pal').innerHTML = (st.palette || []).map(h => `<div><i style="background:${h}" title="${h}"></i><span><button type="button" data-h="${h}" data-k="body">바디</button><button type="button" data-h="${h}" data-k="ink">잉크</button></span></div>`).join('');
+  }
+  $('pal').addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; st[b.dataset.k] = b.dataset.h; sync(); render(); });
+  $('refUp').addEventListener('change', e => {
+    const files = [...e.target.files].slice(0, 8); if(!files.length) return;
+    Promise.all(files.map(f => new Promise(r => { const fr = new FileReader(); fr.onload = () => load(fr.result).then(r); fr.readAsDataURL(f); }))).then(imgs => {
+      imgs = imgs.filter(Boolean); const res = analyze(imgs); if(!res) return;
+      $('refThumbs').innerHTML = imgs.map(i => `<img src="${i.src}" alt="">`).join('');
+      st.palette = res.palette; st.rec = res.rec; st.mood = res.rec; $('refRead').textContent = res.read; $('refOut').hidden = false;
+      showPalette(); syncMood(); render();
+    });
+  });
+  function makeMask(im){   // logo → single-colour alpha mask (works for transparent PNGs and logos on a light/dark background)
+    const c = document.createElement('canvas'), k = Math.min(1, 900 / Math.max(im.naturalWidth, im.naturalHeight));
+    c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k);
+    const x = c.getContext('2d'); x.drawImage(im, 0, 0, c.width, c.height); const id = x.getImageData(0, 0, c.width, c.height), d = id.data;
+    const corner = [0, (c.width - 1) * 4, (c.height - 1) * c.width * 4, d.length - 4];
+    const transparent = corner.every(i => d[i+3] < 20), bgLight = corner.reduce((a, i) => a + (d[i] + d[i+1] + d[i+2]) / 3, 0) / 4 > 128;
+    let minX = c.width, minY = c.height, maxX = 0, maxY = 0;
+    for(let i = 0; i < d.length; i += 4){
+      const l = (d[i] + d[i+1] + d[i+2]) / 765; let a = transparent ? d[i+3] / 255 : (bgLight ? 1 - l : l); a = Math.max(0, Math.min(1, (a - .12) * 1.3));
+      d[i] = d[i+1] = d[i+2] = 255; d[i+3] = a * 255;
+      if(a > .3){ const p = i / 4, px2 = p % c.width, py = (p / c.width) | 0; if(px2 < minX) minX = px2; if(px2 > maxX) maxX = px2; if(py < minY) minY = py; if(py > maxY) maxY = py; }
+    }
+    x.putImageData(id, 0, 0); if(maxX <= minX) return c;
+    const o = document.createElement('canvas'); o.width = maxX - minX + 1; o.height = maxY - minY + 1; o.getContext('2d').drawImage(c, -minX, -minY); return o;
+  }
+  $('partnerUp').addEventListener('change', e => { const f = e.target.files[0]; if(!f) return;
+    const fr = new FileReader(); fr.onload = () => load(fr.result).then(im => { if(!im) return; IMG.partner = im; IMG.partnerMask = makeMask(im);
+      Object.keys(tintCache).filter(k => k.startsWith('partnerMask')).forEach(k => delete tintCache[k]);
+      if(st.aArt === 'symbol') st.aArt = 'collab'; sync(); render(); }); fr.readAsDataURL(f); });
+  $('partnerTint').addEventListener('change', render);
+
   seg('aArt', ARTS_A, 'aArt', () => { if(st.aArt === 'symbol' && +$('aW').value > 120) $('aW').value = 45; });
   seg('bArt', ARTS_B, 'bArt'); seg('aPos', null, 'aPos');
   swatches('body', BODY, 'body'); swatches('ink', INK, 'ink');
   ['aUp','bUp'].forEach(id => $(id).addEventListener('change', e => { const f = e.target.files[0]; if(!f) return;
     const r = new FileReader(); r.onload = () => load(r.result).then(im => { st[id[0] + 'Img'] = im; render(); }); r.readAsDataURL(f); }));
 
-  const FIELDS = ['name','code','season','title','aText','bText','aW','bW','fabric','vendor','owner','tNeck','tCare','tTag','tPack','dReq','dOk','dDue','dest','notes'];
+  const FIELDS = ['brand','name','code','season','title','aText','bText','aW','bW','fabric','vendor','owner','tNeck','tCare','tTag','tPack','dReq','dOk','dDue','dest','notes'];
   document.querySelector('aside').addEventListener('input', e => { if(e.target.closest('#spec')) return; render(); });
   document.querySelector('aside').addEventListener('change', () => render());
 
   const KEY = 's2u-goods-v2';
-  function save(){ try{ localStorage.setItem(KEY, JSON.stringify({st:{item:st.item, body:st.body, ink:st.ink, aArt:st.aArt, bArt:st.bArt, aPos:st.aPos, spec:st.spec, qty:st.qty, aMethod:$('aMethod').value, bMethod:$('bMethod').value},
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify({st:{item:st.item, body:st.body, ink:st.ink, aArt:st.aArt, bArt:st.bArt, aPos:st.aPos, spec:st.spec, qty:st.qty, mood:st.mood, rec:st.rec, palette:st.palette, aMethod:$('aMethod').value, bMethod:$('bMethod').value},
     f:Object.fromEntries(FIELDS.map(k => [k, $(k).value]))})); }catch(e){} }
   function restore(){ try{ const d = JSON.parse(localStorage.getItem(KEY) || 'null'); if(!d) return false;
     Object.assign(st, d.st); FIELDS.forEach(k => { if(d.f && k in d.f) $(k).value = d.f[k]; }); return true; }catch(e){ return false; } }
@@ -563,11 +721,13 @@ TO YOU</textarea></div>
   if(!restored || !st.spec) buildSpecInputs(); else {
     const keep = st.spec; buildSpecInputs(); if(keep.length === st.spec.length && keep[0][1].length === st.spec[0][1].length){ st.spec = keep; document.querySelectorAll('#spec input').forEach(i => i.value = st.spec[+i.dataset.r][1][+i.dataset.c]); } }
   st.qty = st.qty || {}; buildQty();
+  if(!MOODS[st.mood]) st.mood = 'sport'; syncMood(); if(st.palette && st.palette.length){ showPalette(); $('refOut').hidden = false; $('refRead').textContent = '이전에 분석한 팔레트예요. 새 이미지를 올리면 다시 분석해요.'; }
   sync();
   Promise.all([
     load('assets/symbol.png').then(i => IMG.symbol = i), load('assets/wordmark.png').then(i => IMG.wordmark = i),
     ...Object.values(SHOTS).flat().map(s => load(`assets/${s.k}.jpg`).then(i => IMG[s.k] = i)),
-    document.fonts.load('96px "Bebas Neue"'), document.fonts.load('15px Pretendard'), document.fonts.load('12px "JetBrains Mono"')
+    document.fonts.load('96px "Bebas Neue"'), document.fonts.load('15px Pretendard'), document.fonts.load('12px "JetBrains Mono"'),
+    document.fonts.load('40px Anton'), document.fonts.load('800 40px Archivo'), document.fonts.load('40px "Instrument Serif"'), document.fonts.load('italic 40px "Instrument Serif"')
   ]).then(() => document.fonts.ready).then(() => {
     const h = {'#studio':'tabShot', '#wo':'tabWo'}[location.hash];
     if(qItem && ITEMS[qItem] && qItem !== st.item){ $('itemSel').value = qItem; $('itemSel').dispatchEvent(new Event('change')); }
