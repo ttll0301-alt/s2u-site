@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark">
 <title>S2:U — Sustain to You</title>
-<meta name="description" content="S2:U(Sustain to You)는 서울의 프로그램 IP 회사입니다. S2:1 GROUND MOVEMENT부터 S2:4 RECOVERY &amp; LIFESTYLE까지 네 개의 프로그램을 브랜드 세션, FYF 커뮤니티 세션, 트레이닝 센터로 운영합니다.">
+<meta name="description" content="S2:U(Sustain to You)는 서울의 프로그램 IP 회사입니다. S1 GROUND MOVEMENT부터 S4 RECOVERY &amp; LIFESTYLE까지 네 개의 프로그램을 브랜드 세션, FYF 커뮤니티 세션, 트레이닝 센터로 운영합니다.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sustaintoyou.com/">
 <meta property="og:title" content="S2:U — Sustain to You">
@@ -485,7 +485,17 @@
   .ip-code{font-family:'Bebas Neue',sans-serif; font-size:clamp(44px,5vw,64px); line-height:0.9; letter-spacing:0.01em; color:var(--move-red);}
   .ip-card.r .ip-code{color:var(--recover-blue);}
   .ip-name{font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.08em; margin-top:10px;}
-  .ip-desc{font-size:14.5px; line-height:1.7; color:var(--bone-dim); margin-top:12px;}
+  .ip-card{display:flex; flex-direction:column;}
+  .ip-sub{font-size:14.5px; font-weight:600; color:var(--bone); margin-top:14px; line-height:1.5;}
+  .ip-desc{font-size:14px; line-height:1.75; color:var(--bone-dim); margin-top:10px;}
+  .ip-tag{font-size:11.5px; font-weight:700; letter-spacing:0.12em; color:var(--move-red); margin-top:18px;}
+  .ip-card.r .ip-tag{color:var(--recover-blue);}
+  .ip-kw{font-size:12.5px; color:var(--bone-dim); margin-top:6px;}
+  .ip-end{font-size:14.5px; font-weight:700; color:var(--bone); margin-top:auto; padding-top:20px;}
+  .ip-flow{font-family:'Bebas Neue',sans-serif; font-size:clamp(22px,3vw,32px); letter-spacing:0.08em; margin-top:36px;}
+  .ip-flow i{font-style:normal; color:var(--move-red); margin:0 0.3em;}
+  .ip-close{margin-top:28px; max-width:720px; font-size:15px; line-height:1.8; color:var(--bone-dim);}
+  .ip-close strong{display:block; margin-top:6px; color:var(--bone); font-weight:700;}
   .ch-head{font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:0.14em; color:var(--bone-dim); margin-top:72px;}
   .ch-grid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-top:20px;}
   .ch-card{border:1px solid var(--line); border-radius:16px; padding:22px 22px 24px; min-width:0;}
@@ -1041,15 +1051,45 @@
     <div class="brand-sec" style="border-top:none;">
       <div class="eyebrow">01 · PROGRAM IP</div>
       <h2 class="brand-h">우리는<br><em>프로그램</em>을 만듭니다</h2>
-      <p class="brand-p"><strong>S2:U는 프로그램 IP 회사입니다.</strong> 움직임, 근력, 심폐, 회복을 네 개의 프로그램으로 설계하고, 같은 프로그램을 브랜드 세션과 커뮤니티 세션, 트레이닝 센터로 이어 운영합니다.</p>
-      <p class="brand-p">어디서 만나든 같은 이름, 같은 기준, 같은 흐름. 그게 S2:U 프로그램입니다.</p>
+      <p class="brand-p"><strong>S2:U는 프로그램 IP 회사입니다.</strong> 순간적으로 강한 퍼포먼스에서 끝나지 않습니다. 움직임의 기반을 만들고, 근력을 키우고, 그 힘을 체력과 퍼포먼스로 확장한 뒤 충분히 회복하는 네 개의 프로그램을 설계합니다.</p>
+      <p class="brand-p">운동이 중심이고, 음악·비주얼·패션·예술·음식·공간은 각 프로그램을 하나의 문화적 경험으로 완성하는 방식입니다.</p>
+      <div class="ip-flow">GROUND <i>→</i> STRENGTH <i>→</i> ENGINE <i>→</i> RECOVERY <i>↺</i></div>
 
       <div class="ip-grid">
-        <div class="ip-card"><div class="ip-code">S2:1</div><div class="ip-name">GROUND MOVEMENT</div><p class="ip-desc">지면에서 시작하는 움직임. 발과 손, 코어로 몸의 기본 패턴을 다시 세웁니다.</p></div>
-        <div class="ip-card"><div class="ip-code">S2:2</div><div class="ip-name">STRENGTH CAPACITY</div><p class="ip-desc">무게를 다루는 힘, 그리고 그 힘을 오래 버티는 용량을 키웁니다.</p></div>
-        <div class="ip-card"><div class="ip-code">S2:3</div><div class="ip-name">HYBRID ENGINE</div><p class="ip-desc">러닝과 트레이닝을 오가며 심폐 엔진을 끌어올립니다.</p></div>
-        <div class="ip-card r"><div class="ip-code">S2:4</div><div class="ip-name">RECOVERY &amp; LIFESTYLE</div><p class="ip-desc">호흡과 이완, 회복을 일상의 루틴으로 가져갑니다.</p></div>
+        <div class="ip-card">
+          <div class="ip-code">S1</div><div class="ip-name">GROUND MOVEMENT</div>
+          <p class="ip-sub">움직임의 기반을 만드는 프로그램</p>
+          <p class="ip-desc">지면 감각, 모빌리티, 코어와 그라운드 무브먼트로 몸이 제대로 움직일 수 있는 기반을 만듭니다. Animal Flow, 크롤링, 음악에 맞춘 그룹 플로우와 브레싱 리셋까지.</p>
+          <p class="ip-tag">MOVEMENT × MUSIC</p>
+          <p class="ip-kw">Ground · Mobility · Connection · Flow</p>
+          <p class="ip-end">잘 움직일 수 있는 몸을 만듭니다.</p>
+        </div>
+        <div class="ip-card">
+          <div class="ip-code">S2</div><div class="ip-name">STRENGTH CAPACITY</div>
+          <p class="ip-sub">기초 근력과 근지구력을 만드는 프로그램</p>
+          <p class="ip-desc">스쿼트·힌지·푸시·풀·런지·캐리. 무거운 중량보다 정확한 자세로 저항을 통제하고, 꾸준히 힘을 만들어낼 수 있는 기반을 쌓습니다.</p>
+          <p class="ip-tag">STRENGTH × VISUAL</p>
+          <p class="ip-kw">Strength · Endurance · Control · Foundation</p>
+          <p class="ip-end">힘을 낼 수 있는 몸을 만듭니다.</p>
+        </div>
+        <div class="ip-card">
+          <div class="ip-code">S3</div><div class="ip-name">HYBRID ENGINE</div>
+          <p class="ip-sub">근력과 심폐체력을 퍼포먼스로 연결하는 프로그램</p>
+          <p class="ip-desc">러닝과 로잉·스키·바이크를 기능성 움직임과 연결해, S2에서 만든 힘을 오래 쓰는 하이브리드 체력으로 바꿉니다. 페이스 조절부터 팀 퍼포먼스까지.</p>
+          <p class="ip-tag">HYBRID RUNNING × FASHION</p>
+          <p class="ip-kw">Run · Cardio · Engine · Hybrid</p>
+          <p class="ip-end">만들어진 힘을 체력과 퍼포먼스로 확장합니다.</p>
+        </div>
+        <div class="ip-card r">
+          <div class="ip-code">S4</div><div class="ip-name">RECOVERY &amp; LIFESTYLE</div>
+          <p class="ip-sub">회복을 건강한 삶과 문화로 확장하는 프로그램</p>
+          <p class="ip-desc">브레스워크와 명상, 숙면, 음식과 사운드까지. 몸과 마음을 다시 안정된 상태로 돌려놓고, 계속 움직일 수 있는 생활 방식을 만듭니다.</p>
+          <p class="ip-tag">RECOVERY × ART · FOOD · FASHION · SPACE</p>
+          <p class="ip-kw">Breath · Mind · Sleep · Food · Sound</p>
+          <p class="ip-end">몸과 마음을 회복하고 건강한 삶으로 확장합니다.</p>
+        </div>
       </div>
+      <p class="ip-close">S1부터 S4는 한 번 거치고 끝나는 단계가 아닙니다. 회복된 몸으로 다시 움직이고 훈련하는 흐름이 이어질 때, 지속 가능한 변화가 만들어집니다. <strong>강한 퍼포먼스를 넘어, 오래 지속할 수 있는 몸과 삶을 만듭니다.</strong></p>
 
       <div class="ch-head">ONE IP · FOUR CHANNELS</div>
       <div class="ch-grid">
@@ -1344,7 +1384,7 @@
     <div class="brand-sec">
       <div class="eyebrow">05 · TRAINING CENTER</div>
       <h2 class="brand-h">프로그램이 사는<br><em>센터</em>를 엽니다</h2>
-      <p class="brand-p">S2:U의 첫 트레이닝 센터는 S2:1부터 S2:4까지, 네 개의 프로그램이 매일 돌아가는 곳입니다. Movement와 Recovery가 한 동선 안에 있는 구조로 설계하고 있습니다. 오픈 소식을 가장 먼저 받고 싶다면 대기 명단에 이름을 남겨주세요.</p>
+      <p class="brand-p">S2:U의 첫 트레이닝 센터는 S1부터 S4까지, 네 개의 프로그램이 매일 돌아가는 곳입니다. Movement와 Recovery가 한 동선 안에 있는 구조로 설계하고 있습니다. 오픈 소식을 가장 먼저 받고 싶다면 대기 명단에 이름을 남겨주세요.</p>
       <div class="loc-box">
         <div class="loc-tag">OPENING 2026.12 – 2027.03 — SEOUL</div>
         <div class="loc-big">위치 공개 예정</div>
