@@ -823,8 +823,18 @@
     .cur{width:22px; height:22px; margin:-11px 0 0 -11px; border-radius:50%; z-index:10000;
       transition:opacity 0.25s ease, box-shadow 0.3s ease;}
     .cur svg{display:block; width:100%; height:100%; filter:drop-shadow(0 1px 4px rgba(0,0,0,0.55));
-      animation:yySpin 6s linear infinite;}
+      animation:yySpin 6s linear infinite, yyGlow 1.4s ease-in-out infinite alternate;}
     @keyframes yySpin{to{transform:rotate(360deg);}}
+    @keyframes yyGlow{
+      from{filter:drop-shadow(0 0 2px rgba(244,242,237,0.45)) drop-shadow(0 1px 4px rgba(0,0,0,0.55));}
+      to{filter:drop-shadow(0 0 7px rgba(244,242,237,0.95)) drop-shadow(0 0 14px rgba(255,61,46,0.55));}}
+    .cur::before, .cur::after{content:""; position:absolute; width:8px; height:8px; pointer-events:none;
+      background:#fff; clip-path:polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+      filter:drop-shadow(0 0 3px #fff); opacity:0; animation:yyTwinkle 1.8s ease-in-out infinite;}
+    .cur::before{top:-7px; right:-7px;}
+    .cur::after{bottom:-6px; left:-6px; width:6px; height:6px; animation-delay:0.9s;}
+    @keyframes yyTwinkle{0%,100%{opacity:0; transform:scale(0.3) rotate(0deg);} 45%{opacity:1; transform:scale(1) rotate(45deg);} 70%{opacity:0; transform:scale(0.4) rotate(90deg);}}
+    .cur-run, .cur-step, .cur-spm{display:none !important;}
     .cur-run{width:90px; height:90px; margin:-45px 0 0 -45px; transition:opacity 0.25s ease;}
     .cur.off, .cur-run.off{opacity:0;}
     .cur-step{position:fixed; top:0; left:0; z-index:9998; pointer-events:none;
