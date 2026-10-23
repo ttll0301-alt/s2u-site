@@ -68,11 +68,12 @@
 
   .overlay-nav{
     position:fixed; inset:0; z-index:200; background:var(--off-black);
-    display:flex; flex-direction:column; justify-content:center;
-    padding:0 clamp(24px,8vw,120px); transform:translateY(-100%);
-    transition:transform 0.55s cubic-bezier(.77,0,.18,1);
+    display:flex; flex-direction:column; justify-content:safe center;
+    padding:72px clamp(24px,8vw,120px) 32px; transform:translateY(-100%);
+    overflow-y:auto; visibility:hidden;
+    transition:transform 0.55s cubic-bezier(.77,0,.18,1), visibility 0s linear 0.55s;
   }
-  .overlay-nav.open{transform:translateY(0);}
+  .overlay-nav.open{transform:translateY(0); visibility:visible; transition:transform 0.55s cubic-bezier(.77,0,.18,1), visibility 0s;}
   .overlay-nav .close-btn{
     position:absolute; top:24px; right:clamp(20px,5vw,56px);
     background:none; border:none; color:var(--bone);
@@ -83,11 +84,11 @@
   .nav-list li:last-child{border-bottom:1px solid var(--line);}
   .nav-list a{
     display:flex; align-items:baseline; gap:18px; font-family:'Bebas Neue',sans-serif;
-    font-size:clamp(40px,9vw,96px); padding:10px 0; transition:color 0.25s, padding-left 0.25s;
+    font-size:clamp(32px,min(9vw,7.4vh),88px); padding:6px 0; transition:color 0.25s, padding-left 0.25s;
   }
   .nav-list a .num{font-family:'Pretendard'; font-size:13px; font-weight:600; color:var(--bone-dim); letter-spacing:0.05em;}
   .nav-list a:hover, .nav-list a:focus-visible{color:var(--move-red); padding-left:14px;}
-  .nav-foot{margin-top:48px; display:flex; gap:28px; font-size:13px; color:var(--bone-dim);}
+  .nav-foot{margin-top:clamp(20px,4vh,48px); display:flex; flex-wrap:wrap; gap:12px 28px; font-size:13px; color:var(--bone-dim);}
 
   .page-head{
     padding:calc(34px + 120px) clamp(20px,5vw,56px) 64px;
@@ -3079,13 +3080,13 @@ ${pts}
       }
       px = e.clientX; py = e.clientY;
       mx = e.clientX; my = e.clientY;
-      if(!seen){ seen = true; dot.classList.remove('off'); run.classList.remove('off'); }
+      if(!seen || dot.classList.contains('off')){ seen = true; dot.classList.remove('off'); run.classList.remove('off'); }
 
       state.hot = !!e.target.closest(HOT);
       state.aim = !!e.target.closest('.cad-stage, #runMap');
 
       let text = '';
-      if(aim && e.target.closest('.cad-stage')) text = 'TAP';
+      if(state.aim && e.target.closest('.cad-stage')) text = 'TAP';
       else if(e.target.closest('.work')) text = 'VIEW';
       else if(e.target.closest('.pl-thumb')) text = 'PLAY';
       lab.textContent = text;
