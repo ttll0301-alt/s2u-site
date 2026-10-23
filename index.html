@@ -818,7 +818,7 @@
     input, textarea{cursor:none;}
     .cur, .cur-run{position:fixed; top:0; left:0; z-index:9999; pointer-events:none;
       will-change:transform;}
-    .cur{width:22px; height:22px; margin:-11px 0 0 -11px; border-radius:50%; z-index:10000;
+    .cur{width:24px; height:24px; margin:-12px 0 0 -12px; border-radius:50%; z-index:10000;
       transition:opacity 0.25s ease, box-shadow 0.3s ease;}
     .cur svg{display:block; width:100%; height:100%; overflow:visible; filter:drop-shadow(0 1px 4px rgba(0,0,0,0.6));}
     .cur .yy-ring, .cur .yy-s{fill:none; stroke:#f4f2ed; stroke-width:5; stroke-linecap:round;
@@ -827,10 +827,10 @@
     .cur .yy-s{animation:yyS 3.6s ease-in-out infinite;}
     .cur .yy-fill{opacity:0; animation:yyFill 3.6s ease-in-out infinite;}
     .cur .yy-dot{opacity:0; transform:scale(0); transform-box:fill-box; transform-origin:center; animation:yyDot 3.6s ease-out infinite;}
-    @keyframes yyRing{0%{stroke-dashoffset:100;} 28%,90%{stroke-dashoffset:0;} 100%{stroke-dashoffset:0; opacity:0.0;}}
-    @keyframes yyS{0%,24%{stroke-dashoffset:100;} 50%,90%{stroke-dashoffset:0;} 100%{stroke-dashoffset:0; opacity:0;}}
-    @keyframes yyFill{0%,48%{opacity:0;} 62%,90%{opacity:1;} 100%{opacity:0;}}
-    @keyframes yyDot{0%,58%{opacity:0; transform:scale(0);} 68%,90%{opacity:1; transform:scale(1);} 100%{opacity:0; transform:scale(1);}}
+    @keyframes yyRing{0%{stroke-dashoffset:100;} 28%,92%{stroke-dashoffset:0; opacity:1;} 100%{stroke-dashoffset:0; opacity:0.45;}}
+    @keyframes yyS{0%,24%{stroke-dashoffset:100;} 50%,92%{stroke-dashoffset:0; opacity:1;} 100%{stroke-dashoffset:0; opacity:0;}}
+    @keyframes yyFill{0%,48%{opacity:0;} 62%,92%{opacity:1;} 100%{opacity:0.3;}}
+    @keyframes yyDot{0%,58%{opacity:0; transform:scale(0);} 68%,92%{opacity:1; transform:scale(1);} 100%{opacity:0; transform:scale(1);}}
     .cur-run, .cur-step, .cur-spm{display:none !important;}
     .cur-run{width:90px; height:90px; margin:-45px 0 0 -45px; transition:opacity 0.25s ease;}
     .cur.off, .cur-run.off{opacity:0;}
@@ -1516,7 +1516,7 @@
   </section>
 
 
-  <div class="cur off" id="cur"><svg viewBox="-50 -50 100 100" aria-hidden="true"><circle r="47" fill="#0c0c0d"/><path class="yy-fill" d="M0,-47 A47,47 0 0 1 0,47 A23.5,23.5 0 0 1 0,0 A23.5,23.5 0 0 0 0,-47Z" fill="#f4f2ed"/><path class="yy-s" pathLength="100" d="M0,-47 A23.5,23.5 0 0 1 0,0 A23.5,23.5 0 0 0 0,47"/><circle class="yy-ring" pathLength="100" r="47" transform="rotate(-90)"/><circle class="yy-dot" cy="-23.5" r="8" fill="#f4f2ed"/><circle class="yy-dot" cy="23.5" r="8" fill="#0c0c0d" stroke="#f4f2ed" stroke-width="0"/></svg></div>
+  <div class="cur off" id="cur"><svg viewBox="-50 -50 100 100" aria-hidden="true"><circle r="47" fill="#0c0c0d" stroke="#f4f2ed" stroke-width="5" stroke-opacity="0.45"/><g opacity="0.3"><path d="M0,-47 A47,47 0 0 1 0,47 A23.5,23.5 0 0 1 0,0 A23.5,23.5 0 0 0 0,-47Z" fill="#f4f2ed"/><circle cy="-23.5" r="8" fill="#f4f2ed"/></g><path class="yy-fill" d="M0,-47 A47,47 0 0 1 0,47 A23.5,23.5 0 0 1 0,0 A23.5,23.5 0 0 0 0,-47Z" fill="#f4f2ed"/><path class="yy-s" pathLength="100" d="M0,-47 A23.5,23.5 0 0 1 0,0 A23.5,23.5 0 0 0 0,47"/><circle class="yy-ring" pathLength="100" r="47" transform="rotate(-90)"/><circle class="yy-dot" cy="-23.5" r="8" fill="#f4f2ed"/><circle class="yy-dot" cy="23.5" r="8" fill="#0c0c0d" stroke="#f4f2ed" stroke-width="0"/></svg></div>
   <canvas class="cur-run off" id="curRun" width="180" height="180"></canvas>
   <div class="cur-lab" id="curLab"></div>
   <div class="cur-spm" id="curSpm"></div>
