@@ -822,18 +822,17 @@
       will-change:transform;}
     .cur{width:22px; height:22px; margin:-11px 0 0 -11px; border-radius:50%; z-index:10000;
       transition:opacity 0.25s ease, box-shadow 0.3s ease;}
-    .cur svg{display:block; width:100%; height:100%; filter:drop-shadow(0 1px 4px rgba(0,0,0,0.55));
-      animation:yySpin 6s linear infinite, yyGlow 1.4s ease-in-out infinite alternate;}
-    @keyframes yySpin{to{transform:rotate(360deg);}}
-    @keyframes yyGlow{
-      from{filter:drop-shadow(0 0 2px rgba(244,242,237,0.45)) drop-shadow(0 1px 4px rgba(0,0,0,0.55));}
-      to{filter:drop-shadow(0 0 7px rgba(244,242,237,0.95)) drop-shadow(0 0 14px rgba(255,61,46,0.55));}}
-    .cur::before, .cur::after{content:""; position:absolute; width:8px; height:8px; pointer-events:none;
-      background:#fff; clip-path:polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
-      filter:drop-shadow(0 0 3px #fff); opacity:0; animation:yyTwinkle 1.8s ease-in-out infinite;}
-    .cur::before{top:-7px; right:-7px;}
-    .cur::after{bottom:-6px; left:-6px; width:6px; height:6px; animation-delay:0.9s;}
-    @keyframes yyTwinkle{0%,100%{opacity:0; transform:scale(0.3) rotate(0deg);} 45%{opacity:1; transform:scale(1) rotate(45deg);} 70%{opacity:0; transform:scale(0.4) rotate(90deg);}}
+    .cur svg{display:block; width:100%; height:100%; overflow:visible; filter:drop-shadow(0 1px 4px rgba(0,0,0,0.6));}
+    .cur .yy-ring, .cur .yy-s{fill:none; stroke:#f4f2ed; stroke-width:5; stroke-linecap:round;
+      stroke-dasharray:100; stroke-dashoffset:100;}
+    .cur .yy-ring{animation:yyRing 3.6s ease-in-out infinite;}
+    .cur .yy-s{animation:yyS 3.6s ease-in-out infinite;}
+    .cur .yy-fill{opacity:0; animation:yyFill 3.6s ease-in-out infinite;}
+    .cur .yy-dot{opacity:0; transform:scale(0); transform-box:fill-box; transform-origin:center; animation:yyDot 3.6s ease-out infinite;}
+    @keyframes yyRing{0%{stroke-dashoffset:100;} 28%,90%{stroke-dashoffset:0;} 100%{stroke-dashoffset:0; opacity:0.0;}}
+    @keyframes yyS{0%,24%{stroke-dashoffset:100;} 50%,90%{stroke-dashoffset:0;} 100%{stroke-dashoffset:0; opacity:0;}}
+    @keyframes yyFill{0%,48%{opacity:0;} 62%,90%{opacity:1;} 100%{opacity:0;}}
+    @keyframes yyDot{0%,58%{opacity:0; transform:scale(0);} 68%,90%{opacity:1; transform:scale(1);} 100%{opacity:0; transform:scale(1);}}
     .cur-run, .cur-step, .cur-spm{display:none !important;}
     .cur-run{width:90px; height:90px; margin:-45px 0 0 -45px; transition:opacity 0.25s ease;}
     .cur.off, .cur-run.off{opacity:0;}
@@ -1148,10 +1147,10 @@
 
       <div class="filter-row" id="joinFilter">
         <button class="filter-btn active" data-jcat="all">전체</button>
-        <button class="filter-btn" data-jcat="build">BUILD & POWER</button>
-        <button class="filter-btn" data-jcat="engine">ENGINE</button>
-        <button class="filter-btn" data-jcat="mobility">MOBILITY</button>
-        <button class="filter-btn" data-jcat="hybrid">HYBRID DAY</button>
+        <button class="filter-btn" data-jcat="mobility">S2:1 GROUND</button>
+        <button class="filter-btn" data-jcat="build">S2:2 STRENGTH</button>
+        <button class="filter-btn" data-jcat="engine">S2:3 ENGINE</button>
+        <button class="filter-btn" data-jcat="hybrid">FULL FLOW</button>
       </div>
       <div class="grid2" id="joinGrid"></div>
     </section>
@@ -1161,13 +1160,13 @@
       <p class="section-lede">브랜드와 함께한 협업부터 S2:U가 직접 기획하고 운영한 세션까지 — 지금까지의 활동을 하나씩 기록합니다.</p>
       <div class="stats-row">
         <div class="stat"><div class="stat-n display" id="statTotal">–</div><div class="stat-l">Total Events</div></div>
-        <div class="stat"><div class="stat-n display" id="statCollab">–</div><div class="stat-l">Brand Collab</div></div>
-        <div class="stat"><div class="stat-n display" id="statOwn">–</div><div class="stat-l">Own Session</div></div>
+        <div class="stat"><div class="stat-n display" id="statCollab">–</div><div class="stat-l">Brand Session</div></div>
+        <div class="stat"><div class="stat-n display" id="statOwn">–</div><div class="stat-l">Community Session</div></div>
       </div>
       <div class="filter-row" id="filterBar">
         <button class="filter-btn active" data-cat="all">전체</button>
-        <button class="filter-btn" data-cat="collab">브랜드 협업</button>
-        <button class="filter-btn" data-cat="own">자체 세션</button>
+        <button class="filter-btn" data-cat="collab">브랜드 세션</button>
+        <button class="filter-btn" data-cat="own">커뮤니티 세션</button>
       </div>
       <div class="events-toolbar">
         <div class="sort-group" id="sortGroup">
@@ -1519,7 +1518,7 @@
   </section>
 
 
-  <div class="cur off" id="cur"><svg viewBox="-50 -50 100 100" aria-hidden="true"><circle r="47" fill="#0c0c0d" stroke="#f4f2ed" stroke-width="5"/><path d="M0,-47 A47,47 0 0 1 0,47 A23.5,23.5 0 0 1 0,0 A23.5,23.5 0 0 0 0,-47Z" fill="#f4f2ed"/><circle cy="-23.5" r="8" fill="#f4f2ed"/><circle cy="23.5" r="8" fill="#0c0c0d"/></svg></div>
+  <div class="cur off" id="cur"><svg viewBox="-50 -50 100 100" aria-hidden="true"><circle r="47" fill="#0c0c0d"/><path class="yy-fill" d="M0,-47 A47,47 0 0 1 0,47 A23.5,23.5 0 0 1 0,0 A23.5,23.5 0 0 0 0,-47Z" fill="#f4f2ed"/><path class="yy-s" pathLength="100" d="M0,-47 A23.5,23.5 0 0 1 0,0 A23.5,23.5 0 0 0 0,47"/><circle class="yy-ring" pathLength="100" r="47" transform="rotate(-90)"/><circle class="yy-dot" cy="-23.5" r="8" fill="#f4f2ed"/><circle class="yy-dot" cy="23.5" r="8" fill="#0c0c0d" stroke="#f4f2ed" stroke-width="0"/></svg></div>
   <canvas class="cur-run off" id="curRun" width="180" height="180"></canvas>
   <div class="cur-lab" id="curLab"></div>
   <div class="cur-spm" id="curSpm"></div>
@@ -1600,10 +1599,10 @@
   const DAYPASS_URL = 'https://smartstore.naver.com/atelieramusant/products/13725532199';
   const MONTHLY_URL = 'https://smartstore.naver.com/atelieramusant/products/13725532910';
   const sessions = [
-    {cat:'build', catLabel:'근력 · STRENGTH', catColor:'red', name:'BUILD & POWER', nick:"일명 '알통'", desc:'무게를 다루는 근력 세션. 매주 기준을 새로 세우는 시간.', day:'수요일 저녁', duration:'60분', cap:'14명'},
-    {cat:'engine', catLabel:'심폐 · CARDIO', catColor:'red', name:'ENGINE', nick:"일명 '심쿵'", desc:'심박수를 끝까지 밀어붙이는 카디오 세션.', day:'토요일 오전', duration:'50분', cap:'12명'},
-    {cat:'mobility', catLabel:'회복 · RECOVERY', catColor:'blue', name:'MOBILITY', nick:'MOVE BETTER CLASS', desc:'발에서 시작해 코어까지 — Animal Flow 기반 모빌리티 & 코어 세션.', day:'토요일 오전', duration:'60분', cap:'14명'},
-    {cat:'hybrid', catLabel:'믹스 · HYBRID', catColor:'red', name:'HYBRID DAY', nick:"일명 '종합선물세트'", desc:'Movement와 Recovery를 한 세션에 — 다 한 번에 오는 날.', day:'격주 일요일', duration:'90분', cap:'10명'},
+    {cat:'mobility', catLabel:'S2:1 · GROUND MOVEMENT', catColor:'red', name:'MOBILITY', nick:'MOVE BETTER CLASS', desc:'발에서 시작해 코어까지 — Animal Flow 기반 모빌리티 & 코어 세션.', day:'토요일 오전', duration:'60분', cap:'14명'},
+    {cat:'build', catLabel:'S2:2 · STRENGTH CAPACITY', catColor:'red', name:'BUILD & POWER', nick:"일명 '알통'", desc:'무게를 다루는 근력 세션. 매주 기준을 새로 세우는 시간.', day:'수요일 저녁', duration:'60분', cap:'14명'},
+    {cat:'engine', catLabel:'S2:3 · HYBRID ENGINE', catColor:'red', name:'ENGINE', nick:"일명 '심쿵'", desc:'심박수를 끝까지 밀어붙이는 카디오 세션.', day:'토요일 오전', duration:'50분', cap:'12명'},
+    {cat:'hybrid', catLabel:'S2:1 – S2:4 · FULL FLOW', catColor:'blue', name:'HYBRID DAY', nick:"일명 '종합선물세트'", desc:'Movement와 Recovery를 한 세션에 — 다 한 번에 오는 날.', day:'격주 일요일', duration:'90분', cap:'10명'},
   ];
   document.getElementById('joinGrid').innerHTML = sessions.map((s, i) => `
     <div class="join-card" data-jcat="${s.cat}">
@@ -1747,7 +1746,7 @@
     });
     grid.innerHTML = sorted.map((e, i) => `
       <div class="card cat-${e.cat}" data-cat="${e.cat}" style="animation-delay:${i * 0.05}s">
-        <div class="thumb"><span class="big">${e.letter}</span><span class="cat-tag">${e.cat === 'collab' ? 'Brand Collab' : 'Own Session'}</span></div>
+        <div class="thumb"><span class="big">${e.letter}</span><span class="cat-tag">${e.cat === 'collab' ? 'Brand Session' : 'Community Session'}</span></div>
         <div class="card-body">
           <div class="card-date">${e.date}${e.participants ? ' · 참여 ' + e.participants + '명' : ''}</div>
           <div class="card-title display">${e.title}</div>
