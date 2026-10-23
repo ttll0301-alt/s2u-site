@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark">
 <title>S2:U — Sustain to You</title>
+<meta name="description" content="S2:U(Sustain to You)는 Movement → Recovery → Community를 하나의 흐름으로 잇는 서울의 퍼포먼스 컬처 브랜드입니다. 정기 세션, 브랜드 협업 세션, 러닝 코칭을 운영합니다.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sustaintoyou.com/">
+<meta property="og:title" content="S2:U — Sustain to You">
+<meta property="og:description" content="Movement → Recovery → Community → You. 서울의 퍼포먼스 컬처 브랜드 S2:U의 세션과 브랜드 협업 기록.">
+<meta property="og:image" content="https://sustaintoyou.com/profile/media/og-profile.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Pretendard:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -395,6 +401,8 @@
   .partners .p-eyebrow{font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:0.14em; color:var(--bone-dim); margin-bottom:28px;}
   .plogos{display:flex; flex-wrap:wrap; align-items:center; gap:clamp(20px,3.2vw,38px) clamp(28px,4.6vw,60px); font-size:clamp(14px,1.9vw,20px);}
   .plogos img{width:auto; max-width:100%; display:block; opacity:0.9;}
+  .partners .p-cta{display:inline-block; margin-top:40px; padding:12px 20px; border:1px solid var(--line-strong); border-radius:999px; font-size:15px; font-weight:600; color:var(--bone);}
+  .partners .p-cta:hover{border-color:var(--bone);}
   footer{padding:32px clamp(20px,5vw,56px) 50px; border-top:1px solid var(--line); font-size:12px; color:var(--bone-dim); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
 
   @media (prefers-reduced-motion: reduce){
@@ -967,6 +975,7 @@
       <span>SEOUL, KR</span>
       <a href="https://www.instagram.com/s2useoul/" target="_blank" rel="noopener">INSTAGRAM</a>
       <a href="https://www.instagram.com/findurflow__/" target="_blank" rel="noopener">FYF</a>
+      <a href="profile/">COMPANY PROFILE</a>
       <span>WAITLIST</span>
     </div>
   </nav>
@@ -1462,6 +1471,7 @@
       <img src="profile/media/partners/kosmospeople.png?v=6" alt="KOSMOSPEOPLE" style="height:0.8em" loading="lazy">
       <img src="profile/media/partners/fyf.png?v=6" alt="FYF" style="height:1.9em" loading="lazy">
     </div>
+    <a class="p-cta" href="profile/">브랜드 협업 · 회사 소개서 보기 →</a>
   </section>
 
   <footer>
@@ -1614,7 +1624,8 @@
 
   // rsvp:'<slug>' 를 넣으면 카드에 RSVP 신청 버튼이 생깁니다 (/admin/ 에서 만든 행사 주소).
   const events = [
-    {cat:'collab', date:'2026.10.19', title:"RUNNER'S HOUSE · MOVV URBAN 5K RUN", desc:'더샵갤러리 러너스하우스에서 MOVV와 함께 도심 5K를 달리고 회복까지 이어가는 프라이빗 세션을 S2:U가 운영합니다.', with:'MOVV × THE SHARP GALLERY', letter:'M', participants:0},
+    {cat:'collab', date:'2026.10.20', title:'RUNMATE CAMP · 1:1 RUNNING COACHING', desc:'SK텔레콤 런메이트 캠프에서 프라이빗 세션과 1:1 러닝 코칭을 맡았습니다. 피지컬 테스트와 AI 러닝 분석으로 자세·착지·리듬을 확인하고, S2:U 코치진이 11일간 1:1 코칭을 이어갑니다.', with:'S2:U × SK TELECOM · T팩토리 성수', letter:'S', participants:0},
+    {cat:'collab', date:'2026.10.19', title:"RUNNER'S HOUSE · MOVV URBAN 5K RUN", desc:'MOVV와 S2:U의 첫 번째 어반 러닝 세션입니다. 발과 발목을 중심으로 몸을 준비하고, MOVV 러닝화를 신고 도심 속 5km를 함께 달린 뒤 더샵갤러리의 리커버리 시설에서 회복까지 이어갔습니다.', with:'MOVV × THE SHARP GALLERY', letter:'M', participants:0},
     {cat:'collab', date:'2026.10.05', title:'FIRST RUCK SESSION', desc:'더템플짐 해방촌에서 출발해 웨이트 베스트를 메고 동네와 숲길을 함께 걷고 오른 S2:U의 첫 럭킹 세션입니다. 15명을 초대했습니다.', with:'S2:U × GORUCK', letter:'G', participants:15},
     {cat:'collab', date:'2026.10.03', title:'SUNN FESTIVAL 고성', desc:'고성 세계잼버리수련장에서 열린 SUNN 페스티벌의 웰니스 세션 전체를 기획하고 이틀간 운영했습니다. 숲에서 달리고, 몸을 깨우고, 호흡을 고른 뒤 사우나로 마무리하는 흐름입니다.', with:'SEALING SERVICE · SUNN', letter:'S', participants:0},
     {cat:'collab', date:'2026.10', title:'서울공예박물관 나이트 세션', desc:'해가 진 박물관 마당에 매트와 무드등을 깔고, 움직임에서 이완까지 이어지는 야간 웰니스 세션을 열었습니다.', with:'SEOUL MUSEUM OF CRAFT ART', letter:'C', participants:0},
@@ -2143,6 +2154,16 @@ ${pts}
     }
     // date / place 는 비워두면 자동으로 표시되지 않습니다. 값만 채우면 바로 노출됩니다.
     const WORKS = [
+      {v:'profile/media/s2u-skt-runmate.mp4', cat:'BRAND COLLAB', t:'S2:U × SK TELECOM', date:'2026.10.20', place:'T팩토리 성수',
+       w:'SK텔레콤', ig:'https://www.instagram.com/reel/De1G8pwCA3L/',
+       d:'RUNMATE CAMP · 프라이빗 세션 · 1:1 러닝 코칭',
+       long:'SK텔레콤 런메이트 캠프에서 S2:U가 프라이빗 세션과 1:1 러닝 코칭을 제공했습니다. MEASURABLE 피지컬 테스트와 AI 러닝 분석으로 각자의 자세와 착지, 리듬을 데이터로 확인하고, 리포트와 슬로모션 영상을 바탕으로 직접 달리며 나에게 맞는 움직임과 페이스를 찾았습니다. 이후 S2:U 코치진이 11일간 1:1 러닝 코칭을 함께합니다.'},
+
+      {v:'profile/media/s2u-craft-night.mp4', cat:'BRAND COLLAB', t:'SEOUL MUSEUM OF CRAFT ART', date:'2026.10', place:'서울공예박물관',
+       w:'서울공예박물관', ig:'',
+       d:'서울공예박물관 나이트 세션 필름',
+       long:'해가 진 박물관 마당에 매트와 무드등을 깔고, 움직임에서 이완까지 이어지는 야간 웰니스 세션을 열었습니다.'},
+
       {v:'profile/media/s2u-goruck.mp4', cat:'BRAND COLLAB', t:'S2:U × GORUCK', date:'2026.10.05', place:'더템플짐 해방촌',
        w:'GORUCK', ig:'',
        d:'FIRST RUCK SESSION 필름',
