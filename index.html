@@ -1601,7 +1601,7 @@
   const sessions = [
     {cat:'mobility', catLabel:'S2:1 · GROUND MOVEMENT', catColor:'red', name:'MOBILITY', nick:'MOVE BETTER CLASS', desc:'발에서 시작해 코어까지 — Animal Flow 기반 모빌리티 & 코어 세션.', day:'토요일 오전', duration:'60분', cap:'14명'},
     {cat:'build', catLabel:'S2:2 · STRENGTH CAPACITY', catColor:'red', name:'BUILD & POWER', nick:"일명 '알통'", desc:'무게를 다루는 근력 세션. 매주 기준을 새로 세우는 시간.', day:'수요일 저녁', duration:'60분', cap:'14명'},
-    {cat:'engine', catLabel:'S2:3 · HYBRID ENGINE', catColor:'red', name:'ENGINE', nick:"일명 '심쿵'", desc:'심박수를 끝까지 밀어붙이는 카디오 세션.', day:'토요일 오전', duration:'50분', cap:'12명'},
+    {cat:'engine', catLabel:'S2:3 · HYBRID ENGINE', catColor:'red', name:'ENGINE', nick:"일명 '심쿵'", desc:'', day:'토요일 오전', duration:'50분', cap:'12명'},
     {cat:'hybrid', catLabel:'S2:1 – S2:4 · FULL FLOW', catColor:'blue', name:'HYBRID DAY', nick:"일명 '종합선물세트'", desc:'Movement와 Recovery를 한 세션에 — 다 한 번에 오는 날.', day:'격주 일요일', duration:'90분', cap:'10명'},
   ];
   document.getElementById('joinGrid').innerHTML = sessions.map((s, i) => `
@@ -1609,7 +1609,7 @@
       <div class="join-tag ${s.catColor}">${s.catLabel}</div>
       <div class="join-name display">${s.name}</div>
       <div class="join-nick">${s.nick}</div>
-      <div class="join-desc">${s.desc}</div>
+      ${s.desc ? `<div class="join-desc">${s.desc}</div>` : ''}
       <div class="join-meta">
         <div><div class="join-meta-k">요일</div><div class="join-meta-v">${s.day}</div></div>
         <div><div class="join-meta-k">시간</div><div class="join-meta-v">${s.duration}</div></div>
@@ -1730,7 +1730,7 @@
     {cat:'collab', date:'2026.07', title:'BALANSA × ONYOURMARK', desc:'부산 베이스의 스트릿 브랜드 발란사와 온유어마크의 협업 티셔츠 런칭과 함께한 세션.', with:'BALANSA · ONYOURMARK', letter:'B', participants:14},
     {cat:'collab', date:'2026.08.08', title:'Garmin × S2:U CrossFit', desc:'가민 브랜드샵 이태원 B2에서 진행한 크로스핏 세션. 가민 커넥트 연동을 시범 적용했습니다.', with:'Garmin Brand Shop Itaewon', letter:'G', participants:18},
     {cat:'own', date:'2026.08.15', title:'S2: MOVE BETTER CLASS', desc:'발에서 시작해 코어까지 — Animal Flow 기반 모빌리티 & 코어 클래스.', with:'S2:U · Garmin Brand Shop Itaewon', letter:'M', participants:14},
-    {cat:'own', date:'2026.08.12', title:'S2: 심쿵', desc:'심박수를 끝까지 밀어붙이는 카디오 세션 — S2:U 정규 프로그램.', with:'S2:U', letter:'S', participants:12},
+    {cat:'own', date:'2026.08.12', title:'S2: 심쿵', desc:'S2:U 정규 프로그램.', with:'S2:U', letter:'S', participants:12},
     {cat:'own', date:'2026.07', title:'Sunday Morning', desc:'yoaakim과 함께한 커뮤니티 러닝 세션. 흐름을 찾아가는 일요일 아침.', with:'FYF Community', letter:'S', participants:20},
     {cat:'own', date:'2026.06', title:'21일간의 도전', desc:'Find Your Flow와 함께한 21일 프로젝트의 마무리.', with:'FYF Community', letter:'21', participants:35},
     {cat:'own', date:'2026.06', title:'애니멀 플로우', desc:'동물의 움직임에서 영감을 받아 인간 본연의 기능과 감각을 회복하는 트레이닝 세션.', with:'S2:U', letter:'A', participants:9},
@@ -2084,7 +2084,7 @@ ${pts}
 
   const photoSessions = [
     {date:'2026.08.15', title:'S2: MOVE BETTER CLASS', loc:'Garmin Brand Shop Itaewon', desc:'발에서 시작해 코어까지 — Animal Flow 기반 모빌리티 & 코어 클래스.', participants:14, instructor:'임창현', osymUrl:null, sent:true},
-    {date:'2026.08.12', title:'S2: 심쿵', loc:'Garmin Brand Shop Itaewon', desc:'심박수를 끝까지 밀어붙이는 카디오 세션 — S2:U 정규 프로그램.', participants:12, instructor:'한수현', osymUrl:null, sent:true},
+    {date:'2026.08.12', title:'S2: 심쿵', loc:'Garmin Brand Shop Itaewon', desc:'S2:U 정규 프로그램.', participants:12, instructor:'한수현', osymUrl:null, sent:true},
     {date:'2026.08.08', title:'Garmin × S2:U CrossFit', loc:'Garmin Brand Shop Itaewon B2', desc:'가민 브랜드샵 이태원 B2에서 진행한 크로스핏 세션.', participants:18, instructor:'S2:U 코치진', osymUrl:null, sent:false},
   ];
   const photoList = document.getElementById('photoList');
