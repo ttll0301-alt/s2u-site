@@ -372,31 +372,45 @@ TO YOU</textarea></div>
   function sizeMM(p){ const w = +$(p + 'W').value || 0; return `${w}×${Math.round(w * artAspect(st[p + 'Art'], p))}mm`; }
 
   // ---- 스튜디오 뷰 ----
-  const SHOTS = [
-    {k:'held-front', place:'a', x:518, y:418, pxmm:0.667, t:null, cap:'FRONT · 앞판 A'},
-    {k:'rack-back', place:'b', x:464, y:540, pxmm:0.564, t:null, cap:'BACK · 뒷판 B'},
-    {k:'chest-detail', place:'a', x:485, y:300, pxmm:3.78, t:{rot:-8, sy:.8}, cap:'DETAIL · ' + 'print'},
-    {k:'studio-table', place:'a', x:442, y:340, pxmm:0.98, t:{sy:.92}, cap:'STUDIO · 원단 스와치 · 행택'}
-  ];
+  // studio photos per item (black body only): plain AI shots, art composited live. x,y = art centre-top in photo px for the item's first A position
+  const SHOTS = {
+    hoodie:[
+      {k:'held-front', place:'a', x:518, y:418, pxmm:0.667, cap:'FRONT · 앞판 A'},
+      {k:'rack-back', place:'b', x:464, y:540, pxmm:0.564, cap:'BACK · 뒷판 B'},
+      {k:'chest-detail', place:'a', x:485, y:300, pxmm:3.78, t:{rot:-8, sy:.8}, noShift:true, detail:true},
+      {k:'studio-table', place:'a', x:442, y:340, pxmm:0.98, t:{sy:.92}, cap:'STUDIO · 원단 스와치 · 행택'}],
+    cap:[
+      {k:'cap-held', place:'a', x:470, y:420, pxmm:1.66, cap:'FRONT · 앞판 A'},
+      {k:'cap-hook', place:null, cap:'STUDIO · 벽걸이'},
+      {k:'cap-detail', place:'a', x:515, y:250, pxmm:3.6, detail:true},
+      {k:'cap-table', place:'a', x:388, y:236, pxmm:1.55, t:{rot:-14, sy:.86}, cap:'STUDIO · 자수실 · 원단 스와치'}],
+    tee:[
+      {k:'tee-held', place:'a', x:519, y:424, pxmm:0.76, cap:'FRONT · 앞판 A'},
+      {k:'tee-rack', place:'b', x:470, y:376, pxmm:0.70, cap:'BACK · 뒷판 B'}]
+  };
+  const SHOT_ITEMS = Object.keys(SHOTS).map(k => ITEMS[k].label).join(' · ');
   function drawShots(){
-    const c = $('cvShot'), ctx = c.getContext('2d'); ctx.fillStyle = '#0c0c0d'; ctx.fillRect(0, 0, c.width, c.height);
-    const ok = st.item === 'hoodie' && st.body === '#0C0C0D';
-    $('shotNote').textContent = ok ? 'AI로 만든 무지 후디 사진 위에 지금 설정한 그래픽을 합성한 참고용 이미지예요. 원단 질감·핏은 실물 샘플로 확인하세요.'
-      : '스튜디오 뷰 사진은 지금 블랙 후디만 준비돼 있어요. 다른 아이템·컬러 사진은 Claude에게 요청하면 추가할 수 있어요.';
+    const set = SHOTS[st.item], ok = !!set && st.body === '#0C0C0D';
+    const c = $('cvShot'); c.height = ok && set.length === 2 ? 1160 : 1500;
+    const ctx = c.getContext('2d'); ctx.fillStyle = '#0c0c0d'; ctx.fillRect(0, 0, c.width, c.height);
+    $('shotNote').textContent = ok ? 'AI로 만든 무지 제품 사진 위에 지금 설정한 그래픽을 합성한 참고용 이미지예요. 원단 질감·핏은 실물 샘플로 확인하세요.'
+      : `스튜디오 뷰 사진은 지금 블랙 ${SHOT_ITEMS}만 준비돼 있어요. 다른 품목·컬러 사진은 Claude에게 요청하면 추가할 수 있어요.`;
     ctx.fillStyle = 'rgba(244,242,237,.6)'; ctx.font = '600 13px Pretendard'; spaced(ctx, `S2:U GOODS · ${$('season').value} · STUDIO VIEW`, 64, 70, 3);
     ctx.font = '64px "Bebas Neue"'; const [t1, t2] = ($('title').value || '').split('/').map(s => s.trim());
     ctx.fillStyle = '#f4f2ed'; ctx.fillText(t1 || '', 64, 140); ctx.fillStyle = '#ff3d2e'; ctx.fillText(t2 || '', 64 + ctx.measureText((t1 || '') + ' ').width, 140);
-    if(!ok){ ctx.fillStyle = 'rgba(244,242,237,.5)'; ctx.font = '20px Pretendard'; ctx.fillText('블랙 후디를 고르면 스튜디오 뷰가 보여요.', 64, 260); return; }
-    const cells = [[64, 180, 480, 600], [560, 180, 480, 600], [1056, 180, 480, 600], [64, 796, 1472, 640]];
-    SHOTS.forEach((s, i) => {
+    if(!ok){ ctx.fillStyle = 'rgba(244,242,237,.5)'; ctx.font = '20px Pretendard'; ctx.fillText(`블랙 ${SHOT_ITEMS}를 고르면 스튜디오 뷰가 보여요.`, 64, 260); return; }
+    const cells = set.length === 2 ? [[64, 180, 728, 910], [808, 180, 728, 910]]
+      : [[64, 180, 480, 600], [560, 180, 480, 600], [1056, 180, 480, 600], [64, 796, 1472, 640]];
+    const first = IT().a[0], shiftMM = (aOpt().cx - first.cx) / IT().upm;   // e.g. 가슴 중앙 vs 가슴 왼쪽
+    set.forEach((s, i) => {
       const im = IMG[s.k]; if(!im) return; const [x, y, w, h] = cells[i];
       const comp = document.createElement('canvas'); comp.width = im.naturalWidth; comp.height = im.naturalHeight;
       const cx = comp.getContext('2d'); cx.drawImage(im, 0, 0);
-      const kind = st[s.place + 'Art'];
+      const kind = s.place ? st[s.place + 'Art'] : 'none';
       if(kind !== 'none'){
         const wpx = (+$(s.place + 'W').value || 0) * s.pxmm;
         cx.save(); cx.globalCompositeOperation = luminance(st.ink) > .5 ? 'screen' : 'multiply'; cx.globalAlpha = .88; cx.filter = 'blur(0.4px)';
-        let ax = s.x; if(s.place === 'a' && st.aPos === 'center' && s.k !== 'chest-detail') ax -= 85 * s.pxmm;
+        const ax = s.x + (s.place === 'a' && !s.noShift ? shiftMM * s.pxmm : 0);
         cx.translate(ax, s.y); if(s.t){ cx.rotate((s.t.rot || 0) * Math.PI/180); cx.scale(1, s.t.sy || 1); }
         drawArt(cx, kind, s.place, 0, 0, wpx, st.ink); cx.restore();
       }
@@ -404,12 +418,12 @@ TO YOU</textarea></div>
       const r = Math.max(w / comp.width, h / comp.height), sw = w / r, sh = h / r;
       ctx.save(); roundRect(ctx, x, y, w, h, 8); ctx.clip();
       ctx.drawImage(comp, (comp.width - sw)/2, (comp.height - sh)/2, sw, sh, x, y, w, h); ctx.restore();
-      ctx.font = '13px Pretendard'; const cap = s.k === 'chest-detail' ? `DETAIL · ${$(s.place + 'Method').value}` : s.cap;
+      ctx.font = '13px Pretendard'; const cap = s.detail ? `DETAIL · ${$(s.place + 'Method').value}` : s.cap;
       const tw = ctx.measureText(cap).width; ctx.fillStyle = 'rgba(12,12,13,.72)'; roundRect(ctx, x + 14, y + h - 44, tw + 20, 30, 4); ctx.fill();
       ctx.fillStyle = '#f4f2ed'; ctx.fillText(cap, x + 24, y + h - 24);
     });
     ctx.fillStyle = 'rgba(244,242,237,.5)'; ctx.font = '12px Pretendard';
-    ctx.fillText('사진은 AI로 만든 무지 후디 컷 위에 실제 아트워크를 합성한 참고용 이미지입니다. 원단 질감·핏은 실물 샘플로 확인.', 64, 1470);
+    ctx.fillText('사진은 AI로 만든 무지 제품 컷 위에 실제 아트워크를 합성한 참고용 이미지입니다. 원단 질감·핏은 실물 샘플로 확인.', 64, c.height - 30);
   }
   function roundRect(ctx, x, y, w, h, r){ ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
 
@@ -552,7 +566,7 @@ TO YOU</textarea></div>
   sync();
   Promise.all([
     load('assets/symbol.png').then(i => IMG.symbol = i), load('assets/wordmark.png').then(i => IMG.wordmark = i),
-    ...SHOTS.map(s => load(`assets/${s.k}.jpg`).then(i => IMG[s.k] = i)),
+    ...Object.values(SHOTS).flat().map(s => load(`assets/${s.k}.jpg`).then(i => IMG[s.k] = i)),
     document.fonts.load('96px "Bebas Neue"'), document.fonts.load('15px Pretendard'), document.fonts.load('12px "JetBrains Mono"')
   ]).then(() => document.fonts.ready).then(() => {
     const h = {'#studio':'tabShot', '#wo':'tabWo'}[location.hash];
