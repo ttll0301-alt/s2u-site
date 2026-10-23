@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Pretendard:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
   :root{
     --off-black:#0c0c0d; --black-2:#141416; --bone:#f4f2ed;
@@ -320,6 +320,7 @@
   .pace-row input[type=range]{flex:1; accent-color:var(--recover-blue);}
   .pace-echo{font-family:'Bebas Neue'; font-size:16px; min-width:70px; text-align:right;}
   .run-note{margin-top:18px; font-size:12px; color:var(--bone-dim); line-height:1.7; max-width:640px;}
+  #runMap .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9) saturate(0.6);}
   .leaflet-control-attribution{background:rgba(10,10,10,0.7)!important; color:#888!important;}
   .leaflet-control-attribution a{color:#aaa!important;}
 
@@ -1827,7 +1828,7 @@
     }
     runMap = L.map('runMap', {zoomControl:true}).setView([lat, lon], 15);
     window._runMapRef = runMap;
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {attribution:'&copy; OpenStreetMap &copy; CARTO', subdomains:'abcd', maxZoom:20}).addTo(runMap);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', maxZoom:19}).addTo(runMap);
   }
   function buildLoopWaypoints(lat, lon, km){
     const radiusM = (km * 1000) / (2 * Math.PI); const n = 6; const pts = [[lat, lon]];
