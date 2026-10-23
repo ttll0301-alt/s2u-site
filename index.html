@@ -899,6 +899,11 @@
   .case-media::before{content:''; position:absolute; inset:0;
     background:linear-gradient(155deg, rgba(255,61,46,0.22), rgba(43,108,176,0.30) 70%, var(--black-2));}
   .case-media video{position:relative; z-index:1; width:100%; height:100%; object-fit:cover;}
+  .case-embed{display:none; position:relative; z-index:3; border:0; background:#fff;
+    width:min(400px, calc(100% - 32px)); height:min(720px, 82vh); margin:16px auto; border-radius:12px;}
+  .case-media.is-embed{aspect-ratio:auto;}
+  .case-media.is-embed video, .case-media.is-embed .case-cover{display:none;}
+  .case-media.is-embed .case-embed{display:block;}
   .case-body{max-width:1100px; margin:0 auto; padding:clamp(40px,6vw,84px) clamp(20px,5vw,56px) 120px;}
   .case-cat{font-size:10px; letter-spacing:0.2em; color:var(--move-red);}
   .case-t{font-family:'Bebas Neue',sans-serif; font-size:clamp(34px,7vw,86px); line-height:0.94;
@@ -2343,6 +2348,7 @@ ${pts}
     view.innerHTML =
       '<div class="case-bar"><span>S2:U JOURNAL</span><button type="button" id="caseClose">CLOSE &#10005;</button></div>'
       + '<div class="case-media"><video id="caseVid" muted loop playsinline controls></video>'
+      + '<iframe id="caseEmbed" class="case-embed" title="Instagram 영상" loading="lazy" allowtransparency="true" allow="autoplay; encrypted-media; picture-in-picture" scrolling="no"></iframe>'
       + '<div class="case-cover" id="caseCover"></div></div>'
       + '<div class="case-body">'
       + '<div class="case-cat" id="caseCat"></div><h2 class="case-t" id="caseT"></h2>'
@@ -2373,9 +2379,19 @@ ${pts}
       const cover = view.querySelector('#caseCover');
       cover.textContent = w.t;
       cover.classList.remove('hide');
-      loadVideo(vid, w.v, function(ok){
-        if(ok){ cover.classList.add('hide'); vid.play().catch(function(){}); }
-      });
+      const media = view.querySelector('.case-media'), embed = view.querySelector('#caseEmbed');
+      if(!w.v && w.ig){
+        // 영상 파일이 없으면 인스타그램 릴스를 그대로 임베드
+        vid.pause(); vid.removeAttribute('src');
+        media.classList.add('is-embed');
+        embed.src = w.ig.replace(/\/?(\?.*)?$/, '/') + 'embed/';
+      } else {
+        media.classList.remove('is-embed');
+        embed.removeAttribute('src');
+        loadVideo(vid, w.v, function(ok){
+          if(ok){ cover.classList.add('hide'); vid.play().catch(function(){}); }
+        });
+      }
       const ig = view.querySelector('#caseIg');
       if(w.ig){ ig.href = w.ig; ig.style.display = 'inline-block'; } else { ig.style.display = 'none'; }
       const nx = WORKS[(i + 1) % WORKS.length];
@@ -2390,6 +2406,7 @@ ${pts}
       view.setAttribute('aria-hidden', 'true');
       document.body.classList.remove('locked');
       vid.pause();
+      view.querySelector('#caseEmbed').removeAttribute('src');
     }
 
     host.querySelectorAll('.work').forEach(function(btn){
