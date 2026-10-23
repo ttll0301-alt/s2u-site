@@ -820,8 +820,11 @@
     input, textarea{cursor:none;}
     .cur, .cur-run{position:fixed; top:0; left:0; z-index:9999; pointer-events:none;
       will-change:transform;}
-    .cur{width:6px; height:6px; margin:-3px 0 0 -3px; border-radius:50%; background:#f4f2ed;
-      transition:opacity 0.25s ease;}
+    .cur{width:22px; height:22px; margin:-11px 0 0 -11px; border-radius:50%; z-index:10000;
+      transition:opacity 0.25s ease, box-shadow 0.3s ease;}
+    .cur svg{display:block; width:100%; height:100%; filter:drop-shadow(0 1px 4px rgba(0,0,0,0.55));
+      animation:yySpin 6s linear infinite;}
+    @keyframes yySpin{to{transform:rotate(360deg);}}
     .cur-run{width:90px; height:90px; margin:-45px 0 0 -45px; transition:opacity 0.25s ease;}
     .cur.off, .cur-run.off{opacity:0;}
     .cur-step{position:fixed; top:0; left:0; z-index:9998; pointer-events:none;
@@ -1506,7 +1509,7 @@
   </section>
 
 
-  <div class="cur off" id="cur"></div>
+  <div class="cur off" id="cur"><svg viewBox="-50 -50 100 100" aria-hidden="true"><circle r="47" fill="#0c0c0d" stroke="#f4f2ed" stroke-width="5"/><path d="M0,-47 A47,47 0 0 1 0,47 A23.5,23.5 0 0 1 0,0 A23.5,23.5 0 0 0 0,-47Z" fill="#f4f2ed"/><circle cy="-23.5" r="8" fill="#f4f2ed"/><circle cy="23.5" r="8" fill="#0c0c0d"/></svg></div>
   <canvas class="cur-run off" id="curRun" width="180" height="180"></canvas>
   <div class="cur-lab" id="curLab"></div>
   <div class="cur-spm" id="curSpm"></div>
@@ -3104,8 +3107,8 @@ ${pts}
       speed = speed * 0.86 + Math.hypot(vx, vy) * 0.14;
       vx *= 0.9; vy *= 0.9;
 
-      dot.style.transform = `translate3d(${mx}px, ${my}px, 0) scale(${down ? 0.6 : 1})`;
-      dot.style.background = `rgb(${c[0]},${c[1]},${c[2]})`;
+      dot.style.transform = `translate3d(${mx}px, ${my}px, 0) scale(${down ? 0.75 : (state.hot ? 1.3 : 1)})`;
+      dot.style.boxShadow = `0 0 0 2px rgb(${c[0]},${c[1]},${c[2]})`;
 
       // 보속에 따라 케이던스가 오름 — 멈추면 제자리 걸음
       gait += (0.9 + Math.min(4.6, speed * 0.30)) * (1/60) * Math.PI * 2;
