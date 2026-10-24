@@ -554,7 +554,7 @@
   @media (max-width:600px){.prd-grid{grid-template-columns:minmax(0,340px); justify-content:center;}}
   .prd{margin:0;}
   .prd-stage{position:relative; aspect-ratio:376/600; border-radius:14px; overflow:hidden; background:#efebe4;}
-  .prd-v{position:absolute; inset:0; opacity:0; transition:opacity 1.4s ease-in-out;}
+  .prd-v{position:absolute; inset:0; opacity:0; transition:opacity 0.45s ease-out;}
   .prd-t{position:absolute; inset:0;}
   .prd-v.on{opacity:1; z-index:2;}
   .prd-v.prev{opacity:1; z-index:1; transition:none;}
@@ -1443,20 +1443,20 @@
       <div class="prd-grid">
         <figure class="prd">
           <div class="prd-stage">
-            <div class="prd-v on"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-tee-0s.jpg" alt="S2:U 심볼 반팔 티셔츠 블랙 앞면" loading="lazy"></div></div></div>
-            <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-tee-1s.jpg" alt="S2:U 심볼 반팔 티셔츠 블랙 오른쪽 측면" loading="lazy"></div></div></div>
-            <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-tee-2s.jpg" alt="S2:U 반팔 티셔츠 블랙 뒷면" loading="lazy"></div></div></div>
-            <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-tee-3s.jpg" alt="S2:U 심볼 반팔 티셔츠 블랙 왼쪽 측면" loading="lazy"></div></div></div>
+            <div class="prd-v on"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-tee-0s.jpg" alt="S2:U 심볼 반팔 티셔츠 블랙 앞면" decoding="async"></div></div></div>
+            <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-tee-1s.jpg" alt="S2:U 심볼 반팔 티셔츠 블랙 오른쪽 측면" decoding="async"></div></div></div>
+            <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-tee-2s.jpg" alt="S2:U 반팔 티셔츠 블랙 뒷면" decoding="async"></div></div></div>
+            <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-tee-3s.jpg" alt="S2:U 심볼 반팔 티셔츠 블랙 왼쪽 측면" decoding="async"></div></div></div>
           </div>
           <figcaption><span>Nº01 SYMBOL TEE</span><span>BLACK</span></figcaption>
           <p class="prd-d">땀이 마른 뒤에도 입는 티셔츠.</p>
         </figure>
         <figure class="prd">
           <div class="prd-stage">
-            <div class="prd-v on"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-jk-0s.jpg" alt="S2:U 트랙 자켓 블랙 앞면" loading="lazy"></div></div></div>
-            <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-jk-1s.jpg" alt="S2:U 트랙 자켓 블랙 오른쪽 측면" loading="lazy"></div></div></div>
-            <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-jk-2s.jpg" alt="S2:U 트랙 자켓 블랙 뒷면" loading="lazy"></div></div></div>
-            <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-jk-3s.jpg" alt="S2:U 트랙 자켓 블랙 왼쪽 측면" loading="lazy"></div></div></div>
+            <div class="prd-v on"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-jk-0s.jpg" alt="S2:U 트랙 자켓 블랙 앞면" decoding="async"></div></div></div>
+            <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-jk-1s.jpg" alt="S2:U 트랙 자켓 블랙 오른쪽 측면" decoding="async"></div></div></div>
+            <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-jk-2s.jpg" alt="S2:U 트랙 자켓 블랙 뒷면" decoding="async"></div></div></div>
+            <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-jk-3s.jpg" alt="S2:U 트랙 자켓 블랙 왼쪽 측면" decoding="async"></div></div></div>
           </div>
           <figcaption><span>Nº02 TRACK JACKET</span><span>BLACK</span></figcaption>
           <p class="prd-d">세션에 가고, 세션에서 돌아오는 자켓.</p>
@@ -2249,7 +2249,7 @@ ${pts}
       setInterval(function(){
         if(!st.offsetParent) return;
         const old = v[n]; old.classList.add('prev'); old.classList.remove('on');
-        setTimeout(function(){ if(!old.classList.contains('on')) old.classList.remove('turn', 'prev'); }, 1300);
+        setTimeout(function(){ if(!old.classList.contains('on')) old.classList.remove('turn', 'prev'); }, 600);
         n = (n + 1) % v.length;
         v[n].classList.remove('turn'); void v[n].offsetWidth;
         v[n].classList.add('turn', 'on');
