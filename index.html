@@ -48,8 +48,9 @@
     position:fixed; top:34px; left:0; right:0; z-index:100;
     display:flex; align-items:center; justify-content:space-between;
     padding:18px clamp(20px,5vw,56px);
-    mix-blend-mode:difference;
+    mix-blend-mode:difference; pointer-events:none;
   }
+  .topbar > *{pointer-events:auto;}
   .logo{display:block; line-height:0; mix-blend-mode:normal;}
   .logo img{height:42px; width:auto; filter:drop-shadow(0 1px 6px rgba(0,0,0,0.25));}
   /* 심볼: 두께가 있는 것처럼 겹쳐 쌓고 360도 회전 */
@@ -567,6 +568,9 @@
   .prd figcaption{display:flex; justify-content:space-between; gap:12px; margin-top:14px; font-size:12px; letter-spacing:0.12em;}
   .prd figcaption span:first-child{font-weight:600;}
   .prd figcaption span:last-child{color:var(--bone-dim);}
+  .prd-d{margin-top:6px; font-size:13px; color:var(--bone-dim);}
+  .prd-next{margin-top:36px; padding-top:18px; border-top:1px solid var(--line); font-size:13px; color:var(--bone-dim);}
+  .prd-next b{color:var(--bone); font-weight:600; letter-spacing:0.12em; font-size:12px; margin-right:12px;}
 
   /* ---- 플레이리스트 ---- */
   .pl-list{margin-top:40px; border-top:1px solid var(--line);}
@@ -1143,7 +1147,7 @@
         <div class="ch-card now"><span class="ch-when">NOW</span><div class="ch-name">BRAND SESSION</div><p class="ch-desc">브랜드와 함께 S2:U 프로그램으로 세션을 기획하고 운영합니다. MOVV, SK텔레콤, GORUCK, GARMIN 등.</p></div>
         <div class="ch-card now"><span class="ch-when">NOW</span><div class="ch-name">FYF COMMUNITY SESSION</div><p class="ch-desc">Find Your Flow 커뮤니티와 함께하는 정기 세션. 일일권·정기권으로 참여합니다.</p></div>
         <div class="ch-card"><span class="ch-when">2026.12 – 2027.03</span><div class="ch-name">TRAINING CENTER</div><p class="ch-desc">S2:U 프로그램이 매일 돌아가는 첫 트레이닝 센터가 문을 엽니다.</p></div>
-        <div class="ch-card"><span class="ch-when">COMING</span><div class="ch-name">PRODUCT</div><p class="ch-desc">프로그램에서 출발한 건강기능식품과 의류로 확장합니다.</p></div>
+        <div class="ch-card"><span class="ch-when">NEXT</span><div class="ch-name">PRODUCT</div><p class="ch-desc">Coming soon.</p></div>
       </div>
     </div>
   </section>
@@ -1444,7 +1448,7 @@
     <div class="brand-sec">
       <div class="eyebrow">06 · PRODUCT</div>
       <h2 class="brand-h">Product</h2>
-      <p class="brand-p">세션이 끝나도 흐름은 이어집니다. 몸에 닿는 옷부터 공간에 머무는 향까지, 운동 밖의 하루를 S2:U답게.</p>
+      <p class="brand-p">S2:U PRODUCT는 운동 이후를 위한 서비스입니다.<br>입는 것, 머무는 것, 남는 것. 번호를 붙여 하나씩 내놓습니다.</p>
       <div class="prd-grid">
         <figure class="prd">
           <div class="prd-stage">
@@ -1453,7 +1457,8 @@
             <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-tee-2.jpg" alt="S2:U 반팔 티셔츠 블랙 뒷면" loading="lazy"></div></div></div>
             <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-tee-3.jpg" alt="S2:U 심볼 반팔 티셔츠 블랙 왼쪽 측면" loading="lazy"><img class="prd-sym" src="goods/assets/symbol-bone.png" alt="" style="left:61%; top:30%; width:4.6%; --sx:0.9;"></div></div></div>
           </div>
-          <figcaption><span>S2:U SYMBOL TEE</span><span>BLACK · COMING SOON</span></figcaption>
+          <figcaption><span>Nº01 SYMBOL TEE</span><span>BLACK</span></figcaption>
+          <p class="prd-d">땀이 마른 뒤에도 입는 티셔츠.</p>
         </figure>
         <figure class="prd">
           <div class="prd-stage">
@@ -1462,9 +1467,11 @@
             <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-jk-2.jpg" alt="S2:U 트랙 자켓 블랙 뒷면" loading="lazy"><img class="prd-sym" src="goods/assets/symbol-bone.png" alt="" style="left:50%; top:23.5%; width:3.4%; --sx:1;"></div></div></div>
             <div class="prd-v"><div class="prd-t"><div class="prd-i"><img src="goods/assets/prd-jk-3.jpg" alt="S2:U 트랙 자켓 블랙 왼쪽 측면" loading="lazy"><img class="prd-sym" src="goods/assets/symbol-bone.png" alt="" style="left:55%; top:23.7%; width:3.8%; --sx:0.9;"></div></div></div>
           </div>
-          <figcaption><span>S2:U TRACK JACKET</span><span>BLACK · SAMPLE</span></figcaption>
+          <figcaption><span>Nº02 TRACK JACKET</span><span>BLACK</span></figcaption>
+          <p class="prd-d">세션에 가고, 세션에서 돌아오는 자켓.</p>
         </figure>
       </div>
+      <p class="prd-next"><b>Nº03 SCENT</b> 세션이 끝난 공간에 남는 향. 준비 중.</p>
     </div>
   </section>
 
@@ -2880,8 +2887,11 @@ ${pts}
       if(!b) return;
       setView(b.dataset.go);
       const bar = document.getElementById('viewbar');
-      const y = bar.getBoundingClientRect().top + window.scrollY - 50;
-      if(window.scrollY < y) window.scrollTo({top: y, behavior: 'smooth'});
+      // 고른 탭의 첫 화면으로: 탭 바 바로 아래에서 내용이 시작되게 (아래쪽에서 눌러도 위로 올라옴)
+      const sec = document.querySelector('.view.on');
+      if(!sec) return;
+      const y = sec.getBoundingClientRect().top + window.scrollY - bar.offsetHeight - (parseFloat(bar.style.top) || 52);
+      if(Math.abs(window.scrollY - y) > 4) window.scrollTo({top: y, behavior: 'smooth'});
     });
 
     // 메뉴·히어로 링크도 뷰 전환에 연결
@@ -2903,6 +2913,11 @@ ${pts}
       payBtn.classList.toggle('show', past && !sheet.classList.contains('open'));
     }
     window.addEventListener('scroll', toggleBtn, {passive:true});
+
+    // 탭 바가 고정 헤더 밑에 가려져 클릭이 안 되던 문제: 헤더 바로 아래에 붙인다
+    const vbar = document.getElementById('viewbar'), tbar = document.querySelector('.topbar');
+    function stickBelow(){ if(vbar && tbar) vbar.style.top = Math.round(tbar.getBoundingClientRect().bottom) + 'px'; }
+    stickBelow(); window.addEventListener('resize', stickBelow); window.addEventListener('load', stickBelow);
     toggleBtn();
 
     function openSheet(){ sheet.classList.add('open'); sheet.setAttribute('aria-hidden','false'); payBtn.classList.remove('show'); }
