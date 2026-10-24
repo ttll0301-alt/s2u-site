@@ -556,18 +556,13 @@
   .prd-stage{position:relative; aspect-ratio:376/600; border-radius:14px; overflow:hidden; perspective:1800px;
     background:radial-gradient(ellipse at 50% 40%, #f6f3ee 0%, #ebe6de 70%, #e2dcd2 100%);}
   .prd-stage::before{content:''; position:absolute; left:18%; right:18%; top:84.5%; height:18px; border-radius:50%;
-    background:radial-gradient(closest-side, rgba(0,0,0,0.26), transparent); animation:prdShadow 12s infinite;}
-  .prd-3d{position:absolute; inset:0; transform-style:preserve-3d; animation:prdSpin 12s infinite;}
+    background:radial-gradient(closest-side, rgba(0,0,0,0.26), transparent);}
+  .prd-3d{position:absolute; inset:0; transform-style:preserve-3d;}
+  .prd-spin{position:absolute; inset:0; transform-style:preserve-3d; transition:opacity 0.7s ease-in-out; will-change:transform;}
   .prd-half{position:absolute; inset:0; transform-style:preserve-3d;}
   .prd-half.back{transform:rotateY(180deg);}
   .prd-strip{position:absolute; top:0; left:50%; height:100%; transform-origin:0 50%; background-repeat:no-repeat;
     backface-visibility:hidden; -webkit-backface-visibility:hidden;}
-  .prd-stage:hover .prd-3d, .prd-stage:hover::before{animation-play-state:paused;}
-  /* 앞·뒤에서 천천히, 옆모습은 빠르게 지나간다 */
-  @keyframes prdSpin{0%{transform:rotateY(0deg); animation-timing-function:cubic-bezier(.65,0,.35,1);}
-    50%{transform:rotateY(180deg); animation-timing-function:cubic-bezier(.65,0,.35,1);} 100%{transform:rotateY(360deg);}}
-  @keyframes prdShadow{0%,50%,100%{transform:scaleX(1); animation-timing-function:cubic-bezier(.65,0,.35,1);} 25%,75%{transform:scaleX(0.62); animation-timing-function:cubic-bezier(.65,0,.35,1);}}
-  @media (prefers-reduced-motion:reduce){.prd-3d, .prd-stage::before{animation-duration:60s;}}
   .prd figcaption{display:flex; justify-content:space-between; gap:12px; margin-top:14px; font-size:12px; letter-spacing:0.12em;}
   .prd figcaption span:first-child{font-weight:600;}
   .prd figcaption span:last-child{color:var(--bone-dim);}
@@ -2242,40 +2237,69 @@ ${pts}
       v.muted = true;
     });
   })();
-  /* ---- 프로덕트: 앞·뒤 컷아웃을 타원 곡면 띠(strip)로 감아 CSS 3D로 회전 ---- */
+  /* ---- 프로덕트: 앞·뒤 컷아웃을 곡면 띠(strip)로 감아 CSS 3D로 좌우로 천천히 돌리고,
+     가운데를 지날 때 앞↔뒤가 부드럽게 바뀐다 (사진 두 장으로 정확히 보이는 각도만 쓴다) ---- */
   (function(){
-    const N = 56, DEPTH = 0.62, OV = 1.2;   // 띠 개수, 몸판 두께(몸판 반폭 대비), 띠 겹침   // 띠 개수, 옷 두께(가로 반지름 대비)
+    const N = 56, DEPTH = 0.62, OV = 1.2;   // 띠 개수, 몸판 두께(몸판 반폭 대비), 띠 겹침
+    const SWAY = 24, HALF = 4200;           // 좌우 회전 각도(도), 한 번 넘어가는 시간(ms)
+    function half(el, src, cls, W, H){
+      const a = W / 2, A = a * (+el.dataset.body || 0.5), b = A * (+el.dataset.depth || DEPTH);
+      // 몸판만 타원 곡면으로 감고, 소매는 몸판 옆으로 평평하게 뻗게 한다
+      const zf = function(u){ return Math.abs(u) < A ? b * Math.sqrt(1 - (u/A)*(u/A)) : 0; };
+      const h = document.createElement('div'); h.className = 'prd-half ' + cls;
+      for(let k = 0; k < N; k++){
+        const u0 = -a + 2*a*k/N, u1 = u0 + 2*a/N, z0 = zf(u0), z1 = zf(u1);
+        const len = Math.hypot(u1 - u0, z1 - z0), sx = len / (u1 - u0);
+        const ang = Math.atan2(-(z1 - z0), u1 - u0) * 180 / Math.PI;
+        const sp = document.createElement('i'); sp.className = 'prd-strip';
+        sp.style.width = (len + 2*OV) + 'px';   // 양옆으로 겹쳐 띠 사이 틈(밝은 선)을 없앤다
+        sp.style.transform = 'translateX(' + u0 + 'px) translateZ(' + z0 + 'px) rotateY(' + ang + 'deg) translateX(' + (-OV) + 'px)';
+        sp.style.backgroundImage = 'url(' + src + ')';
+        sp.style.backgroundSize = (W * sx) + 'px ' + H + 'px';
+        sp.style.backgroundPosition = (-(u0 + a) * sx + OV) + 'px 0';
+        h.appendChild(sp);
+      }
+      return h;
+    }
     function build(el){
       const st = el.parentElement, W = st.clientWidth, H = st.clientHeight;
       if(!W || el.dataset.w == W) return;
       el.dataset.w = W; el.innerHTML = '';
-      const a = W / 2, A = a * (+el.dataset.body || 0.5), b = A * (+el.dataset.depth || DEPTH);
-      // 몸판만 타원 곡면으로 감고, 소매는 몸판 옆으로 평평하게 뻗게 한다
-      const zf = function(u){ return Math.abs(u) < A ? b * Math.sqrt(1 - (u/A)*(u/A)) : 0; };
-      [['front', el.dataset.front], ['back', el.dataset.back]].forEach(function(side){
-        const half = document.createElement('div'); half.className = 'prd-half ' + side[0];
-        for(let k = 0; k < N; k++){
-          const u0 = -a + 2*a*k/N, u1 = u0 + 2*a/N;
-          const z0 = zf(u0), z1 = zf(u1);
-          const len = Math.hypot(u1 - u0, z1 - z0), sx = len / (u1 - u0);
-          const ang = Math.atan2(-(z1 - z0), u1 - u0) * 180 / Math.PI;
-          const sp = document.createElement('i'); sp.className = 'prd-strip';
-          sp.style.width = (len + 2*OV) + 'px';   // 양옆으로 겹쳐 띠 사이 틈(밝은 선)을 없앤다
-          sp.style.transform = 'translateX(' + u0 + 'px) translateZ(' + z0 + 'px) rotateY(' + ang + 'deg) translateX(' + (-OV) + 'px)';
-          sp.style.backgroundImage = 'url(' + side[1] + ')';
-          sp.style.backgroundSize = (W * sx) + 'px ' + H + 'px';
-          sp.style.backgroundPosition = (-(u0 + a) * sx + OV) + 'px 0';
-          half.appendChild(sp);
-        }
-        el.appendChild(half);
+      el._spins = ['front', 'back'].map(function(face){
+        const s = document.createElement('div'); s.className = 'prd-spin';
+        const mine = face === 'front' ? el.dataset.front : el.dataset.back, other = face === 'front' ? el.dataset.back : el.dataset.front;
+        s.appendChild(half(el, mine, 'front', W, H)); s.appendChild(half(el, other, 'back', W, H));
+        el.appendChild(s); return s;
       });
+      el._spins[1].style.opacity = 0;
     }
-    document.querySelectorAll('.prd-3d').forEach(function(el){
+    const els = [...document.querySelectorAll('.prd-3d')];
+    els.forEach(function(el){
       [el.dataset.front, el.dataset.back].forEach(function(src){ new Image().src = src; });   // 미리 불러오기
       if('ResizeObserver' in window) new ResizeObserver(function(){ build(el); }).observe(el.parentElement);
       else window.addEventListener('resize', function(){ build(el); });
       build(el);
+      el.parentElement.addEventListener('mouseenter', function(){ el._hold = true; });
+      el.parentElement.addEventListener('mouseleave', function(){ el._hold = false; });
+      el._t = 0;
     });
+    const still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let last = performance.now();
+    (function tick(now){
+      const dt = Math.min(100, now - last); last = now;
+      els.forEach(function(el){
+        if(!el._spins || !el.offsetParent) return;
+        if(!el._hold && !still) el._t += dt;
+        const ph = el._t / HALF;                       // 1 = 한 번 넘어감
+        const ang = SWAY * Math.sin(ph * Math.PI);     // 0도를 지날 때마다 앞/뒤가 바뀐다
+        const back = Math.floor(ph + 0.5) % 2 === 1;
+        el._spins[0].style.transform = 'rotateY(' + ang + 'deg)';
+        el._spins[1].style.transform = 'rotateY(' + (180 + ang) + 'deg)';
+        el._spins[0].style.opacity = back ? 0 : 1;
+        el._spins[1].style.opacity = back ? 1 : 0;
+      });
+      requestAnimationFrame(tick);
+    })(last);
   })();
   /* ---- 플레이리스트 (표 형식, 행 안에서 재생) ---- */
   (function(){
