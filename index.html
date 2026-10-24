@@ -259,6 +259,7 @@
   .balance-v{font-family:'Bebas Neue'; font-size:26px; margin-top:2px;}
   .balance-v span{color:var(--recover-blue);}
   .balance-buy{font-family:'Bebas Neue'; font-size:13px; letter-spacing:0.03em; color:var(--bone-dim); text-decoration:underline; text-underline-offset:3px;}
+  .balance-widget[hidden]{display:none;}
   .balance-note{margin-top:10px; font-size:11.5px; color:var(--bone-dim); line-height:1.6; max-width:640px;}
 
   .join-pay-btn.deduct{position:relative;}
@@ -498,7 +499,7 @@
   .ip-desc{font-size:14px; line-height:1.75; color:var(--bone-dim); margin-top:10px;}
   .ip-tag{font-size:11.5px; font-weight:700; letter-spacing:0.12em; color:var(--move-red); margin-top:18px;}
   .ip-card.r .ip-tag{color:var(--recover-blue);}
-  .ip-kw{font-size:12.5px; color:var(--bone-dim); margin-top:6px;}
+  .ip-kw{display:none;}
   .ip-end{font-size:14.5px; font-weight:700; color:var(--bone); margin-top:auto; padding-top:20px;}
   .ip-flow{font-family:'Bebas Neue',sans-serif; font-size:clamp(22px,3vw,32px); letter-spacing:0.08em; margin-top:36px;}
   .ip-flow i{font-style:normal; color:var(--move-red); margin:0 0.3em;}
@@ -807,13 +808,12 @@
   .paybtn{position:fixed; right:clamp(16px,3vw,30px); bottom:clamp(16px,3vw,30px); z-index:120;
     border:none; border-radius:999px; padding:16px 28px; cursor:pointer;
     background:var(--move-red); color:#fff; font-family:'Pretendard'; font-weight:700; font-size:14.5px;
-    box-shadow:0 10px 34px rgba(255,61,46,0.42);
+    box-shadow:0 6px 20px rgba(0,0,0,0.35);
     opacity:0; transform:translateY(20px); pointer-events:none;
     transition:opacity 0.4s ease, transform 0.4s cubic-bezier(.2,0,.15,1), filter 0.2s ease;}
   .paybtn.show{opacity:1; transform:none; pointer-events:auto;}
   .paybtn:hover{filter:brightness(1.1);}
-  .paybtn span::before{content:'⚡ ';}
-
+  
   .paysheet{position:fixed; inset:0; z-index:200; background:rgba(6,6,8,0.7); backdrop-filter:blur(4px);
     display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none;
     transition:opacity 0.32s ease;}
@@ -1134,7 +1134,7 @@
           <p class="ip-end">몸과 마음을 회복하고 건강한 삶으로 확장합니다.</p>
         </div>
       </div>
-      <p class="ip-close">S2:1부터 S2:4는 한 번 거치고 끝나는 단계가 아닙니다. 회복된 몸으로 다시 움직이고 훈련하는 흐름이 이어질 때, 지속 가능한 변화가 만들어집니다. <strong>한 번의 운동이 아니라, 오래 지속할 수 있는 몸과 삶을 만듭니다.</strong></p>
+      <p class="ip-close">한 번 거치고 끝나는 단계가 아닙니다. 회복된 몸으로 다시 움직이며, <strong>오래 지속할 수 있는 몸과 삶</strong>을 만듭니다.</p>
 
       <div class="ch-head">ONE IP · FOUR CHANNELS</div>
       <div class="ch-grid">
@@ -1150,16 +1150,14 @@
     <div class="brand-sec" style="border-top:none;">
       <div class="eyebrow">02 · ABOUT</div>
       <h2 class="brand-h">우리는 왜<br><em>S2:U</em>인가</h2>
-      <p class="brand-p"><strong>운동은 끝나도 삶은 계속됩니다.</strong> S2:U는 움직임의 기반을 만드는 트레이닝과 제대로 된 회복, 그리고 그 과정을 함께하는 사람들을 하나의 흐름 안에 놓는 퍼포먼스 컬쳐 브랜드입니다.</p>
-      <p class="brand-p">땀 흘리고 끝나는 수업이 아니라, 잘 움직이는 몸을 만들고 움직인 만큼 다시 제자리로 돌려놓는 회복 루틴까지 설계합니다. 그리고 그 여정은 혼자가 아니라 커뮤니티 안에서 지속됩니다.</p>
-      <p class="brand-p">Movement에서 시작해 Recovery로 이어지고, Community 안에서 완성되어 결국 You로 돌아오는 구조. 아래 네 개의 구역이 그 순서 그대로입니다.</p>
+      <p class="brand-p"><strong>운동은 끝나도 삶은 계속됩니다.</strong> S2:U는 트레이닝과 회복, 그리고 함께하는 사람들을 하나의 흐름으로 잇습니다.</p>
+      <p class="brand-p">Movement에서 시작해 Recovery를 지나, Community 안에서 다시 You로 돌아옵니다.</p>
     </div>
   </section>
 
   <div class="deck-head view" data-view="club" id="club">
     <div class="eyebrow">03 · THE CLUB · FYF COMMUNITY</div>
     <h2>흐름 안으로<br>들어오기</h2>
-    <p>읽는 페이지에서 하는 페이지로. 네 구역은 위 히어로의 네 단어와 같은 순서입니다.</p>
   </div>
 
   <div class="seg-wrap">
@@ -1190,7 +1188,7 @@
 
     <section class="panel" id="panelEvents">
       <div class="section-title display">우리가 만들어<span>온</span> 순간들</div>
-      <p class="section-lede">브랜드와 함께한 협업부터 S2:U가 직접 기획하고 운영한 세션까지 — 지금까지의 활동을 하나씩 기록합니다.</p>
+      <p class="section-lede">브랜드와 함께한 세션, S2:U가 직접 운영한 세션의 기록입니다.</p>
       <div class="stats-row">
         <div class="stat"><div class="stat-n display" id="statTotal">–</div><div class="stat-l">Total Events</div></div>
         <div class="stat"><div class="stat-n display" id="statCollab">–</div><div class="stat-l">Brand Session</div></div>
@@ -1206,7 +1204,7 @@
           <button class="sort-btn active" data-sort="recent">최신순</button>
           <button class="sort-btn" data-sort="participants">참여인원순</button>
         </div>
-        <button class="tetris-toggle" id="tetrisToggle">🧱 테트리스 뷰</button>
+        <button class="tetris-toggle" id="tetrisToggle">테트리스 뷰</button>
       </div>
       <div class="grid3" id="grid"></div>
     </section>
@@ -1223,13 +1221,12 @@
           </div>
           <button class="go-btn" id="goBtn">
             <span class="spinner"></span>
-            <span class="go-label">📍 내 위치에서 시작</span>
+            <span class="go-label">내 위치에서 시작</span>
           </button>
         </div>
         <div class="run-map-wrap">
           <div id="runMap"></div>
           <div class="map-empty" id="mapEmpty">
-            <div class="icon">🗺️</div>
             <p>거리를 고르고 "내 위치에서 시작"을 누르면<br>지금 서 있는 곳 기준으로 루프 코스를 그려드려요.</p>
           </div>
           <div class="run-status" id="statusBanner"></div>
@@ -1244,7 +1241,7 @@
             <b>코스를 시계로 가져가기</b>
             <span>GPX 파일로 내려받아 가민·순토·코로스 또는 스트라바에 올리면 그대로 따라 달릴 수 있어요.</span>
           </div>
-          <button class="gpx-btn" id="gpxBtn" type="button">⌚ GPX 내려받기</button>
+          <button class="gpx-btn" id="gpxBtn" type="button">GPX 내려받기</button>
         </div>
         <div class="pace-row">
           <label>페이스</label>
@@ -1252,7 +1249,7 @@
           <div class="pace-echo" id="paceEcho">6'00"/km</div>
         </div>
       </div>
-      <p class="run-note">경로는 <a href="https://routing.openstreetmap.de" target="_blank" rel="noopener" style="color:var(--bone); text-decoration:underline;">OpenStreetMap 기반 도보 라우팅 엔진</a> 두 곳(OSRM · Valhalla)으로 실시간 계산됩니다. 무료 공용 서버라 가끔 느릴 수 있는데, 한 곳이 응답하지 않으면 자동으로 다른 곳으로 넘어갑니다.</p>
+      <p class="run-note">경로는 <a href="https://routing.openstreetmap.de" target="_blank" rel="noopener" style="color:var(--bone); text-decoration:underline;">OpenStreetMap</a> 기반으로 계산됩니다. 가끔 느릴 수 있어요.</p>
 
       <div class="challenge-block">
         <div class="challenge-head">
@@ -1277,26 +1274,25 @@
           <div class="leaderboard-panel">
             <div class="lb-title">이번 주 10km 리더보드</div>
             <div class="lb-list" id="lbList"></div>
-            <p class="lb-reward">🥇 1등 프로틴바 세트 · 🥈-🥉 프로틴바 · 4~5등 프로틴 음료</p>
+            <p class="lb-reward">1등 프로틴바 세트 · 2–3등 프로틴바 · 4–5등 프로틴 음료</p>
           </div>
         </div>
       </div>
     </section>
 
     <section class="panel" id="panelPhoto">
-      <div class="balance-widget" id="balanceWidget">
+      <div class="balance-widget" id="balanceWidget" hidden>
         <div class="balance-info">
           <div class="balance-k">내 정기권 잔여 횟수</div>
           <div class="balance-v"><span id="balanceNum">5</span> / 8회</div>
         </div>
         <a class="balance-buy" href="https://smartstore.naver.com/atelieramusant/products/13725532910" target="_blank" rel="noopener">정기권 다시 구매 →</a>
       </div>
-      <p class="balance-note">⚠ 실제 잔여 횟수는 로그인 계정과 결제 시스템이 연동돼야 정확히 기록돼요. 지금은 흐름을 보여드리는 목업이라, 새로고침하면 5회로 초기화됩니다.</p>
 
       <div class="section-title display">세션 사진, <span>얼굴로</span> 바로 찾기</div>
-      <p class="section-lede">흐름의 끝은 결국 당신에게 남는 것입니다 — 남은 횟수, 그리고 그날의 사진. 세션 중 촬영된 사진을 일일이 뒤질 필요 없어요. 아워심볼(o-sym)의 얼굴인식 검색으로, 내가 찍힌 사진만 골라서 바로 받아갈 수 있어요.</p>
+      <p class="section-lede">세션 중 찍힌 사진 가운데 내가 나온 것만, 셀카 한 장으로 찾아 받습니다.</p>
       <div class="osym-badge">Powered by <b>o-sym</b> — event.o-sym.com</div>
-      <div class="auto-notify-badge">📩 세션 종료 시 <b>등록된 문자/이메일로 자동 발송</b>되도록 설계 — 회원이 직접 찾아올 필요 없이 알림만 확인하면 됩니다</div>
+      <div class="auto-notify-badge">세션이 끝나면 등록된 문자·이메일로 알려드립니다.</div>
       <div class="how-row">
         <div class="how-step"><div class="how-num">STEP 01</div><div class="how-title display">세션 촬영</div><div class="how-desc">세션 진행 중 참여자들의 모습이 자유롭게 촬영됩니다.</div></div>
         <div class="how-step"><div class="how-num">STEP 02</div><div class="how-title display">사진 업로드</div><div class="how-desc">세션 종료 후 그날 촬영본이 아워심볼 앨범에 올라갑니다.</div></div>
@@ -1347,7 +1343,7 @@
       <div class="perk">
         <div class="eyebrow">AFTER EVERY SESSION</div>
         <h3 class="perk-h">세션이 끝나면,<br>리포트가 먼저 도착합니다</h3>
-        <p class="perk-p">멤버십에 포함된 기능입니다. 운동이 끝나고 30분 안에, 그날의 데이터와 사진과 다음 한 세션이 등록된 메일로 자동 발송됩니다. 따로 찾아올 필요가 없습니다.</p>
+        <p class="perk-p">멤버십에 포함된 기능입니다. 운동이 끝나고 30분 안에, 그날의 데이터와 사진, 다음 한 세션이 메일로 도착합니다.</p>
         <div class="perk-grid">
           <div class="perk-card">
             <div class="perk-n">01</div>
@@ -1476,9 +1472,9 @@
 
   <section class="brand view" data-view="play" id="cadence">
     <div class="brand-sec">
-      <div class="eyebrow">STEP CHART</div>
+      <div class="eyebrow">08 · CADENCE</div>
       <h2 class="brand-h">발로 하던 걸<br><em>손으로</em></h2>
-      <p class="brand-p">화살표가 분당 몇 개 내려오는지가 곧 케이던스입니다. 180 SPM은 러너들이 목표로 삼는 숫자이고, 여기서는 3초에 화살표 아홉 개입니다. 얼마나 버티는지 보세요.</p>
+      <p class="brand-p">화살표가 내려오는 속도가 곧 케이던스입니다. 30초 동안 박자를 맞춰보세요.</p>
 
       <div class="cad">
         <div class="cad-bar">
@@ -1487,9 +1483,9 @@
             <button type="button" data-bpm="160">160<small>조깅</small></button>
             <button type="button" data-bpm="170" class="on">170<small>템포</small></button>
             <button type="button" data-bpm="180">180<small>레이스</small></button>
-            <button type="button" data-bpm="200">200<small>미친</small></button>
+            <button type="button" data-bpm="200">200<small>전력</small></button>
           </div>
-          <button class="cad-sound" id="cadSound" type="button">🔊 소리 켜짐</button>
+          <button class="cad-sound" id="cadSound" type="button">소리 켜짐</button>
         </div>
 
         <div class="cad-stage" id="cadStage">
@@ -1518,50 +1514,19 @@
           </div>
           <div class="cad-rank"><b id="cadRank">—</b></div>
           <p class="cad-msg" id="cadMsg"></p>
-          <button class="cad-share" id="cadShare" type="button">기록 복사해서 자랑하기</button>
+          <button class="cad-share" id="cadShare" type="button">기록 복사</button>
         </div>
       </div>
 
-      <div class="why">
-        <div class="eyebrow">왜 손으로 하는가</div>
-        <h3 class="why-h">화살표를 잘 눌러도<br>빨라지지는 않습니다</h3>
-
-        <div class="why-grid">
-          <div class="why-card">
-            <div class="why-n">01</div>
-            <div class="why-t">숫자가 아니라 감각으로</div>
-            <div class="why-d">대부분의 러너는 시계를 보지 않으면 165와 180을 구분하지 못합니다. <b>몇 SPM인지 아는 것과 그 속도가 어떤 느낌인지 아는 것은 다릅니다.</b> 박자를 몸에 넣어두면 도로에서 시계를 안 봐도 리듬을 잡을 수 있습니다.</div>
-          </div>
-
-          <div class="why-card">
-            <div class="why-n">02</div>
-            <div class="why-t">쫓지 말고 예측하기</div>
-            <div class="why-d">소리를 듣고 반응하면 이미 늦습니다. 잘하는 사람은 다음 박자가 올 자리를 미리 알고 손을 놓습니다. <b>착지도 똑같습니다.</b> 발이 땅에 닿는 순간을 예측하고 있어야 충격을 흘려보낼 수 있습니다.</div>
-          </div>
-
-          <div class="why-card">
-            <div class="why-n">03</div>
-            <div class="why-t">손이 바닥을 읽는 일</div>
-            <div class="why-d">S2:U의 MOBILITY 세션은 애니멀 플로우 기반입니다. 비스트와 크랩은 <b>손이 지면을 딛는 자세</b>이고, 손끝의 리듬 감각이 그대로 쓰입니다. 손으로 하는 리듬 훈련이 이 브랜드에서 엉뚱한 선택이 아닌 이유입니다.</div>
-          </div>
-
-          <div class="why-card">
-            <div class="why-n">04</div>
-            <div class="why-t">180은 목표가 아니라 기준점</div>
-            <div class="why-d">180 SPM은 자주 인용되지만 모두에게 맞는 정답은 아닙니다. 키, 속도, 다리 길이에 따라 최적값이 달라집니다. <b>현실적인 접근은 지금 자기 케이던스에서 5~10% 올려보는 것</b>이고, 그래서 여기도 160부터 시작합니다.</div>
-          </div>
-        </div>
-
-        <p class="why-note"><b>솔직히 말하면, 이 게임은 러닝 실력을 직접 늘려주지 않습니다.</b> 손가락 리듬이 다리로 그대로 옮겨가지도 않습니다. 다만 메트로놈에 맞춰 달리는 케이던스 훈련은 러너들이 오래 써온 방법이고, 이건 그 훈련의 감각을 30초 안에 체험해보는 입구입니다. 진짜는 도로에서 합니다.</p>
-      </div>
+      <p class="why-note">손가락 리듬이 다리로 그대로 옮겨가지는 않습니다. 박자의 감각을 한번 느껴보는 정도로 즐겨주세요. 진짜는 도로에서 합니다.</p>
     </div>
   </section>
 
   <section class="brand view" data-view="journal" id="journal">
     <div class="brand-sec">
-      <div class="eyebrow">FILM &amp; JOURNAL</div>
+      <div class="eyebrow">09 · JOURNAL</div>
       <h2 class="brand-h">S2:U 저널</h2>
-      <p class="brand-p">브랜드가 아니라 흐름을 기록합니다. FYF와 함께 뛰고, 만들고, 협업해온 순간들 — 한 줄을 눌러 자세히 보세요.</p>
+      <p class="brand-p">FYF와 함께 뛰고, 만들고, 협업해온 기록입니다. 한 줄을 눌러 자세히 보세요.</p>
       <div class="works" id="works"></div>
     </div>
   </section>
@@ -1832,7 +1797,7 @@
   document.getElementById('tetrisToggle').addEventListener('click', function(){
     tetrisView = !tetrisView;
     this.classList.toggle('active', tetrisView);
-    this.textContent = tetrisView ? '🧱 카드 뷰로' : '🧱 테트리스 뷰';
+    this.textContent = tetrisView ? '카드 뷰로' : '테트리스 뷰';
     grid.classList.toggle('tetris', tetrisView);
     renderEvents();
   });
@@ -2891,7 +2856,7 @@ ${pts}
     });
     soundBtn.addEventListener('click', () => {
       sound = !sound;
-      soundBtn.textContent = sound ? '🔊 소리 켜짐' : '🔇 소리 꺼짐';
+      soundBtn.textContent = sound ? '소리 켜짐' : '소리 꺼짐';
     });
     document.getElementById('cadShare').addEventListener('click', () => {
       if(!lastResult) return;
