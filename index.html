@@ -337,6 +337,7 @@
   .leaflet-control-attribution a{color:#aaa!important;}
 
   /* CHALLENGE */
+  .challenge-block[hidden]{display:none;}
   .challenge-block{margin-top:56px; padding-top:48px; border-top:1px solid var(--line);}
   .challenge-dist{display:flex; gap:10px; margin-top:28px; flex-wrap:wrap;}
   .chal-btn{
@@ -1251,7 +1252,7 @@
       </div>
       <p class="run-note">경로는 <a href="https://routing.openstreetmap.de" target="_blank" rel="noopener" style="color:var(--bone); text-decoration:underline;">OpenStreetMap</a> 기반으로 계산됩니다. 가끔 느릴 수 있어요.</p>
 
-      <div class="challenge-block">
+      <div class="challenge-block" hidden><!-- 실제 운영 시작하면 hidden 제거 -->
         <div class="challenge-head">
           <div class="eyebrow" style="margin-bottom:8px;">S2:U CHALLENGE</div>
           <div class="section-title display" style="font-size:clamp(24px,3vw,32px);">완주하고 <span>리워드</span> 받기</div>
