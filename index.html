@@ -13,7 +13,7 @@
 <meta property="og:image" content="https://sustaintoyou.com/profile/media/og-profile.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Pretendard:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@1&family=Pretendard:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
@@ -541,6 +541,34 @@
   .loc-big{font-family:'Bebas Neue',sans-serif; font-size:clamp(30px,5.6vw,64px); line-height:1; margin-top:16px;}
   .loc-sub{margin-top:14px; font-size:13.5px; color:var(--bone-dim);}
 
+  /* ---- 프로덕트 (릴스형 프레임) ---- */
+  .prd-grid{display:grid; grid-template-columns:repeat(2,minmax(0,340px)); gap:20px; margin-top:44px;}
+  @media (max-width:600px){.prd-grid{grid-template-columns:minmax(0,340px); justify-content:center;}}
+  .prd{margin:0;}
+  .prd-reel{position:relative; aspect-ratio:9/16; border-radius:14px; overflow:hidden; background:var(--black-2);}
+  .prd-f{position:absolute; inset:0; opacity:0; transition:opacity 0.9s ease;}
+  .prd-f.on{opacity:1;}
+  .prd-ph{position:absolute; top:0; bottom:0; left:50%; height:100%; width:max-content; transform:translateX(-50%) scale(1.04);
+    transition:transform 4s ease-out;}
+  .prd-f.on .prd-ph{transform:translateX(-50%) scale(1.12);}
+  .prd-ph > img:first-child, .prd-ph > svg{display:block; height:100%; width:auto;}
+  .prd-ph > svg{aspect-ratio:9/16;}
+  .prd-sym{position:absolute; transform:translateX(-50%); mix-blend-mode:screen; opacity:0.9; filter:blur(0.3px);}
+  .prd-k{position:absolute; left:0; right:0; top:46%; text-align:center; font-family:'Instrument Serif',serif; font-style:italic;
+    font-weight:400; font-size:clamp(40px,6vw,58px); line-height:1; color:#ff8a2a; letter-spacing:-0.01em;
+    text-shadow:0 0 1px #3a1a00, 0 2px 14px rgba(0,0,0,0.45);}
+  .prd-sub{position:absolute; left:50%; bottom:20%; transform:translateX(-50%); max-width:86%; white-space:nowrap;
+    background:rgba(0,0,0,0.78); color:#fff; font-size:11.5px; padding:4px 9px;}
+  .prd-bars{position:absolute; top:10px; left:10px; right:10px; display:flex; gap:4px; z-index:2;}
+  .prd-bars i{flex:1; height:2px; background:rgba(255,255,255,0.3); border-radius:2px; overflow:hidden;}
+  .prd-bars i b{display:block; height:100%; width:0; background:#fff;}
+  .prd-bars i.done b{width:100%;}
+  .prd-bars i.on b{width:100%; transition:width var(--d,3.6s) linear;}
+  .prd figcaption{display:flex; justify-content:space-between; gap:12px; margin-top:14px; font-size:12px; letter-spacing:0.12em;}
+  .prd figcaption span:first-child{font-weight:600;}
+  .prd figcaption span:last-child{color:var(--bone-dim);}
+  @media (prefers-reduced-motion:reduce){.prd-ph, .prd-f.on .prd-ph{transition:none; transform:translateX(-50%);}}
+
   /* ---- 플레이리스트 ---- */
   .pl-list{margin-top:40px; border-top:1px solid var(--line);}
   .pl-row{display:flex; align-items:center; gap:clamp(14px,3vw,32px); padding:22px 4px;
@@ -1012,9 +1040,10 @@
       <li><a href="#club"><span class="num">03</span>CLUB</a></li>
       <li><a href="#membership"><span class="num">04</span>MEMBERSHIP</a></li>
       <li><a href="#location"><span class="num">05</span>CENTER</a></li>
-      <li><a href="#lifestyle"><span class="num">06</span>LIFESTYLE</a></li>
-      <li><a href="#cadence"><span class="num">07</span>CADENCE</a></li>
-      <li><a href="#journal"><span class="num">08</span>JOURNAL</a></li>
+      <li><a href="#product"><span class="num">06</span>PRODUCT</a></li>
+      <li><a href="#lifestyle"><span class="num">07</span>LIFESTYLE</a></li>
+      <li><a href="#cadence"><span class="num">08</span>CADENCE</a></li>
+      <li><a href="#journal"><span class="num">09</span>JOURNAL</a></li>
     </ul>
     <div class="nav-foot">
       <span>SEOUL, KR</span>
@@ -1059,6 +1088,7 @@
       <button type="button" data-go="club">CLUB</button>
       <button type="button" data-go="membership">MEMBERSHIP</button>
       <button type="button" data-go="location">CENTER</button>
+      <button type="button" data-go="product">PRODUCT</button>
       <button type="button" data-go="playlist">PLAYLIST</button>
       <button type="button" data-go="play">PLAY</button>
       <button type="button" data-go="journal">JOURNAL</button>
@@ -1411,9 +1441,83 @@
     </div>
   </section>
 
+  <section class="brand view" data-view="product" id="product">
+    <div class="brand-sec">
+      <div class="eyebrow">06 · PRODUCT</div>
+      <h2 class="brand-h">Product</h2>
+      <p class="brand-p">세션에서 입던 옷을 일상까지. S2:U 심볼을 담은 첫 제품을 준비하고 있습니다.</p>
+      <div class="prd-grid">
+        <figure class="prd">
+          <div class="prd-reel">
+            <div class="prd-f"><div class="prd-ph"><img src="goods/assets/tee-held.jpg" alt="S2:U 심볼 반팔 티셔츠 블랙 앞면" loading="lazy">
+              <img class="prd-sym" src="goods/assets/symbol-bone.png" alt="" style="left:55.9%; top:35.2%; width:8.4%;"></div>
+              <b class="prd-k">movement</b><span class="prd-sub">움직이는 몸을 위해 만든 옷.</span></div>
+            <div class="prd-f"><div class="prd-ph"><img src="goods/assets/tee-rack.jpg" alt="S2:U 심볼 반팔 티셔츠 블랙 뒷면" loading="lazy">
+              <img class="prd-sym" src="goods/assets/symbol-bone.png" alt="" style="left:50.6%; top:33%; width:14%;"></div>
+              <b class="prd-k">sustain</b><span class="prd-sub">세션이 끝나도 계속 입게 되는 옷.</span></div>
+          </div>
+          <figcaption><span>S2:U SYMBOL TEE</span><span>BLACK · COMING SOON</span></figcaption>
+        </figure>
+        <figure class="prd">
+          <div class="prd-reel">
+            <div class="prd-f"><div class="prd-ph"><svg viewBox="0 0 360 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="S2:U 트랙 자켓 블랙">
+            <defs><radialGradient id="prdBg" cx="50%" cy="38%" r="75%"><stop offset="0" stop-color="#d9d4cb"/><stop offset="1" stop-color="#8f8a82"/></radialGradient>
+              <linearGradient id="prdSh" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".07"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></linearGradient></defs>
+            <rect width="360" height="640" fill="url(#prdBg)"/>
+            <ellipse cx="180" cy="512" rx="130" ry="10" fill="#000" opacity=".18"/>
+            <g stroke="#050505" stroke-width="1" stroke-linejoin="round">
+              <path d="M112 196 Q82 204 72 232 L48 446 L86 452 L108 262 Z" fill="#121213"/>
+              <path d="M248 196 Q278 204 288 232 L312 446 L274 452 L252 262 Z" fill="#121213"/>
+              <path d="M48 446 L86 452 L84 470 L46 464 Z M312 446 L274 452 L276 470 L314 464 Z" fill="#0b0b0c"/>
+              <path d="M152 170 L112 194 Q96 202 94 220 L94 470 L266 470 L266 220 Q264 202 248 194 L208 170 Z" fill="#141415"/>
+              <path d="M94 470 L266 470 L266 492 L94 492 Z" fill="#0b0b0c"/>
+              <path d="M150 146 L210 146 L212 176 Q180 186 148 176 Z" fill="#0f0f10"/>
+            </g>
+            <path d="M152 170 L112 194 Q96 202 94 220 L94 470 L266 470 L266 220 Q264 202 248 194 L208 170 Z" fill="url(#prdSh)"/>
+            <g fill="none" stroke="#f4f2ed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M118 194 L180 318 L242 194"/>
+              <path d="M150 147 L210 147"/>
+              <path d="M100 206 L64 448"/><path d="M260 206 L296 448"/>
+            </g>
+            <path d="M180 178 L180 492" stroke="#3a3a3c" stroke-width="2"/>
+            <rect x="176" y="176" width="8" height="12" rx="1.5" fill="#6d6d70"/>
+            <image href="goods/assets/symbol-bone.png" x="206" y="214" width="18" height="32" opacity=".95"/>
+          </svg></div>
+              <b class="prd-k">rhythm</b><span class="prd-sub">달리고, 걷고, 다시 움직이는 리듬.</span></div>
+            <div class="prd-f"><div class="prd-ph" style="transform-origin:59% 36%;"><svg viewBox="0 0 360 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="S2:U 트랙 자켓 블랙">
+            <defs><radialGradient id="prdBg2" cx="50%" cy="38%" r="75%"><stop offset="0" stop-color="#d9d4cb"/><stop offset="1" stop-color="#8f8a82"/></radialGradient>
+              <linearGradient id="prdSh2" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".07"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></linearGradient></defs>
+            <rect width="360" height="640" fill="url(#prdBg2)"/>
+            <ellipse cx="180" cy="512" rx="130" ry="10" fill="#000" opacity=".18"/>
+            <g stroke="#050505" stroke-width="1" stroke-linejoin="round">
+              <path d="M112 196 Q82 204 72 232 L48 446 L86 452 L108 262 Z" fill="#121213"/>
+              <path d="M248 196 Q278 204 288 232 L312 446 L274 452 L252 262 Z" fill="#121213"/>
+              <path d="M48 446 L86 452 L84 470 L46 464 Z M312 446 L274 452 L276 470 L314 464 Z" fill="#0b0b0c"/>
+              <path d="M152 170 L112 194 Q96 202 94 220 L94 470 L266 470 L266 220 Q264 202 248 194 L208 170 Z" fill="#141415"/>
+              <path d="M94 470 L266 470 L266 492 L94 492 Z" fill="#0b0b0c"/>
+              <path d="M150 146 L210 146 L212 176 Q180 186 148 176 Z" fill="#0f0f10"/>
+            </g>
+            <path d="M152 170 L112 194 Q96 202 94 220 L94 470 L266 470 L266 220 Q264 202 248 194 L208 170 Z" fill="url(#prdSh2)"/>
+            <g fill="none" stroke="#f4f2ed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M118 194 L180 318 L242 194"/>
+              <path d="M150 147 L210 147"/>
+              <path d="M100 206 L64 448"/><path d="M260 206 L296 448"/>
+            </g>
+            <path d="M180 178 L180 492" stroke="#3a3a3c" stroke-width="2"/>
+            <rect x="176" y="176" width="8" height="12" rx="1.5" fill="#6d6d70"/>
+            <image href="goods/assets/symbol-bone.png" x="206" y="214" width="18" height="32" opacity=".95"/>
+          </svg></div>
+              <b class="prd-k">to you</b><span class="prd-sub">가슴에 남는 건 S2:U 심볼 하나.</span></div>
+          </div>
+          <figcaption><span>S2:U TRACK JACKET</span><span>BLACK · SAMPLE</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
   <section class="brand view" data-view="playlist" id="lifestyle">
     <div class="brand-sec">
-      <div class="eyebrow">06 · LIFESTYLE</div>
+      <div class="eyebrow">07 · LIFESTYLE</div>
       <h2 class="brand-h">Playlist</h2>
       <p class="brand-p">무브먼트에서 리커버리까지, 우리가 세션마다 듣는 사운드를 모았습니다.</p>
       <div class="pl-grid" id="plGrid"></div>
@@ -2185,6 +2289,26 @@ ${pts}
       v.muted = true;
     });
   })();
+  /* ---- 프로덕트: 릴스처럼 프레임 자동 전환 ---- */
+  (function(){
+    const D = 3600;
+    document.querySelectorAll('.prd-reel').forEach(function(reel){
+      const fr = [...reel.querySelectorAll('.prd-f')];
+      const bars = document.createElement('div'); bars.className = 'prd-bars';
+      bars.innerHTML = fr.map(() => '<i><b></b></i>').join(''); reel.appendChild(bars);
+      const bi = [...bars.children]; let n = 0;
+      function show(i){
+        fr.forEach((f, k) => f.classList.toggle('on', k === i));
+        bi.forEach(function(b, k){ b.className = k < i ? 'done' : ''; });
+        void bars.offsetWidth; bi[i].style.setProperty('--d', D + 'ms'); bi[i].className = 'on';
+      }
+      show(0);
+      setInterval(function(){
+        if(!reel.offsetParent) return;   // 탭이 숨겨져 있으면 멈춤
+        n = (n + 1) % fr.length; show(n);
+      }, D);
+    });
+  })();
   /* ---- 플레이리스트 (표 형식, 행 안에서 재생) ---- */
   (function(){
     const wrap = document.getElementById('plGrid');
@@ -2193,6 +2317,9 @@ ${pts}
       {t:'S2: MOVE BETTER CLASS', s:'SPOTIFY', k:'sp',
        url:'https://open.spotify.com/playlist/0Ft3pPwxbpmQh2Wm8LX1jW',
        em:'https://open.spotify.com/embed/playlist/0Ft3pPwxbpmQh2Wm8LX1jW?theme=0'},
+      {t:'SUNN FESTIVAL: ANIMAL FLOW / BREATHWORK', s:'SPOTIFY', k:'sp',
+       url:'https://open.spotify.com/playlist/6vXVPfkwotOinkGEient8r',
+       em:'https://open.spotify.com/embed/playlist/6vXVPfkwotOinkGEient8r?theme=0'},
       {t:'Serenade Of', s:'SOUNDCLOUD', k:'sc',
        url:'https://soundcloud.com/soundsgood_store/monday-mix-sgmm147-serenade-of'},
       {t:'Bedroom', s:'SOUNDCLOUD', k:'sc',
@@ -2809,7 +2936,7 @@ ${pts}
     });
 
     // 메뉴·히어로 링크도 뷰 전환에 연결
-    const MAP = {programs:'programs', about:'about', club:'club', membership:'membership', location:'location',
+    const MAP = {programs:'programs', about:'about', club:'club', membership:'membership', location:'location', product:'product',
                  lifestyle:'playlist', cadence:'play', journal:'journal'};
     document.querySelectorAll('a[href^="#"]').forEach(function(a){
       const id = a.getAttribute('href').slice(1);
