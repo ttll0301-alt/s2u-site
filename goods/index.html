@@ -443,7 +443,19 @@ TO YOU</textarea></div>
       {k:'cap-table', place:'a', x:388, y:236, pxmm:1.55, t:{rot:-14, sy:.86}, cap:'STUDIO · 자수실 · 원단 스와치'}],
     tee:[
       {k:'tee-held', place:'a', x:519, y:424, pxmm:0.76, cap:'FRONT · 앞판 A'},
-      {k:'tee-rack', place:'b', x:470, y:376, pxmm:0.70, cap:'BACK · 뒷판 B'}]
+      {k:'tee-rack', place:'b', x:470, y:376, pxmm:0.70, cap:'BACK · 뒷판 B'},
+      {k:'tee-detail', place:'a', x:735, y:540, pxmm:2.4, t:{rot:-3, sy:.8}, noShift:true, detail:true},
+      {k:'tee-table', place:'a', x:495, y:445, pxmm:1.3, cap:'STUDIO · 원단 스와치 · 행택'}],
+    windbreaker:[
+      {k:'wb-held', place:'a', x:537, y:520, pxmm:0.70, cap:'FRONT · 앞판 A'},
+      {k:'wb-rack', place:'b', x:465, y:480, pxmm:0.70, cap:'BACK · 뒷판 B'},
+      {k:'wb-detail', place:'a', x:640, y:450, pxmm:3.0, t:{rot:-2, sy:.85}, noShift:true, detail:true},
+      {k:'wb-table', place:'a', x:410, y:440, pxmm:1.0, t:{rot:-8, sy:.9}, cap:'STUDIO · 원단 스와치 · 행택'}],
+    tote:[
+      {k:'tote-held', place:'a', x:470, y:618, pxmm:1.13, cap:'FRONT · 앞면 A'},
+      {k:'tote-hook', place:'a', x:459, y:600, pxmm:0.94, cap:'STUDIO · 벽걸이'},
+      {k:'tote-detail', place:'a', x:390, y:520, pxmm:1.9, t:{sy:.85}, noShift:true, detail:true},
+      {k:'tote-table', place:'a', x:258, y:420, pxmm:1.2, t:{rot:10, sy:.85}, cap:'STUDIO · 캔버스 · 행택'}]
   };
   const SHOT_ITEMS = Object.keys(SHOTS).map(k => ITEMS[k].label).join(' · ');
   function drawShots(){
