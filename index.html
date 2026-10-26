@@ -571,6 +571,9 @@
   .fs-grid .prd{transition:opacity 0.4s ease, transform 0.4s ease;}
   .fs.pick .prd:not(.on){opacity:0.22;}
   .fs-grid .prd-stage{border-radius:4px; border-top:3px solid var(--c);}
+  .prd-stage.night{background:#050505;}
+  .prd-stage.night::before{display:none;}
+  .prd-stage.night .fs-tag{color:rgba(244,242,237,0.55);}
   .fs-tag{position:absolute; top:12px; left:14px; right:14px; z-index:2; display:flex; justify-content:space-between;
     font-size:10.5px; letter-spacing:0.14em; color:rgba(12,12,13,0.62); pointer-events:none;}
   .fs-tag b{font-weight:600; color:var(--c);}
@@ -886,11 +889,9 @@
   .payprice i{font-style:normal; font-size:0.5em; margin-left:3px; color:var(--bone-dim);}
   .paynote{margin:14px 4px 0; font-size:11px; line-height:1.6; color:var(--bone-dim); text-align:center;}
 
-  /* ---- 심박 커서 ---- */
+  /* ---- 심박 커서 (꺼둠: 기본 커서 사용) ---- */
+  .cur, .cur-run, .cur-lab, .cur-spm, .cur-step{display:none !important;}
   @media (hover:hover) and (pointer:fine){
-    body, a, button, [role="button"], .work, .pl-row, .pl-thumb, .cad-stage,
-    .seg-btn, .filter-btn, .flow-w, .viewbar button, .payopt{cursor:none;}
-    input, textarea{cursor:none;}
     .cur, .cur-run{position:fixed; top:0; left:0; z-index:9999; pointer-events:none;
       will-change:transform;}
     .cur{width:24px; height:24px; margin:-12px 0 0 -12px; border-radius:50%; z-index:10000;
@@ -1482,16 +1483,16 @@
         </div>
         <div class="fs-grid">
           <figure class="prd" data-c="in" style="--c:var(--move-red)">
-            <div class="prd-stage" role="img" aria-label="S2:U 심볼 반팔 티셔츠 블랙, 천천히 회전">
+            <div class="prd-stage night" role="img" aria-label="S2:U 심볼 반팔 티셔츠 블랙을 입은 모델, 천천히 360도 회전">
               <div class="fs-tag"><span>Nº01</span><b>IN SESSION</b></div>
-              <div class="prd-360" data-frames="goods/assets/p360-tee-#.png"></div>
+              <div class="prd-360" data-frames="goods/assets/p360-mtee-#.jpg" data-wrap="0.33,0.67"></div>
             </div>
             <figcaption><div class="fs-name">SYMBOL TEE<em>BLACK</em></div><p class="prd-d">땀이 마른 뒤에도 입는 티셔츠.</p></figcaption>
           </figure>
           <figure class="prd" data-c="way" style="--c:#a25a9a">
-            <div class="prd-stage" role="img" aria-label="S2:U 트랙 자켓 블랙, 천천히 회전">
+            <div class="prd-stage night" role="img" aria-label="S2:U 트랙 자켓 블랙을 입은 모델, 천천히 360도 회전">
               <div class="fs-tag"><span>Nº02</span><b>TO &amp; FROM</b></div>
-              <div class="prd-360" data-frames="goods/assets/p360-jk-#.png"></div>
+              <div class="prd-360" data-frames="goods/assets/p360-mjk-#.jpg" data-wrap="0.33,0.67"></div>
             </div>
             <figcaption><div class="fs-name">TRACK JACKET<em>BLACK</em></div><p class="prd-d">세션에 가고, 세션에서 돌아오는 자켓.</p></figcaption>
           </figure>
@@ -2299,7 +2300,8 @@ ${pts}
       for(let k = 0; k < N; k++){
         const src = box.dataset.frames.replace('#', k), im = new Image();
         box._src[k] = src;
-        im.onload = function(){ box._e[k] = edges(im); box._ready++; build(box); };
+        const fixed = box.dataset.wrap && box.dataset.wrap.split(',').map(Number);   // 배경이 있는 모델 사진은 몸 폭을 직접 지정
+        im.onload = function(){ box._e[k] = fixed || edges(im); box._ready++; build(box); };
         im.src = src;
       }
       if('ResizeObserver' in window) new ResizeObserver(function(){ build(box); }).observe(box);
@@ -3176,6 +3178,7 @@ ${pts}
 
   /* ---- 심박 커서: 화면의 심박수에 맞춰 뛰고, 존 색을 따라감 ---- */
   (function(){
+    return; // 커스텀 커서 꺼둠
     if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
     if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
