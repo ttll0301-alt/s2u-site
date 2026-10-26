@@ -591,16 +591,14 @@
     .fs-grid{grid-template-columns:minmax(0,1fr); gap:34px;}
   }
   .prd{margin:0;}
-  .prd-stage{position:relative; aspect-ratio:376/600; border-radius:14px; overflow:hidden; perspective:1800px;
+  .prd-stage{position:relative; aspect-ratio:3/4; border-radius:14px; overflow:hidden; perspective:1800px;
     background:radial-gradient(ellipse at 50% 40%, #f6f3ee 0%, #ebe6de 70%, #e2dcd2 100%);}
-  .prd-stage::before{content:''; position:absolute; left:18%; right:18%; top:84.5%; height:18px; border-radius:50%;
+  .prd-stage::before{content:''; position:absolute; left:20%; right:20%; top:89%; height:16px; border-radius:50%;
     background:radial-gradient(closest-side, rgba(0,0,0,0.26), transparent);}
-  .prd-3d{position:absolute; inset:0; transform-style:preserve-3d;}
-  .prd-spin{position:absolute; inset:0; transform-style:preserve-3d; transition:opacity 0.7s ease-in-out; will-change:transform;}
-  .prd-half{position:absolute; inset:0; transform-style:preserve-3d;}
-  .prd-half.back{transform:rotateY(180deg);}
-  .prd-strip{position:absolute; top:0; left:50%; height:100%; transform-origin:0 50%; background-repeat:no-repeat;
-    backface-visibility:hidden; -webkit-backface-visibility:hidden;}
+  .prd-360{position:absolute; inset:0; perspective:1400px;}
+  .prd-360 img{position:absolute; inset:0; width:100%; height:100%; object-fit:contain; opacity:0;
+    backface-visibility:hidden; will-change:transform, opacity; user-select:none; -webkit-user-drag:none;}
+  .prd-360 img.on{opacity:1;}
   .prd figcaption{display:flex; justify-content:space-between; gap:12px; margin-top:14px; font-size:12px; letter-spacing:0.12em;}
   .prd figcaption span:first-child{font-weight:600;}
   .prd figcaption span:last-child{color:var(--bone-dim);}
@@ -1486,14 +1484,14 @@
           <figure class="prd" data-c="in" style="--c:var(--move-red)">
             <div class="prd-stage" role="img" aria-label="S2:U 심볼 반팔 티셔츠 블랙, 천천히 회전">
               <div class="fs-tag"><span>Nº01</span><b>IN SESSION</b></div>
-              <div class="prd-3d" data-body="0.42" data-front="goods/assets/prd-tee-0s-cut.png" data-back="goods/assets/prd-tee-2s-cut.png"></div>
+              <div class="prd-360" data-frames="goods/assets/p360-tee-#.png"></div>
             </div>
             <figcaption><div class="fs-name">SYMBOL TEE<em>BLACK</em></div><p class="prd-d">땀이 마른 뒤에도 입는 티셔츠.</p></figcaption>
           </figure>
           <figure class="prd" data-c="way" style="--c:#a25a9a">
             <div class="prd-stage" role="img" aria-label="S2:U 트랙 자켓 블랙, 천천히 회전">
               <div class="fs-tag"><span>Nº02</span><b>TO &amp; FROM</b></div>
-              <div class="prd-3d" data-body="0.58" data-depth="0.5" data-front="goods/assets/prd-jk-0s-cut.png?v=2" data-back="goods/assets/prd-jk-2s-cut.png"></div>
+              <div class="prd-360" data-frames="goods/assets/p360-jk-#.png"></div>
             </div>
             <figcaption><div class="fs-name">TRACK JACKET<em>BLACK</em></div><p class="prd-d">세션에 가고, 세션에서 돌아오는 자켓.</p></figcaption>
           </figure>
@@ -2251,66 +2249,40 @@ ${pts}
       v.muted = true;
     });
   })();
-  /* ---- 프로덕트: 앞·뒤 컷아웃을 곡면 띠(strip)로 감아 CSS 3D로 좌우로 천천히 돌리고,
-     가운데를 지날 때 앞↔뒤가 부드럽게 바뀐다 (사진 두 장으로 정확히 보이는 각도만 쓴다) ---- */
+  /* ---- 프로덕트 360: 45도 간격 사진 8장을 이어 붙여 한 바퀴 천천히 돈다.
+     장마다 22.5도씩 살짝 돌리면서 넘어가는 순간에만 겹쳐, 끊기지 않고 계속 도는 것처럼 보이게 한다 ---- */
   (function(){
-    const N = 56, DEPTH = 0.62, OV = 1.2;   // 띠 개수, 몸판 두께(몸판 반폭 대비), 띠 겹침
-    const SWAY = 24, HALF = 4200;           // 좌우 회전 각도(도), 한 번 넘어가는 시간(ms)
-    function half(el, src, cls, W, H){
-      const a = W / 2, A = a * (+el.dataset.body || 0.5), b = A * (+el.dataset.depth || DEPTH);
-      // 몸판만 타원 곡면으로 감고, 소매는 몸판 옆으로 평평하게 뻗게 한다
-      const zf = function(u){ return Math.abs(u) < A ? b * Math.sqrt(1 - (u/A)*(u/A)) : 0; };
-      const h = document.createElement('div'); h.className = 'prd-half ' + cls;
+    const N = 8, SEG = 1500, TURN = 22.5;    // 장 수, 한 장이 넘어가는 시간(ms), 장마다 보정 회전(도)
+    const boxes = [...document.querySelectorAll('.prd-360')];
+    if(!boxes.length) return;
+    const ease = function(a, b, x){ x = Math.min(1, Math.max(0, (x - a) / (b - a))); return x * x * (3 - 2 * x); };
+    boxes.forEach(function(box){
       for(let k = 0; k < N; k++){
-        const u0 = -a + 2*a*k/N, u1 = u0 + 2*a/N, z0 = zf(u0), z1 = zf(u1);
-        const len = Math.hypot(u1 - u0, z1 - z0), sx = len / (u1 - u0);
-        const ang = Math.atan2(-(z1 - z0), u1 - u0) * 180 / Math.PI;
-        const sp = document.createElement('i'); sp.className = 'prd-strip';
-        sp.style.width = (len + 2*OV) + 'px';   // 양옆으로 겹쳐 띠 사이 틈(밝은 선)을 없앤다
-        sp.style.transform = 'translateX(' + u0 + 'px) translateZ(' + z0 + 'px) rotateY(' + ang + 'deg) translateX(' + (-OV) + 'px)';
-        sp.style.backgroundImage = 'url(' + src + ')';
-        sp.style.backgroundSize = (W * sx) + 'px ' + H + 'px';
-        sp.style.backgroundPosition = (-(u0 + a) * sx + OV) + 'px 0';
-        h.appendChild(sp);
+        const im = new Image(); im.alt = ''; im.decoding = 'async'; im.draggable = false;
+        im.src = box.dataset.frames.replace('#', k);
+        box.appendChild(im);
       }
-      return h;
-    }
-    function build(el){
-      const st = el.parentElement, W = st.clientWidth, H = st.clientHeight;
-      if(!W || el.dataset.w == W) return;
-      el.dataset.w = W; el.innerHTML = '';
-      el._spins = ['front', 'back'].map(function(face){
-        const s = document.createElement('div'); s.className = 'prd-spin';
-        const mine = face === 'front' ? el.dataset.front : el.dataset.back, other = face === 'front' ? el.dataset.back : el.dataset.front;
-        s.appendChild(half(el, mine, 'front', W, H)); s.appendChild(half(el, other, 'back', W, H));
-        el.appendChild(s); return s;
-      });
-      el._spins[1].style.opacity = 0;
-    }
-    const els = [...document.querySelectorAll('.prd-3d')];
-    els.forEach(function(el){
-      [el.dataset.front, el.dataset.back].forEach(function(src){ new Image().src = src; });   // 미리 불러오기
-      if('ResizeObserver' in window) new ResizeObserver(function(){ build(el); }).observe(el.parentElement);
-      else window.addEventListener('resize', function(){ build(el); });
-      build(el);
-      el.parentElement.addEventListener('mouseenter', function(){ el._hold = true; });
-      el.parentElement.addEventListener('mouseleave', function(){ el._hold = false; });
-      el._t = 0;
+      box._imgs = [...box.children]; box._t = 0;
+      box._imgs[0].classList.add('on');
+      const st = box.parentElement;
+      st.addEventListener('mouseenter', function(){ box._hold = true; });
+      st.addEventListener('mouseleave', function(){ box._hold = false; });
     });
-    const still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     let last = performance.now();
     (function tick(now){
       const dt = Math.min(100, now - last); last = now;
-      els.forEach(function(el){
-        if(!el._spins || !el.offsetParent) return;
-        if(!el._hold && !still) el._t += dt;
-        const ph = el._t / HALF;                       // 1 = 한 번 넘어감
-        const ang = SWAY * Math.sin(ph * Math.PI);     // 0도를 지날 때마다 앞/뒤가 바뀐다
-        const back = Math.floor(ph + 0.5) % 2 === 1;
-        el._spins[0].style.transform = 'rotateY(' + ang + 'deg)';
-        el._spins[1].style.transform = 'rotateY(' + (180 + ang) + 'deg)';
-        el._spins[0].style.opacity = back ? 0 : 1;
-        el._spins[1].style.opacity = back ? 1 : 0;
+      boxes.forEach(function(box){
+        if(!box.offsetParent) return;
+        if(!box._hold) box._t += dt;
+        const p = box._t / SEG, i = Math.floor(p) % N, f = p - Math.floor(p), j = (i + 1) % N;
+        const mix = ease(0.38, 0.62, f);
+        box._imgs.forEach(function(im, k){
+          // 나가는 장은 끝까지 불투명하게 두고, 들어오는 장만 그 위로 덮는다 (반투명 두 장이 겹쳐 회색으로 비치는 걸 막는다)
+          if(k === i){ im.style.opacity = mix < 1 ? 1 : 0; im.style.zIndex = 1; im.style.transform = 'rotateY(' + (f * TURN) + 'deg)'; }
+          else if(k === j){ im.style.opacity = mix; im.style.zIndex = 2; im.style.transform = 'rotateY(' + ((f - 1) * TURN) + 'deg)'; }
+          else if(im.style.opacity !== '0'){ im.style.opacity = 0; }
+        });
       });
       requestAnimationFrame(tick);
     })(last);
