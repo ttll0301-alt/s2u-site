@@ -552,8 +552,40 @@
   .loc-sub{margin-top:14px; font-size:13.5px; color:var(--bone-dim);}
 
   /* ---- 프로덕트 (앞·뒤 사진을 곡면에 감아 360도 회전) ---- */
-  .prd-grid{display:grid; grid-template-columns:repeat(2,minmax(0,340px)); gap:20px; margin-top:44px;}
-  @media (max-width:600px){.prd-grid{grid-template-columns:minmax(0,340px); justify-content:center;}}
+  /* 프로덕트: 왼쪽은 흐린 세션 사진 위 큰 분류, 오른쪽은 상품 세로 목록 (USAL 숍 구성 참고) */
+  .shop{display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); margin-top:44px; border:1px solid var(--line);}
+  .shop-l{position:relative; overflow:hidden; padding:clamp(18px,2.4vw,30px);}
+  .shop-l::before{content:''; position:absolute; inset:-40px; background:url(fyf-animal-flow-session.jpg) center/cover;
+    filter:blur(22px) saturate(0.8) brightness(0.62); transform:scale(1.08);}
+  .shop-l > *{position:relative;}
+  .shop-in{position:sticky; top:150px;}
+  .shop-cats{list-style:none; margin:0; padding:0;}
+  .shop-cats button{all:unset; cursor:pointer; display:inline-flex; align-items:flex-start; gap:10px;
+    font-family:'Bebas Neue',sans-serif; font-size:clamp(56px,8.4vw,128px); line-height:0.98; color:var(--bone);
+    padding:2px 12px 0 6px; border:1px solid transparent; transition:color 0.25s ease, border-color 0.25s ease;}
+  .shop-cats button sup{font-family:'Pretendard'; font-size:12px; letter-spacing:0.14em; line-height:1; margin-top:0.9em; color:rgba(244,242,237,0.82); white-space:nowrap;}
+  .shop-cats button:hover{color:#fff;}
+  .shop-cats button.on{border-color:var(--bone);}
+  .shop-cats button:focus-visible{outline:2px solid var(--move-red); outline-offset:3px;}
+  .shop-note{margin-top:clamp(28px,4vw,48px); max-width:26em; font-size:13px; line-height:1.7; color:rgba(244,242,237,0.82);}
+  .shop-r{border-left:1px solid var(--line); background:#e9e6e0;}
+  .shop-r .prd{border-bottom:1px solid rgba(12,12,13,0.12);}
+  .shop-r .prd[hidden]{display:none;}
+  .shop-r .prd-stage{border-radius:0;}
+  .shop-r .shop-lab{display:grid; grid-template-columns:auto minmax(0,1fr); margin:0 !important; font-size:13px !important; letter-spacing:0.08em !important;}
+  .shop-r .shop-lab .k{background:#9b9993; color:#f4f2ed; padding:12px 14px; font-weight:600;}
+  .shop-r .shop-lab .n{background:#f7f5f1; color:#0c0c0d; padding:12px 16px; font-weight:500 !important; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .prd-soon{display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; color:#0c0c0d; text-align:center;}
+  .prd-soon b{font-family:'Bebas Neue',sans-serif; font-size:clamp(38px,5vw,60px); letter-spacing:0.04em; line-height:1;}
+  .prd-soon span{font-size:12px; letter-spacing:0.12em; color:rgba(12,12,13,0.6);}
+  .prd-soon::before{display:none;}
+  @media (max-width:760px){
+    .shop{grid-template-columns:minmax(0,1fr);}
+    .shop-r{border-left:none; border-top:1px solid var(--line);}
+    .shop-in{position:relative; top:auto;}
+    .shop-cats{display:flex; flex-wrap:wrap; gap:4px 6px;}
+    .shop-cats button{font-size:44px;}
+  }
   .prd{margin:0;}
   .prd-stage{position:relative; aspect-ratio:376/600; border-radius:14px; overflow:hidden; perspective:1800px;
     background:radial-gradient(ellipse at 50% 40%, #f6f3ee 0%, #ebe6de 70%, #e2dcd2 100%);}
@@ -1440,23 +1472,37 @@
       <div class="eyebrow">06 · PRODUCT</div>
       <h2 class="brand-h">Product</h2>
       <p class="brand-p">S2:U PRODUCT는 운동 이후를 위한 서비스입니다.<br>입는 것, 머무는 것, 남는 것. 번호를 붙여 하나씩 내놓습니다.</p>
-      <div class="prd-grid">
-        <figure class="prd">
-          <div class="prd-stage" role="img" aria-label="S2:U 심볼 반팔 티셔츠 블랙, 360도 회전">
-            <div class="prd-3d" data-body="0.42" data-front="goods/assets/prd-tee-0s-cut.png" data-back="goods/assets/prd-tee-2s-cut.png"></div>
+      <div class="shop">
+        <div class="shop-l">
+          <div class="shop-in">
+            <ul class="shop-cats" id="shopCats">
+              <li><button type="button" data-c="all" class="on">ALL<sup>[ 03 ]</sup></button></li>
+              <li><button type="button" data-c="tee">TEE<sup>[ 01 ]</sup></button></li>
+              <li><button type="button" data-c="outer">OUTER<sup>[ 01 ]</sup></button></li>
+              <li><button type="button" data-c="scent">SCENT<sup>[ 01 ]</sup></button></li>
+            </ul>
+            <p class="shop-note">땀이 마른 뒤에도 입는 티셔츠. 세션에 가고, 세션에서 돌아오는 자켓. 그리고 세션이 끝난 공간에 남는 향.</p>
           </div>
-          <figcaption><span>Nº01 SYMBOL TEE</span><span>BLACK</span></figcaption>
-          <p class="prd-d">땀이 마른 뒤에도 입는 티셔츠.</p>
-        </figure>
-        <figure class="prd">
-          <div class="prd-stage" role="img" aria-label="S2:U 트랙 자켓 블랙, 360도 회전">
-            <div class="prd-3d" data-body="0.58" data-depth="0.5" data-front="goods/assets/prd-jk-0s-cut.png" data-back="goods/assets/prd-jk-2s-cut.png"></div>
-          </div>
-          <figcaption><span>Nº02 TRACK JACKET</span><span>BLACK</span></figcaption>
-          <p class="prd-d">세션에 가고, 세션에서 돌아오는 자켓.</p>
-        </figure>
+        </div>
+        <div class="shop-r" id="shopList">
+          <figure class="prd" data-c="tee">
+            <div class="prd-stage" role="img" aria-label="S2:U 심볼 반팔 티셔츠 블랙, 천천히 회전">
+              <div class="prd-3d" data-body="0.42" data-front="goods/assets/prd-tee-0s-cut.png" data-back="goods/assets/prd-tee-2s-cut.png"></div>
+            </div>
+            <figcaption class="shop-lab"><span class="k">Nº01</span><span class="n">심볼 티 – 블랙</span></figcaption>
+          </figure>
+          <figure class="prd" data-c="outer">
+            <div class="prd-stage" role="img" aria-label="S2:U 트랙 자켓 블랙, 천천히 회전">
+              <div class="prd-3d" data-body="0.58" data-depth="0.5" data-front="goods/assets/prd-jk-0s-cut.png" data-back="goods/assets/prd-jk-2s-cut.png"></div>
+            </div>
+            <figcaption class="shop-lab"><span class="k">Nº02</span><span class="n">트랙 자켓 – 블랙</span></figcaption>
+          </figure>
+          <figure class="prd" data-c="scent">
+            <div class="prd-stage prd-soon"><b>SCENT</b><span>COMING SOON</span></div>
+            <figcaption class="shop-lab"><span class="k">Nº03</span><span class="n">세션 이후의 향 – 준비 중</span></figcaption>
+          </figure>
+        </div>
       </div>
-      <p class="prd-next"><b>Nº03 SCENT</b> 세션이 끝난 공간에 남는 향. 준비 중.</p>
     </div>
   </section>
 
@@ -2268,6 +2314,16 @@ ${pts}
       });
       requestAnimationFrame(tick);
     })(last);
+  })();
+  /* ---- 프로덕트 분류 ---- */
+  (function(){
+    const cats = document.getElementById('shopCats'), list = document.getElementById('shopList');
+    if(!cats || !list) return;
+    cats.addEventListener('click', function(e){
+      const b = e.target.closest('button'); if(!b) return;
+      cats.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x === b); });
+      list.querySelectorAll('.prd').forEach(function(f){ f.hidden = !(b.dataset.c === 'all' || f.dataset.c === b.dataset.c); });
+    });
   })();
   /* ---- 플레이리스트 (표 형식, 행 안에서 재생) ---- */
   (function(){
