@@ -595,10 +595,10 @@
     background:radial-gradient(ellipse at 50% 40%, #f6f3ee 0%, #ebe6de 70%, #e2dcd2 100%);}
   .prd-stage::before{content:''; position:absolute; left:20%; right:20%; top:89%; height:16px; border-radius:50%;
     background:radial-gradient(closest-side, rgba(0,0,0,0.26), transparent);}
-  .prd-360{position:absolute; inset:0; perspective:1400px;}
-  .prd-360 img{position:absolute; inset:0; width:100%; height:100%; object-fit:contain; opacity:0;
-    backface-visibility:hidden; will-change:transform, opacity; user-select:none; -webkit-user-drag:none;}
-  .prd-360 img.on{opacity:1;}
+  .prd-360{position:absolute; inset:0; perspective:1600px;}
+  .prd-f{position:absolute; inset:0; transform-style:preserve-3d; opacity:0; will-change:transform, opacity;}
+  .prd-f i{position:absolute; top:0; left:50%; height:100%; transform-origin:0 50%; background-repeat:no-repeat;
+    backface-visibility:hidden; -webkit-backface-visibility:hidden;}
   .prd figcaption{display:flex; justify-content:space-between; gap:12px; margin-top:14px; font-size:12px; letter-spacing:0.12em;}
   .prd figcaption span:first-child{font-weight:600;}
   .prd figcaption span:last-child{color:var(--bone-dim);}
@@ -2249,39 +2249,77 @@ ${pts}
       v.muted = true;
     });
   })();
-  /* ---- 프로덕트 360: 45도 간격 사진 8장을 이어 붙여 한 바퀴 천천히 돈다.
-     장마다 22.5도씩 살짝 돌리면서 넘어가는 순간에만 겹쳐, 끊기지 않고 계속 도는 것처럼 보이게 한다 ---- */
+  /* ---- 프로덕트 360: 45도 간격 사진 8장. 사진마다 옷 몸통을 곡면 띠로 감아 실제로 ±22.5도씩 돌리고,
+     앞 사진이 +22.5도·다음 사진이 −22.5도로 같은 각도가 되는 순간에 잠깐 겹쳐 넘긴다 → 끊김 없이 계속 도는 회전 ---- */
   (function(){
-    const N = 8, SEG = 1500, TURN = 22.5;    // 장 수, 한 장이 넘어가는 시간(ms), 장마다 보정 회전(도)
+    const N = 8, SEG = 1800, STEP = 45;      // 장 수, 한 장(45도)을 도는 시간(ms), 장 간격(도)
+    const STRIPS = 44, DEPTH = 0.9, OV = 1.2;
     const boxes = [...document.querySelectorAll('.prd-360')];
     if(!boxes.length) return;
     const ease = function(a, b, x){ x = Math.min(1, Math.max(0, (x - a) / (b - a))); return x * x * (3 - 2 * x); };
-    boxes.forEach(function(box){
-      for(let k = 0; k < N; k++){
-        const im = new Image(); im.alt = ''; im.decoding = 'async'; im.draggable = false;
-        im.src = box.dataset.frames.replace('#', k);
-        box.appendChild(im);
+    function edges(im){                       // 사진에서 옷이 차지하는 좌우 범위(0~1)
+      try{
+        const w = 96, h = Math.round(w * im.naturalHeight / im.naturalWidth);
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        const g = c.getContext('2d'); g.drawImage(im, 0, 0, w, h);
+        const d = g.getImageData(0, 0, w, h).data;
+        let l = w, r = -1;
+        for(let y = 0; y < h; y++) for(let x = 0; x < w; x++){
+          if(d[(y * w + x) * 4 + 3] > 60){ if(x < l) l = x; if(x > r) r = x; }
+        }
+        return r > l ? [l / w, (r + 1) / w] : [0.1, 0.9];
+      }catch(e){ return [0.1, 0.9]; }
+    }
+    function wrap(src, e, W, H){              // 옷 폭만큼 타원 곡면으로 감은 띠 묶음
+      const a = W / 2, c = ((e[0] + e[1]) / 2 - 0.5) * W, A = (e[1] - e[0]) * W / 2 * 0.92, b = A * DEPTH;
+      const zf = function(u){ const t = (u - c) / A; return Math.abs(t) < 1 ? b * Math.sqrt(1 - t * t) : 0; };
+      const f = document.createElement('div'); f.className = 'prd-f';
+      for(let k = 0; k < STRIPS; k++){
+        const u0 = -a + 2*a*k/STRIPS, u1 = u0 + 2*a/STRIPS, z0 = zf(u0), z1 = zf(u1);
+        const len = Math.hypot(u1 - u0, z1 - z0), sx = len / (u1 - u0);
+        const ang = Math.atan2(-(z1 - z0), u1 - u0) * 180 / Math.PI;
+        const sp = document.createElement('i');
+        sp.style.width = (len + 2*OV) + 'px';
+        sp.style.transform = 'translateX(' + u0 + 'px) translateZ(' + (z0 - b) + 'px) rotateY(' + ang + 'deg) translateX(' + (-OV) + 'px)';
+        sp.style.backgroundImage = 'url(' + src + ')';
+        sp.style.backgroundSize = (W * sx) + 'px ' + H + 'px';
+        sp.style.backgroundPosition = (-(u0 + a) * sx + OV) + 'px 0';
+        f.appendChild(sp);
       }
-      box._imgs = [...box.children]; box._t = 0;
-      box._imgs[0].classList.add('on');
+      return f;
+    }
+    function build(box){
+      const W = box.clientWidth, H = box.clientHeight;
+      if(!W || box._w === W || box._ready < N) return;
+      box._w = W; box.innerHTML = '';
+      box._f = box._src.map(function(src, k){ const f = wrap(src, box._e[k], W, H); box.appendChild(f); return f; });
+    }
+    boxes.forEach(function(box){
+      box._src = []; box._e = []; box._ready = 0; box._t = 0;
+      for(let k = 0; k < N; k++){
+        const src = box.dataset.frames.replace('#', k), im = new Image();
+        box._src[k] = src;
+        im.onload = function(){ box._e[k] = edges(im); box._ready++; build(box); };
+        im.src = src;
+      }
+      if('ResizeObserver' in window) new ResizeObserver(function(){ build(box); }).observe(box);
       const st = box.parentElement;
       st.addEventListener('mouseenter', function(){ box._hold = true; });
       st.addEventListener('mouseleave', function(){ box._hold = false; });
     });
-    if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     let last = performance.now();
     (function tick(now){
       const dt = Math.min(100, now - last); last = now;
       boxes.forEach(function(box){
-        if(!box.offsetParent) return;
-        if(!box._hold) box._t += dt;
+        if(!box._f || !box.offsetParent) return;
+        if(!box._hold && !still) box._t += dt;
         const p = box._t / SEG, i = Math.floor(p) % N, f = p - Math.floor(p), j = (i + 1) % N;
-        const mix = ease(0.38, 0.62, f);
-        box._imgs.forEach(function(im, k){
-          // 나가는 장은 끝까지 불투명하게 두고, 들어오는 장만 그 위로 덮는다 (반투명 두 장이 겹쳐 회색으로 비치는 걸 막는다)
-          if(k === i){ im.style.opacity = mix < 1 ? 1 : 0; im.style.zIndex = 1; im.style.transform = 'rotateY(' + (f * TURN) + 'deg)'; }
-          else if(k === j){ im.style.opacity = mix; im.style.zIndex = 2; im.style.transform = 'rotateY(' + ((f - 1) * TURN) + 'deg)'; }
-          else if(im.style.opacity !== '0'){ im.style.opacity = 0; }
+        const mix = ease(0.36, 0.64, f);
+        box._f.forEach(function(el, k){
+          if(k === i){ el.style.opacity = 1; el.style.zIndex = 1; el.style.transform = 'rotateY(' + (-f * STEP) + 'deg)'; }
+          else if(k === j){ el.style.opacity = mix; el.style.zIndex = 2; el.style.transform = 'rotateY(' + ((1 - f) * STEP) + 'deg)'; }
+          else if(el.style.opacity !== '0'){ el.style.opacity = 0; }
         });
       });
       requestAnimationFrame(tick);
