@@ -1678,15 +1678,15 @@
   const MONTHLY_URL = 'https://smartstore.naver.com/atelieramusant/products/13725532910';
   const sessions = [
     {cat:'mobility', catLabel:'GROUND MOVEMENT', catColor:'red', name:'MOBILITY', nick:'MOVE BETTER CLASS', desc:'발에서 시작해 코어까지 — Animal Flow 기반 모빌리티 & 코어 세션.', day:'토요일 오전', duration:'60분', cap:'14명'},
-    {cat:'build', catLabel:'STRENGTH CAPACITY', catColor:'red', name:'BUILD & POWER', nick:"일명 '알통'", desc:'무게를 다루는 근력 세션. 매주 기준을 새로 세우는 시간.', day:'수요일 저녁', duration:'60분', cap:'14명'},
-    {cat:'engine', catLabel:'HYBRID ENGINE', catColor:'red', name:'ENGINE', nick:"일명 '심쿵'", desc:'', day:'토요일 오전', duration:'50분', cap:'12명'},
-    {cat:'hybrid', catLabel:'FULL FLOW', catColor:'blue', name:'HYBRID DAY', nick:"일명 '종합선물세트'", desc:'Movement와 Recovery를 한 세션에 — 다 한 번에 오는 날.', day:'격주 일요일', duration:'90분', cap:'10명'},
+    {cat:'build', catLabel:'STRENGTH CAPACITY', catColor:'red', name:'BUILD & POWER', nick:'', desc:'무게를 다루는 근력 세션. 매주 기준을 새로 세우는 시간.', day:'수요일 저녁', duration:'60분', cap:'14명'},
+    {cat:'engine', catLabel:'HYBRID ENGINE', catColor:'red', name:'ENGINE', nick:'', desc:'', day:'토요일 오전', duration:'50분', cap:'12명'},
+    {cat:'hybrid', catLabel:'FULL FLOW', catColor:'blue', name:'HYBRID DAY', nick:'', desc:'Movement와 Recovery를 한 세션에 — 다 한 번에 오는 날.', day:'격주 일요일', duration:'90분', cap:'10명'},
   ];
   document.getElementById('joinGrid').innerHTML = sessions.map((s, i) => `
     <div class="join-card" data-jcat="${s.cat}">
       <div class="join-tag ${s.catColor}">${s.catLabel}</div>
       <div class="join-name display">${s.name}</div>
-      <div class="join-nick">${s.nick}</div>
+      ${s.nick ? `<div class="join-nick">${s.nick}</div>` : ''}
       ${s.desc ? `<div class="join-desc">${s.desc}</div>` : ''}
       <div class="join-meta">
         <div><div class="join-meta-k">요일</div><div class="join-meta-v">${s.day}</div></div>
