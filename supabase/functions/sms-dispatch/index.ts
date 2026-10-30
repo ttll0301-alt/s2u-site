@@ -16,13 +16,18 @@ function safeEqual(a: string, b: string) {
 }
 
 Deno.serve(async (req) => {
-  const secret = Deno.env.get("CRON_SECRET") ?? "";
-  const given = req.headers.get("x-cron-secret") ?? "";
-  if (!secret || !safeEqual(secret, given)) return new Response("unauthorized", { status: 401 });
-
   const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
     auth: { persistSession: false },
   });
+
+  // 호출 인증: Secrets의 CRON_SECRET, 없으면 DB rsvp_settings.cron_secret (anon·로그인 사용자는 읽을 수 없음)
+  let secret = Deno.env.get("CRON_SECRET") ?? "";
+  if (!secret) {
+    const s = await sb.from("rsvp_settings").select("value").eq("key", "cron_secret").maybeSingle();
+    secret = s.data?.value ?? "";
+  }
+  const given = req.headers.get("x-cron-secret") ?? "";
+  if (!secret || !safeEqual(secret, given)) return new Response("unauthorized", { status: 401 });
   const provider = getProvider();
   const modeLive = (Deno.env.get("SMS_MODE") ?? "test") === "live" && provider.configured();
   const from = Deno.env.get("SMS_FROM") ?? "";
