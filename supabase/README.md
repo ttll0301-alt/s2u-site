@@ -14,7 +14,7 @@
 ## 설정 순서 (직접 해주셔야 하는 부분)
 
 1. **Supabase 프로젝트 생성** (supabase.com, 리전은 Seoul 권장).
-2. **DB 적용**: SQL Editor에서 `migrations/` 안의 0001 → 0004 파일을 번호 순서대로 실행.
+2. **DB 적용**: SQL Editor에서 `migrations/` 안의 0001 → 0005 파일을(또는 `setup-all.sql` 하나를) 번호 순서대로 실행.
 3. **Auth 설정** (Authentication → Providers/URL):
    - Site URL: `https://sustaintoyou.com`, Redirect URLs에 `https://sustaintoyou.com/admin/` 추가.
    - 첫 로그인을 마친 뒤 **Allow new users to sign up 끄기**. 이후 담당자는 Dashboard → Authentication → Users → Invite user로 추가합니다. (가입해도 `rsvp_staff`에 없으면 아무 데이터도 볼 수 없지만, 불필요한 계정을 막기 위함)
@@ -70,7 +70,7 @@
 
 ## 아직 검증하지 못했거나 구현하지 않은 것
 
-- 실제 Supabase 프로젝트에 올려 본 적이 없습니다. SQL은 문법 검사만 했고(트리거 함수 4개는 검사 도구 한계로 눈으로만 검토), 화면은 가짜 응답으로 렌더링만 확인했습니다. 첫 배포 후 위 순서로 종단 테스트가 필요합니다.
+- 2026.10.30 Supabase 프로젝트(Seoul)에 0001–0005 적용 완료. DB에서 신청→입금 대기→입금 확인→확정, 정원 초과 대기, 중복 번호 차단, 취소 시 대기자 승격, 자리판 집계를 확인했습니다. 문자 발송 Edge Function은 아직 배포 전입니다.
 - Solapi 연동 코드는 공개 문서 기준으로 작성했고 실제 계정으로 호출해 보지 않았습니다.
 - **결제(PG)·가상계좌 자동 입금 확인은 없습니다.** 연동할 때는 업체 웹훅을 받는 Edge Function에서 서명을 검증한 뒤 `rsvp_system_record_payment(신청id, 금액, 업체명, 거래번호, 입금자명)`를 service_role로 호출하면 됩니다. 같은 거래번호는 한 번만 반영되고, 금액 부족·이름 불일치·중복은 확정하지 않고 '확인 필요'로 표시합니다.
 - 스팸·봇 방어는 허니팟과 행사별 신청 속도 제한(행사 설정, 기본 1분 20건)뿐입니다. 공통 링크를 SNS에 공개하면 Cloudflare Turnstile 같은 캡차를 추가하세요.
