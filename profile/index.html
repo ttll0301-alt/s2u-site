@@ -108,6 +108,9 @@ section{padding-block:clamp(64px,10vw,128px);border-top:1px solid var(--line)}
 .feature .media img:first-child{grid-column:span 2;aspect-ratio:16/8}
 .feature .media.tall{grid-template-columns:repeat(3,minmax(0,1fr))}
 .feature .media.tall img,.feature .media.tall img:first-child{grid-column:auto;aspect-ratio:3/4}
+.feature .media.movv{grid-template-columns:repeat(3,minmax(0,1fr))}
+.feature .media.movv .frame{grid-column:1/-1;aspect-ratio:4/3}
+.feature .media.movv img,.feature .media.movv img:first-of-type{grid-column:auto;aspect-ratio:3/4}
 .meta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;margin-bottom:14px}
 .tag{font-family:var(--display);letter-spacing:.12em;font-size:15px;padding:3px 10px;border:1px solid var(--line-strong);border-radius:999px;line-height:1.3}
 .tag.m{border-color:var(--move-red);color:var(--move-red)}
@@ -284,6 +287,22 @@ footer{padding-block:28px 52px;display:flex;justify-content:space-between;gap:12
     </article>
 
     <article class="feature">
+      <div class="media film movv">
+        <div class="frame"><video src="media/s2u-movv.mp4" poster="media/s2u-movv.jpg" muted loop playsinline preload="metadata" aria-label="RUNNER'S HOUSE · MOVV 어반 5K 런 세션 영상"></video></div>
+        <img src="media/s/movv-1.jpg" style="object-position:50% 100%" alt="MOVV 후디를 맞춰 입고 붉은 벽돌 건물 앞에 모인 러너들" loading="lazy">
+        <img src="media/s/movv-2.jpg" alt="벽돌 담장 옆 골목을 MOVV 러닝화를 신고 달리는 러너들" loading="lazy">
+        <img src="media/s/movv-3.jpg" alt="러닝 후 산소 캡슐 안에서 회복 중인 참가자" loading="lazy">
+      </div>
+      <div>
+        <div class="meta"><span class="tag m">MOVEMENT</span><span class="tag r">RECOVERY</span><span class="date">2026.10.19</span></div>
+        <h3>RUNNER'S HOUSE · MOVV URBAN 5K RUN</h3>
+        <p class="with">MOVV × THE SHARP GALLERY</p>
+        <p class="desc">MOVV와 S2:U의 첫 번째 어반 러닝 세션입니다. 발과 발목을 중심으로 몸을 준비하고, MOVV 러닝화를 신고 도심 속 5km를 함께 달린 뒤 더샵갤러리의 리커버리 시설에서 회복까지 이어간 프라이빗 세션입니다.</p>
+        <ul><li>2026.10.19 (월) 08:30 – 11:30</li><li>신체 컨디션 측정 → 발·발목 기능성 트레이닝 → 5K 어반 런</li><li>러닝 후 호흡 정리 · 리커버리 시설 체험 · 갤러리 전시 관람</li></ul>
+      </div>
+    </article>
+
+    <article class="feature">
       <div class="media">
         <img src="media/s/craft-1.jpg" alt="서울공예박물관 앞마당, 조명 아래 매트에 앉은 참가자들" loading="lazy">
         <img src="media/s/craft-3.jpg" alt="야간 세션 중 바닥 동작을 하는 참가자" loading="lazy">
@@ -325,21 +344,6 @@ footer{padding-block:28px 52px;display:flex;justify-content:space-between;gap:12
         <p class="with">SEALING SERVICE · SUNN</p>
         <p class="desc">고성 세계잼버리수련장에서 열린 SUNN 페스티벌의 웰니스 세션 전체를 기획하고 이틀간 운영했습니다. 숲에서 달리고, 몸을 깨우고, 호흡을 고른 뒤 사우나로 마무리하는 흐름입니다.</p>
         <ul><li>웰니스 세션 전체 기획 · 운영</li><li>애니멀 플로우 · 브레스워크 · 포레스트 런</li><li>텐트 사우나 · 아이스배스 · 외기욕</li></ul>
-      </div>
-    </article>
-
-    <article class="feature">
-      <div class="media tall">
-        <img src="media/s/movv-1.jpg" style="object-position:50% 100%" alt="MOVV 후디를 맞춰 입고 붉은 벽돌 건물 앞에 모인 러너들" loading="lazy">
-        <img src="media/s/movv-2.jpg" alt="벽돌 담장 옆 골목을 MOVV 러닝화를 신고 달리는 러너들" loading="lazy">
-        <img src="media/s/movv-3.jpg" alt="러닝 후 산소 캡슐 안에서 회복 중인 참가자" loading="lazy">
-      </div>
-      <div>
-        <div class="meta"><span class="tag m">MOVEMENT</span><span class="tag r">RECOVERY</span><span class="date">2026.10.19</span></div>
-        <h3>RUNNER'S HOUSE · MOVV URBAN 5K RUN</h3>
-        <p class="with">MOVV × THE SHARP GALLERY</p>
-        <p class="desc">MOVV와 S2:U의 첫 번째 어반 러닝 세션입니다. 발과 발목을 중심으로 몸을 준비하고, MOVV 러닝화를 신고 도심 속 5km를 함께 달린 뒤 더샵갤러리의 리커버리 시설에서 회복까지 이어간 프라이빗 세션입니다.</p>
-        <ul><li>2026.10.19 (월) 08:30 – 11:30</li><li>신체 컨디션 측정 → 발·발목 기능성 트레이닝 → 5K 어반 런</li><li>러닝 후 호흡 정리 · 리커버리 시설 체험 · 갤러리 전시 관람</li></ul>
       </div>
     </article>
 
