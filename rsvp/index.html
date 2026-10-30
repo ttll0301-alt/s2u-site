@@ -64,6 +64,20 @@
   button.ghost{background:transparent; color:var(--bone); border:1px solid var(--line-strong); margin-top:14px;}
   .err{margin-top:14px; color:#ffb3a3; font-size:14px; min-height:1em;}
   .hp{position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;}
+  .seats{margin:6px 0 28px; padding:20px; border:1px solid var(--line); border-radius:16px; background:var(--black-2);}
+  .seats-head{display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:14px;}
+  .seats-head b{font-family:'Bebas Neue','Pretendard'; font-weight:400; font-size:30px; letter-spacing:.03em; line-height:1;}
+  .seats-head span{font-size:12px; color:var(--bone-dim);}
+  .seat-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(22px,1fr)); gap:8px;}
+  .seat{aspect-ratio:1; max-width:100%; border-radius:50%; border:1.5px solid var(--line-strong); position:relative;}
+  .seat.on{background:var(--bone); border-color:var(--bone); box-shadow:0 0 10px rgba(244,242,237,.45);}
+  .seat.me{background:var(--move-red); border-color:var(--move-red); box-shadow:0 0 16px rgba(255,61,46,.75);}
+  .seat.me::after{content:'나'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:800; color:#fff;}
+  .seat.open{border-style:dashed;}
+  .seat.lit{animation:lit 1.4s ease-out both;}
+  @keyframes lit{0%{transform:scale(.4); background:transparent; box-shadow:none} 60%{transform:scale(1.25)} 100%{transform:scale(1)}}
+  @media (prefers-reduced-motion:reduce){ .seat.lit{animation:none} }
+  .seats-foot{margin-top:12px; font-size:12px; color:var(--bone-dim);}
   .center{text-align:center; padding:80px 0; color:var(--bone-dim);}
   footer{border-top:1px solid var(--line); padding:26px 20px 40px; text-align:center; font-size:11px; letter-spacing:0.12em; color:var(--bone-dim);}
 </style>
@@ -91,7 +105,7 @@
   const won = n => (n ?? 0).toLocaleString('ko-KR') + '원';
   const safeUrl = u => /^https?:\/\//i.test(u || '') ? u : '';
 
-  let sb, ev, reg, payInfo, editing = false;
+  let sb, ev, reg, payInfo, editing = false, justJoined = false;
 
   if (!cfg.url || !cfg.anonKey || !window.supabase) { $app.innerHTML = '<div class="center">RSVP 서비스를 준비 중입니다.</div>'; return; }
   if (!slug) { $app.innerHTML = '<div class="center">유효하지 않은 링크입니다.</div>'; return; }
@@ -122,12 +136,33 @@
         ${ev.seats_left !== null ? `<div><dt>SEATS</dt><dd>${ev.seats_left > 0 ? `잔여 ${ev.seats_left}석` : '정원 마감 · 대기 신청 가능'}</dd></div>` : ''}
         ${ev.apply_deadline ? `<div><dt>CLOSE</dt><dd>${esc(kst(ev.apply_deadline))}</dd></div>` : ''}
       </dl>
+      ${seatBoard()}
       ${ev.intro ? `<div class="block"><p>${nl(ev.intro)}</p></div>` : ''}
       ${sessions.length ? `<div class="block"><h2>Program</h2>${sessions.map(s => `<p>· ${esc(s.label)}${s.starts_at ? ' — ' + esc(kst(s.starts_at)) : ''}</p>`).join('')}</div>` : ''}
       ${ev.prep ? `<div class="block"><h2>준비물</h2><p>${nl(ev.prep)}</p></div>` : ''}
       ${ev.guide ? `<div class="block"><h2>참여 안내</h2><p>${nl(ev.guide)}</p></div>` : ''}
       ${ev.refund_policy ? `<div class="block"><h2>취소 · 환불</h2><p>${nl(ev.refund_policy)}</p></div>` : ''}
       ${ev.contact ? `<div class="block"><h2>문의</h2><p>${nl(ev.contact)}</p></div>` : ''}`;
+  }
+
+  // 자리판: 신청해서 자리를 잡으면 한 칸이 켜진다. 개수만 보여주고 누가 앉았는지는 드러내지 않는다.
+  function seatBoard() {
+    const b = ev.seat_board; if (!b) return '';
+    const filled = b.filled || 0, cap = b.capacity;
+    const total = cap ? Math.min(cap, 300) : Math.max(filled + 12, 24);
+    const mine = reg?.seat_no || 0;
+    const cells = [];
+    for (let i = 1; i <= total; i++) {
+      const on = i <= filled, me = i === mine;
+      cells.push(`<span class="seat ${me ? 'me' : on ? 'on' : (cap ? '' : 'open')} ${me && justJoined ? 'lit' : ''}" aria-hidden="true"></span>`);
+    }
+    const headline = cap ? `${filled} / ${cap}` : `${filled}`;
+    const sub = cap ? (filled >= cap ? '자리가 모두 찼어요. 대기 신청을 받습니다.' : `${cap - filled}자리 남았어요`) : '함께하는 사람';
+    return `<div class="seats" role="img" aria-label="${esc(cap ? `정원 ${cap}명 중 ${filled}명 참여` : `${filled}명 참여`)}">
+      <div class="seats-head"><b>${esc(headline)}</b><span>${esc(sub)}</span></div>
+      <div class="seat-grid">${cells.join('')}</div>
+      <div class="seats-foot">${mine ? `빨간 자리가 ${esc(reg.name)}님 자리예요.` : '신청하면 한 자리가 채워집니다.'}${b.waitlist ? ` · 대기 ${b.waitlist}명` : ''}${cap && cap > 300 ? ' · 자리판은 300석까지만 표시' : ''}</div>
+    </div>`;
   }
 
   function statusPanel() {
@@ -234,8 +269,12 @@
       btn.disabled = false; btn.textContent = reg ? '응답 저장' : '신청하기';
       if (r.error || !r.data?.ok) { err.textContent = r.data?.message || (/rate_limited/.test(r.error?.message || '') ? '신청이 몰리고 있어요. 1분 뒤 다시 시도해 주세요.' : '처리에 실패했습니다. 잠시 후 다시 시도해 주세요.'); return; }
       if (r.data.token && !token) { token = r.data.token; history.replaceState(null, '', `?e=${encodeURIComponent(slug)}&t=${token}`); }
+      const hadSeat = !!reg?.seat_no;
       reg = r.data.registration; payInfo = r.data.payment_info; editing = false;
-      render(); window.scrollTo({ top: 0, behavior: 'smooth' });
+      const e2 = await sb.rpc('rsvp_public_event', { p_slug: slug }); if (e2.data?.ok) ev = e2.data.event;
+      justJoined = !hadSeat && !!reg.seat_no;
+      render(); justJoined = false;
+      document.querySelector('.seats')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   }
 
