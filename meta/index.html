@@ -59,6 +59,13 @@ canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-actio
 #progress{position:absolute;left:50%;top:58%;transform:translate(-50%,0);width:180px;display:none;text-align:center;font-size:12px}
 #progress .bar{height:3px;background:rgba(242,239,232,.2);margin-top:6px}
 #progress .bar i{display:block;height:100%;width:0;background:var(--red)}
+#nudge{position:absolute;right:18px;bottom:76px;width:270px;background:rgba(30,28,25,.94);border-left:3px solid var(--red);padding:12px 14px;pointer-events:auto;transform:translateX(330px);transition:transform .4s cubic-bezier(.2,.8,.2,1);backdrop-filter:blur(6px)}
+#nudge.on{transform:none}
+#nudge .t{font-size:13px;line-height:1.55}#nudge .t b{font-family:"Bebas Neue","Noto Sans KR",sans-serif;font-weight:400;font-size:20px;letter-spacing:.03em;display:block;color:var(--ink)}
+#nudge .row{display:flex;gap:6px;margin-top:10px}
+#nudge .go{flex:1;text-align:center;background:var(--red);color:#fff;text-decoration:none;font-size:13px;font-weight:700;padding:8px}
+#nudge button{font:inherit;font-size:12px;background:transparent;border:1px solid var(--line);color:var(--mute);padding:8px 10px;cursor:pointer}
+@media (max-width:760px){#nudge{right:10px;left:10px;width:auto;bottom:112px;transform:translateY(240px)}#nudge.on{transform:none}}
 #toast{position:absolute;left:50%;top:18%;transform:translate(-50%,-10px);background:var(--ink);color:#1c1a17;padding:10px 18px;font-size:14px;font-weight:500;opacity:0;transition:.35s;text-align:center}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 #toast .big{display:block;font-family:"Bebas Neue","Noto Sans KR",sans-serif;font-size:30px;letter-spacing:.05em;line-height:1.1}
@@ -86,7 +93,7 @@ section.sec.alt{background:#24221f}
 .sec p.body{max-width:620px;font-size:15px;line-height:1.85;color:#d9d4ca;margin-top:18px}
 .zones{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:36px}
 .zones .z{background:#1f1d1a;padding:20px 16px;min-height:260px;display:flex;flex-direction:column}
-.zones .z .c{font-family:"Bebas Neue","Noto Sans KR",sans-serif;font-size:15px;letter-spacing:.08em}
+.zones .z .c{font-family:"Bebas Neue","Noto Sans KR",sans-serif;font-size:40px;letter-spacing:.04em;line-height:1}
 .zones .z .n{font-family:"Bebas Neue","Noto Sans KR",sans-serif;font-size:28px;line-height:1;margin-top:4px}
 .zones .z .a{margin-top:14px;font-size:20px;font-weight:700}
 .zones .z .a span{font-family:"Bebas Neue","Noto Sans KR",sans-serif;font-weight:400;font-size:17px;letter-spacing:.06em;margin-left:6px}
@@ -178,6 +185,7 @@ footer b{color:var(--ink);font-weight:500;display:block}
   <div id="route"></div>
   <div id="progress"><span id="pgText"></span><div class="bar"><i id="pgBar"></i></div></div>
   <div id="toast"></div>
+  <div id="nudge"><div class="t" id="nudgeT"></div><div class="row"><a class="igLink go" href="https://www.instagram.com/s2useoul/">@s2useoul 팔로우</a><button id="nudgeX">나중에</button></div></div>
   <div id="acts">
     <button class="main" data-a="1"><kbd>1</kbd><span id="act1">운동</span></button>
     <button data-a="2"><kbd>2</kbd>앉기</button>
@@ -205,7 +213,7 @@ footer b{color:var(--ink);font-weight:500;display:block}
  </section>
  <section class="sec alt" id="zones">
   <div class="k">S2:U PROGRAM SYSTEM</div>
-  <h2>GROUND → STRENGTH → ENGINE → RECOVERY → YOU</h2>
+  <h2>S2:1 → S2:2 → S2:3 → S2:4 → S2:U</h2>
   <p class="body">각 존에서 <b>1</b>을 누르면 그 존의 운동을 해요. 순서대로 다섯 곳을 돌면 한 세트가 올라가요.</p>
   <div class="zones" id="zoneGrid"></div>
  </section>
@@ -229,7 +237,7 @@ footer b{color:var(--ink);font-weight:500;display:block}
   <div class="keys">
    <div><b>MOVE</b>바닥을 클릭하면 그곳으로 걸어가요. WASD·방향키로 걷고, Shift를 누르면 달려요.</div>
    <div><b>LOOK</b>드래그로 둘러보고, 휠이나 두 손가락으로 당겨 봐요.</div>
-   <div><b>ACT</b>기구 앞에 서면 1 버튼이 그 동작으로 바뀌어요 — 케틀벨 스윙, 철봉 풀업, 하이록스 스테이션. 2 앉기 · 3 인사.</div>
+   <div><b>ACT</b>기구 앞 바닥의 동그라미가 빨갛게 바뀌면 1 — 그 기구로 운동해요. 주황 스틱부터 케틀벨, 철봉, 밴드, 바벨, 하이록스, 히노키 탕까지. 2 앉기 · 3 인사.</div>
   </div>
  </section>
  <section class="sec alt" id="card">
@@ -238,7 +246,7 @@ footer b{color:var(--ink);font-weight:500;display:block}
   <div class="cardsec">
    <img id="cardSample" alt="완주 카드 예시">
    <ol class="steps">
-    <li>GROUND부터 YOU까지 다섯 존을 한 바퀴 돌아요.</li>
+    <li>S2:1부터 S2:U까지 다섯 존을 한 바퀴 돌아요.</li>
     <li>내 캐릭터·이름·기록이 들어간 스토리 사이즈 완주 카드가 나와요.</li>
     <li>카드를 저장해서 인스타 스토리에 올리고 <b>@s2useoul</b>을 태그해요.</li>
     <li>@s2useoul을 팔로우하면 락커룸 시크릿 소품이 열려요.</li>
@@ -277,7 +285,7 @@ footer b{color:var(--ink);font-weight:500;display:block}
     <h2>S2:U TRAINING CENTER · META</h2>
     <p>S2:U PROGRAM SYSTEM을 공간으로 옮긴 온라인 분관이에요. 네 개의 존이 프로그램 순서대로 놓여 있고, 기구 앞에 서면 그 동작을 할 수 있어요.</p>
     <h3>ZONES</h3>
-    <p>S2:1 GROUND MOVEMENT — 스틱 플로우<br>S2:2 STRENGTH CAPACITY — 케틀벨 스윙 · 철봉 풀업 · 리코일 스트랩<br>S2:3 HYBRID ENGINE — 하이록스 6 스테이션(스키에르그 · 슬레드 · 로잉 · 월볼 · 파머스 캐리 · 샌드백 런지) · 트랙 런<br>S2:4 RECOVERY &amp; LIFESTYLE — 히노키 탕 옆 브레스워크<br>S2:U YOU — 가운데 장독대 마당에서 머물기</p>
+    <p>S2:1 — 스틱 오버헤드 스쿼트 · 스틱 플로우 · 매트 스트레칭<br>S2:2 — 케틀벨 스윙 · 철봉 풀업 · 리코일 S2 로우 · 플렉스빗 밴드 · 바벨 데드리프트 · 플랭크<br>S2:3 — 하이록스 6 스테이션 · 터프 슬레드 푸시·풀 · 트랙 런<br>S2:4 — 히노키 탕 · 마루 명상 · 브레스워크<br>S2:U — 가운데 장독대 마당에서 머물기</p>
     <h3>CREW</h3>
     <p>지금 공간을 함께 걷는 크루와 코치는 NPC예요. 실시간 동시 접속은 아직 연결되지 않았어요.</p>
     <h3>OPENING</h3>
@@ -292,19 +300,19 @@ footer b{color:var(--ink);font-weight:500;display:block}
 // ---------- data ----------
 const RED=[.898,.282,.231], BLUE=[.416,.608,.847], BONE=[.949,.937,.91];
 const ZONES={
- S1:{code:'S2:1',name:'GROUND MOVEMENT',c:[-12,-12],col:RED,accent:'#e5483b',tag:'MOVEMENT × MUSIC',desc:'바닥에서부터 몸을 깨우는 구간.',gear:['STICK MOBILITY','미러월','무브먼트 매트'],act:'플로우',acts:'스틱 플로우',bpm:96,
-     coach:'바닥에서부터 몸을 깨워요. 스틱을 잡고 플로우. (1)'},
- S2:{code:'S2:2',name:'STRENGTH CAPACITY',c:[12,-12],col:RED,accent:'#e5483b',tag:'STRENGTH × VISUAL',desc:'버티는 힘을 쌓는 구간.',gear:['케틀벨 스윙','철봉 풀업','RECOIL S2','FLEXVIT'],act:'스트랩 스쿼트',acts:'케틀벨 스윙 · 철봉 풀업 · 스트랩 스쿼트',bpm:88,
-     coach:'케틀벨 앞에서 1은 스윙, 철봉 아래서 1은 풀업. 리코일 스트랩도 있어요.'},
- S3:{code:'S2:3',name:'HYBRID ENGINE',c:[12,12],col:RED,accent:'#e5483b',tag:'HYBRID RUNNING × FASHION',desc:'달리고, 밀고, 당기는 하이록스 구간.',gear:['HYROX 6 STATION','SKIERG · SLED · ROW','WALL BALLS · CARRY · LUNGES','트랙 런'],act:'트랙 한 바퀴',acts:'하이록스 6 스테이션 · 트랙 런',bpm:168,
+ S1:{code:'S2:1',name:'',c:[-12,-12],col:RED,accent:'#e5483b',tag:'',desc:'',gear:['STICK MOBILITY 거치대','바닥 스틱','무브먼트 매트'],act:'맨몸 플로우',acts:'스틱 오버헤드 스쿼트 · 플랜트 런지 · 트렁크 로테이션 · 스틱 플로우 · 매트 스트레칭',bpm:96,
+     coach:'거치대 앞 동그라미에 서서 1 — 주황 스틱을 집어 들고 운동해요. 바닥 스틱과 매트도 돼요.'},
+ S2:{code:'S2:2',name:'',c:[12,-12],col:RED,accent:'#e5483b',tag:'',desc:'',gear:['케틀벨','철봉','RECOIL S2','FLEXVIT 밴드','바벨 플랫폼','코어 매트'],act:'맨몸 스쿼트',acts:'케틀벨 스윙 · 풀업 · 리코일 로우 · 밴드 풀어파트 · 데드리프트 · 플랭크',bpm:88,
+     coach:'기구마다 바닥에 동그라미가 있어요. 빨갛게 바뀌면 1 — 스윙, 풀업, 리코일, 밴드, 데드리프트, 플랭크.'},
+ S3:{code:'S2:3',name:'',c:[12,12],col:RED,accent:'#e5483b',tag:'',desc:'',gear:['HYROX 6 STATION','SKIERG · SLED · ROW','WALL BALLS · CARRY · LUNGES','터프 레인 슬레드','트랙 런'],act:'트랙 한 바퀴',acts:'하이록스 6 스테이션 · 터프 슬레드 푸시·풀 · 트랙 런',bpm:168,
      coach:'스테이션 앞에서 1, 트랙 위에선 한 바퀴. 하이록스처럼 달리고 밀고 당겨요.'},
- S4:{code:'S2:4',name:'RECOVERY & LIFESTYLE',c:[-12,12],col:BLUE,accent:'#6a9bd8',tag:'RECOVERY × ART · FOOD · SPACE',desc:'히노키 탕 옆 마루에서 숨을 고르는 구간.',gear:['히노키 탕','브레스워크','마루'],act:'호흡하기',acts:'브레스워크',bpm:60,
+ S4:{code:'S2:4',name:'',c:[-12,12],col:BLUE,accent:'#6a9bd8',tag:'',desc:'',gear:['히노키 탕','마루 방석','브레스워크'],act:'호흡하기',acts:'히노키 탕 담그기 · 마루 명상 · 브레스워크',bpm:60,
      coach:'탕 옆 마루에 앉아 호흡을 내려놓아요. (1)'},
- YOU:{code:'S2:U',name:'TO YOU',c:[0,0],col:BONE,accent:'#f2efe8',tag:'TO YOU',desc:'한 세션의 마지막, 머무는 자리.',gear:['장독대 마당'],act:'머물기',acts:'머물기',bpm:0,coach:''},
+ YOU:{code:'S2:U',name:'',c:[0,0],col:BONE,accent:'#f2efe8',tag:'',desc:'',gear:['장독대 마당'],act:'머물기',acts:'머물기',bpm:0,coach:''},
  PATH:{code:'S2:U',name:'CORRIDOR',col:[.6,.58,.55],accent:'#8d877b',tag:'',desc:'다음 존으로 걸어가요.',gear:[],act:'운동',bpm:0}
 };
 const ROUTE=['S1','S2','S3','S4','YOU'];
-const ROUTE_LBL={S1:'GROUND',S2:'STRENGTH',S3:'ENGINE',S4:'RECOVERY',YOU:'YOU'};
+const ROUTE_LBL={S1:'S2:1',S2:'S2:2',S3:'S2:3',S4:'S2:4',YOU:'S2:U'};
 const TOPS=[{n:'차콜',c:[.17,.165,.155]},{n:'본',c:[.9,.88,.83]},{n:'레드',c:RED},{n:'블루',c:BLUE}];
 
 // ---------- gl ----------
@@ -431,9 +439,7 @@ function build(){
  for(let i=0;i<4;i++)box(-16+i*2.7,0,-12.5,1.8,.05,.8,hex('#3b3a36'));
  // stick mobility rack + sticks
  box(-20.6,0,-8,.5,.14,3.2,hex('#24221f'),{solid:1});box(-21.4,0,-8,.12,2.3,3.2,hex('#24221f'));
- for(let i=0;i<7;i++){const z=-9.4+i*.45;rod([-20.5,.12,z],[-21.25,2.35,z],.035,i%3===2?hex('#1d1d1d'):hex('#e86a2c'))}
- for(let i=0;i<3;i++)rod([-15+i*2.7,.06,-10],[-13+i*2.7,.06,-10.4],.035,hex('#e86a2c'));
- label('S2:1 GROUND<small>MOVEMENT × MUSIC</small>',[-12,4.2,-12],'sign');
+ label('S2:1',[-12,4.2,-12],'sign');
 
  // ===== S2 STRENGTH CAPACITY =====
  // rig with Recoil S2 straps
@@ -441,10 +447,9 @@ function build(){
  for(const dx of [-3,0,3])for(const dz of [-.8,.8])box(rx+dx,0,rz+dz,.14,2.9,.14,hex('#1b1a18'),{solid:1});
  for(const dz of [-.8,.8])box(rx,2.8,rz+dz,6.3,.14,.14,hex('#1b1a18'));
  for(const dx of [-3,0,3])box(rx+dx,2.8,rz,.14,.14,1.74,hex('#1b1a18'));
- for(const dx of [-1.5,1.5]){for(const sx of [-.12,.12]){box(rx+dx+sx,1.25,rz+.8,.05,1.55,.02,hex('#101010'));box(rx+dx+sx,1.05,rz+.8,.14,.05,.05,RED,{e:RED.map(v=>v*.3)})}}
  // Flexvit bands on wall hooks (east wall)
  const bandCols=['#2e7d5b','#3a6ea5','#c9483a','#d9b23a','#6b5ba8'];
- for(let i=0;i<5;i++){const z=-17+i*1.3;box(21.75,1.9,z,.3,.05,.05,hex('#888'));ring(21.6,1.45,z,.42,.02,hex(bandCols[i]),'xy',Math.PI/2,12)}
+ for(let i=0;i<5;i++){const z=-17+i*1.3;box(21.75,1.9,z,.3,.05,.05,hex('#888'))}
  // kettlebells
  const kb=(x,z,s=1)=>{sph(x,.22*s,z,.42*s,.38*s,.42*s,hex('#1c1c1c'));ring(x,.5*s,z,.13*s,.025*s,hex('#1c1c1c'),'xy',0,10)};
  for(let i=0;i<6;i++)kb(6.5+i*.9,-7.2,0.85+i*.05);
@@ -454,13 +459,13 @@ function build(){
  for(let i=0;i<4;i++)cyl(18.5+i*.6,.45,-8.5,.4,.08,hex('#141414'),{rot:M.RZ(Math.PI/2)});
  // chibi pull-up bar
  for(const x of [4.6,6.6])box(x,0,-13,.1,2.05,.1,hex('#1b1a18'),{solid:1});rod([4.55,1.95,-13],[6.65,1.95,-13],.035,hex('#b9b9b4'));
- label('PULL-UP',[5.6,2.45,-13],'num',0,22);label('KB SWING',[8.75,1.05,-7.2],'num',0,22);label('RECOIL S2',[12,3.2,-16],'num',0,26);
+ label('PULL-UP',[5.6,2.45,-13],'num',0,22);label('KB SWING',[8.75,1.05,-7.2],'num',0,22);label('RECOIL S2',[12,3.2,-16],'num',0,26);label('FLEXVIT',[21,2.4,-14.4],'num',0,22);label('STICK MOBILITY',[-20.4,2.7,-8],'num',0,24);label('DEADLIFT',[12,1.2,-3.8],'num',0,22);
  // floor barbell holder
  box(5.2,0,-19.5,1.2,.25,.6,hex('#1b1a18'),{solid:1});for(let i=0;i<6;i++)rod([4.8+i*.16,.25,-19.5+(i%2)*.12],[4.8+i*.16,2.15,-19.5+(i%2)*.12],.018,hex('#9a9a96'));
  // lifting platforms
  for(const x of [8,16]){box(x,0,-3.8+-.0,2.6,.06,2.2,hex('#7d5c3c'));box(x,0,-3.8,2.6,.065,1.1,hex('#2b2926'))}
  box(13,0,-10.5,2.2,.03,1.2,hex('#46423b'));box(13,0,-12.5,2.2,.03,1.2,hex('#46423b'));
- label('S2:2 STRENGTH<small>STRENGTH × VISUAL</small>',[12,4.2,-12],'sign');
+ label('S2:2',[12,4.2,-12],'sign');
 
  // ===== S3 HYBRID ENGINE =====
  const tc=[12,12];const TA=7.6,TB=5.6;
@@ -487,8 +492,9 @@ function build(){
  // agility turf lanes (push / pull)
  box(12,0,20.3,16,.05,2.4,hex('#3e6b3a'));for(const z of [19.1,20.3,21.5])box(12,0,z,16,.06,.05,BONE);
  for(const x of [4.2,19.8])box(x,0,20.3,.06,.06,2.4,BONE);
- box(6,0,19.7,.8,.22,.9,hex('#c9c3b6'),{solid:1});box(9,0,20.9,.8,.22,.9,hex('#1b1a18'),{solid:1});
- label('S2:3 ENGINE<small>HYROX · HYBRID RUNNING</small>',[12,4.2,12],'sign');
+ 
+ label('TURF LANE · SLED',[12,1.1,20.3],'num',0,24);
+ label('S2:3',[12,4.2,12],'sign');
 
  // ===== S4 RECOVERY & LIFESTYLE =====
  // hinoki tub
@@ -511,7 +517,8 @@ function build(){
  // lattice partition
  box(-6.5,0,9.5,.08,2.4,5,hex('#efe3c6'),{e:hex('#3a3326'),solid:1});
  for(let i=0;i<=10;i++)box(-6.45,0,7+i*.5,.05,2.4,.05,hex('#2a241d'));for(let j=0;j<=5;j++)box(-6.45,j*.48,9.5,.05,.04,5,hex('#2a241d'));
- label('S2:4 RECOVERY<small>BREATHE · REST</small>',[-12,4.2,12],'sign');
+ label('HINOKI',[-12,1.6,17.4],'num',0,22);label('MEDITATION',[-16.5,1.3,9],'num',0,22);
+ label('S2:4',[-12,4.2,12],'sign');
 
  // ===== YOU — jangdokdae madang =====
  cyl(0,0,0,5.6,.06,hex('#8d877b'));
@@ -521,7 +528,7 @@ function build(){
  [[-1.9,-2.2,.95],[-.7,-2.3,1.1],[.6,-2.25,1.0],[1.9,-2.15,.85],[-1.3,-1.1,.75],[0,-1.05,.8],[1.3,-1.1,.7]].forEach(j=>jar(j[0],j[2]?j[1]:j[1],j[2]));
  // S2:U pylon
  box(0,0,3.6,.5,2.6,.5,BONE,{e:[.25,.25,.24],solid:1});
- label('S2:U<small>TO YOU</small>',[0,3.5,3.6],'sign');
+ label('S2:U',[0,3.5,3.6],'sign');
 }
 
 // ---------- characters ----------
@@ -556,15 +563,15 @@ function drawFigure(list,ch,offT){
  if(ch.acc==='beanie'){part(M.mul(head,M.T(0,.12,-.02)),'sph',.67,.5,.63,ch.accCol||RED);part(M.mul(head,M.T(0,.06,-.02)),'cyl',.68,.09,.64,ch.accCol||RED);part(M.mul(head,M.T(0,.38,-.02)),'sph',.13,.13,.13,BONE)}
  if(ch.acc==='cap'){const cc=ch.accCol||[.17,.165,.155];part(M.mul(head,M.T(0,.12,-.03)),'sph',.65,.46,.62,cc);part(M.ch(head,M.T(0,.1,.3),M.RX(.18)),'box',.4,.03,.26,cc);part(M.mul(head,M.T(0,.25,.24)),'box',.09,.03,.01,RED,RED.map(v=>v*.3))}
  for(const [side,a,sp] of [[-1,P.arL,P.spL||0],[1,P.arR,P.spR||0]]){
-  const sh=M.ch(torso,M.T(.2*side,.33,0),M.RZ((sp+.18)*side),M.RX(-a));
+  const sh=M.ch(torso,M.T(.2*side,.33,0),M.RY(((side<0?P.ayL:P.ayR)||0)*-side),M.RZ((sp+.18)*side),M.RX(-a));
   part(M.mul(sh,M.T(0,-.11,0)),'cyl',.12,.2,.12,ch.top);
   part(M.mul(sh,M.T(0,-.24,0)),'sph',.12,.12,.12,ch.skin);
   if(!offT){if(!ch.hands)ch.hands=[[0,0,0],[0,0,0]];ch.hands[side<0?0:1]=M.xf(M.mul(sh,M.T(0,-.25,0)),[0,0,0,1])}
   if(ch.state==='carry')part(M.mul(sh,M.T(0,-.37,0)),'sph',.17,.16,.17,[.11,.11,.11])}
  const cm=M.ch(torso,M.T(0,.33,0),M.RX(-((P.arL+P.arR)/2)));
  if(ch.state==='swing'){part(M.mul(cm,M.T(0,-.42,.03)),'sph',.3,.28,.3,[.11,.11,.11]);part(M.mul(cm,M.T(0,-.28,.02)),'box',.2,.04,.05,[.11,.11,.11])}
- if(ch.state==='flow')part(M.ch(cm,M.T(0,-.26,.06),M.RZ(Math.PI/2)),'cyl',.06,1.5,.06,[.91,.42,.17]);
- if(ch.state==='ski'||ch.state==='row'||ch.state==='lift')part(M.ch(cm,M.T(0,-.26,.05),M.RZ(Math.PI/2)),'cyl',.05,ch.state==='row'?.5:.42,.05,ch.state==='lift'?RED:[.12,.12,.12]);
+  if(ch.state==='deadlift'){const bb=M.ch(cm,M.T(0,-.27,.04),M.RZ(Math.PI/2));part(bb,'cyl',.045,1.6,.045,[.72,.72,.7]);for(const s of [-1,1])part(M.mul(bb,M.T(0,.66*s,0)),'cyl',.46,.07,.46,[.1,.1,.1])}
+ if(ch.state==='ski'||ch.state==='row')part(M.ch(cm,M.T(0,-.26,.05),M.RZ(Math.PI/2)),'cyl',.05,ch.state==='row'?.5:.42,.05,[.12,.12,.12]);
  if(ch.state==='wallball')part(M.mul(cm,M.T(0,-.38,.06)),'sph',.27,.27,.27,[.2,.19,.18]);
  if(ch.state==='lunge')part(M.ch(torso,M.T(0,.43,-.2),M.RZ(Math.PI/2)),'cyl',.2,.78,.2,[.24,.23,.21]);
  if(offT)return;
@@ -580,15 +587,29 @@ function animate(ch,dt){
  else if(s==='sit'){p.thL=p.thR=1.5;p.knL=p.knR=0;p.minHip=.11;p.arL=p.arR=.5;p.spL=p.spR=.3;p.lean=-.08}
  else if(s==='bow'){const k=Math.min(1,Math.sin(Math.min(Math.PI,t*2.2)));p.lean=.6*k;p.arL=p.arR=.4*k}
  else if(s==='lift'){const c=(1-Math.cos(t*2.4))/2;p.thL=p.thR=1.25*c;p.knL=p.knR=2.0*c;p.lean=.35*c;p.arL=p.arR=1.35;p.spL=p.spR=.12}
- else if(s==='swing'){const c=(1-Math.cos(t*3.2))/2;p.lean=1.0*(1-c)+.05;p.thL=p.thR=.35*(1-c)+.05;p.knL=p.knR=.45*(1-c);const th=1.6*c-.1;p.arL=p.arR=th-p.lean;p.spL=p.spR=.0}
+ else if(s==='swing'){const c=(1-Math.cos(t*3.2))/2;p.lean=1.0*(1-c)+.05;p.thL=p.thR=.35*(1-c)+.05;p.knL=p.knR=.45*(1-c);const th=1.6*c-.1;p.arL=p.arR=th+p.lean;p.spL=p.spR=.0}
  else if(s==='pullup'){const r=Math.min(1,t/.35),c=(1-Math.cos(t*2.6))/2;p.rootY=(1.05+.25*c)*r;p.arL=p.arR=3.0*r;p.spL=p.spR=.15+1.1*c*r;p.thL=p.thR=.25;p.knL=p.knR=.7+.2*c}
- else if(s==='ski'){const c=(1-Math.cos(t*2.8))/2;p.arL=p.arR=2.7-3.0*c;p.lean=.6*c;p.thL=p.thR=.5*c;p.knL=p.knR=.8*c;p.spL=p.spR=.1}
- else if(s==='sled'){const ph=t*9,A=.6;p.thL=Math.sin(ph)*A+.3;p.thR=-Math.sin(ph)*A+.3;p.knL=Math.max(0,-Math.sin(ph))*A*1.6+.2;p.knR=Math.max(0,Math.sin(ph))*A*1.6+.2;p.lean=.95;p.arL=p.arR=.55;p.spL=p.spR=.05}
- else if(s==='row'){const c=(1-Math.cos(t*2.4))/2;p.minHip=.45;p.thL=p.thR=2.3-.8*c;p.knL=p.knR=2.2-2.2*c;p.lean=.35-.7*c;p.arL=p.arR=(1.5-1.1*c)-p.lean;p.spL=p.spR=.08}
- else if(s==='wallball'){const c=(1-Math.cos(t*2.6))/2;p.thL=p.thR=1.25*c;p.knL=p.knR=2.0*c;p.lean=.35*c;p.arL=p.arR=(1.4+1.4*(1-c))-p.lean;p.spL=p.spR=.1}
+ else if(s==='ski'){const c=(1-Math.cos(t*2.8))/2;p.lean=.6*c;p.arL=p.arR=2.7-2.9*c+p.lean;p.thL=p.thR=.5*c;p.knL=p.knR=.8*c;p.spL=p.spR=.1}
+ else if(s==='sled'){const ph=t*9,A=.6;p.thL=Math.sin(ph)*A+.3;p.thR=-Math.sin(ph)*A+.3;p.knL=Math.max(0,-Math.sin(ph))*A*1.6+.2;p.knR=Math.max(0,Math.sin(ph))*A*1.6+.2;p.lean=.95;p.arL=p.arR=1.4+.95;p.spL=p.spR=.05}
+ else if(s==='row'){const c=(1-Math.cos(t*2.4))/2;p.minHip=.45;p.thL=p.thR=2.3-.8*c;p.knL=p.knR=2.2-2.2*c;p.lean=.35-.7*c;p.arL=p.arR=(1.5-1.1*c)+p.lean;p.spL=p.spR=.08}
+ else if(s==='wallball'){const c=(1-Math.cos(t*2.6))/2;p.thL=p.thR=1.25*c;p.knL=p.knR=2.0*c;p.lean=.35*c;p.arL=p.arR=(1.4+1.4*(1-c))+p.lean;p.spL=p.spR=.1}
  else if(s==='carry'){const ph=t*9,A=.45;p.thL=Math.sin(ph)*A;p.thR=-Math.sin(ph)*A;p.knL=Math.max(0,-Math.sin(ph))*A*1.6+.05;p.knR=Math.max(0,Math.sin(ph))*A*1.6+.05;p.arL=p.arR=0;p.spL=p.spR=.28;p.lift=Math.abs(Math.sin(ph))*.02}
  else if(s==='lunge'){const per=1.6,k=Math.floor(t/per)%2,c=Math.sin(Math.PI*((t%per)/per));const f=[.95*c,.95*c],b=[-.5*c,1.4*c];
   if(k){p.thL=f[0];p.knL=f[1];p.thR=b[0];p.knR=b[1]}else{p.thR=f[0];p.knR=f[1];p.thL=b[0];p.knL=b[1]}p.arL=p.arR=2.6;p.spL=p.spR=.9;p.lean=.05}
+ else if(STICKS.has(s)&&t<.55&&!ch.npcSkip){const k=Math.sin(Math.min(1,t/.55)*Math.PI);p.lean=.85*k;p.thL=p.thR=.5*k;p.knL=p.knR=.8*k;p.arL=p.arR=(.9+p.lean)*k;p.spL=p.spR=.08}
+ else if(s==='sticklunge'){const per=1.8,k=Math.floor(t/per)%2,c=Math.sin(Math.PI*((t%per)/per));const f=[.9*c,.9*c],b=[-.45*c,1.3*c];
+  if(k){p.thL=f[0];p.knL=f[1];p.thR=b[0];p.knR=b[1]}else{p.thR=f[0];p.knR=f[1];p.thL=b[0];p.knL=b[1]}p.lean=.12;p.arL=p.arR=.95+p.lean;p.spL=p.spR=.02}
+ else if(s==='stickrot'){p.arL=p.arR=2.45;p.spL=p.spR=1.0;p.spin=Math.sin(t*2.2)*.75;p.thL=p.thR=.12;p.knL=p.knR=.2}
+ else if(s==='ohsquat'){const c=(1-Math.cos(t*2.4))/2;p.thL=p.thR=1.25*c;p.knL=p.knR=2.0*c;p.lean=.3*c;p.arL=p.arR=2.9+p.lean;p.spL=p.spR=.35}
+ else if(s==='stretch'){const c=(1-Math.cos(t*1.3))/2;p.thL=p.thR=1.5;p.minHip=.11;p.lean=.15+.85*c;p.arL=p.arR=1.3+p.lean;p.spL=p.spR=.1}
+ else if(s==='trxrow'){const c=(1-Math.cos(t*2.4))/2;p.lean=-.55+.35*c;p.thL=p.thR=.3;p.knL=p.knR=.05;p.arL=p.arR=(2.0-.8*c)+p.lean;p.spL=p.spR=.1}
+ else if(s==='band'){const c=(1-Math.cos(t*2.6))/2;p.arL=p.arR=1.5;p.ayL=p.ayR=1.25*c;p.spL=p.spR=.0}
+ else if(s==='deadlift'){const c=(1-Math.cos(t*2.2))/2;p.lean=.95*(1-c);p.thL=p.thR=.55*(1-c);p.knL=p.knR=.75*(1-c);p.arL=p.arR=p.lean;p.spL=p.spR=.12}
+ else if(s==='plank'){const c=Math.sin(t*2)*.03;p.lean=1.4;p.thL=p.thR=-1.0;p.knL=p.knR=0;p.minHip=.3+c;p.arL=p.arR=1.4;p.spL=p.spR=.05}
+ else if(s==='lanepull'){const w=Math.sin(t*5)*.45;p.lean=-.3;p.thL=.3;p.thR=-.2;p.knL=.15;p.knR=.2;p.arL=1.3+w+p.lean;p.arR=1.3-w+p.lean;p.spL=p.spR=.05}
+ else if(s==='soak'){p.thL=p.thR=1.5;p.minHip=.11;p.rootY=.3;const c=(1-Math.cos(t*1.2))/2;p.arL=p.arR=.3+c*.2;p.spL=p.spR=.5;p.lean=-.15}
+ else if(s==='meditate'){p.thL=p.thR=1.5;p.knL=p.knR=2.9;p.minHip=.2;p.rootY=.4;const c=(1-Math.cos(t*1.1))/2;p.arL=p.arR=.65;p.spL=p.spR=.15;p.lean=.02+c*.04}
+ else if(s==='stickflow'){const c=Math.sin(t*1.6);p.thL=1.0+.25*c;p.thR=1.0-.25*c;p.knL=1.5-.3*c;p.knR=1.5+.3*c;p.lean=1.1;p.arL=1.1+.35*c;p.arR=1.1-.35*c;p.spin=t*.6}
  else if(s==='flow'){const c=Math.sin(t*1.6);p.thL=1.0+.25*c;p.thR=1.0-.25*c;p.knL=1.5-.3*c;p.knR=1.5+.3*c;p.lean=1.1;p.arL=1.1+.35*c;p.arR=1.1-.35*c;p.spin=t*.9}
  else if(s==='breathe'||s==='stay'){p.thL=p.thR=1.5;p.minHip=.11;const c=(1-Math.cos(t*(s==='stay'?1.2:1.6)))/2;p.arL=p.arR=.3+c*2.6;p.spL=p.spR=.1+c*.3;p.lean=-.05}
  else{const c=Math.sin(t*2.2);p.arL=p.arR=.05+c*.05;p.lift=c*.008;p.lean=c*.02}
@@ -617,46 +638,82 @@ function collide(c,r=.32){c.x=Math.max(-21.6,Math.min(21.6,c.x));c.z=Math.max(-2
 const $=id=>document.getElementById(id);
 function renderRoute(){const r=$('route');r.innerHTML=ROUTE.map((z,i)=>`<span class="st ${i<routeIdx?'done':''} ${i===routeIdx?'next'+(z==='S4'?' b':''):''}">${ROUTE_LBL[z]}</span>`).join('<span class="ar">→</span>')+`<span class="set">SET<b>${sets}</b></span>`}
 function renderZone(z){const Z=ZONES[z];const zc=$('zonecard');zc.style.borderTopColor=Z.accent;
- zc.innerHTML=`<div class="code" style="color:${Z.accent}">${Z.code}${z==='PATH'?'':''}</div><div class="name">${Z.name}</div>`+
- (Z.tag?`<div class="aroma"><span class="en" style="color:${Z.accent}">${Z.tag}</span></div>`:'')+`<div class="desc">${Z.desc}</div>`+
+ zc.innerHTML=(z==='PATH'?`<div class="code" style="color:${Z.accent}">${Z.code}</div><div class="name">${Z.name}</div>`:`<div class="name" style="color:${Z.accent};font-size:34px">${Z.code}</div>`)+
+ (Z.desc?`<div class="desc">${Z.desc}</div>`:'')+
  (Z.gear.length?`<div class="gear">${Z.gear.map(g=>`<span>${g}</span>`).join('')}</div>`:'');
  $('stZone').textContent=z==='PATH'?'통로':ROUTE_LBL[z];$('stBpm').textContent=Z.bpm?Z.bpm+' BPM':'—';$('act1').textContent=Z.act;actLbl=''}
 let toastT=0;function toast(h,ms=2400){const t=$('toast');t.innerHTML=h;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),ms)}
 
 // ---------- actions ----------
-const STATIONS=[
- {id:'swing',zone:'S2',pos:[8.75,-8.3],yaw:0,txt:'케틀벨 스윙',dur:5},
- {id:'pullup',zone:'S2',pos:[5.6,-13],yaw:0,txt:'철봉 풀업',dur:5.5},
- {id:'ski',zone:'S3',pos:[8.2,11.25],yaw:Math.PI,txt:'스키에르그',dur:5},
- {id:'sled',zone:'S3',pos:[12,10.2],yaw:Math.PI,txt:'슬레드 푸시',dur:5},
- {id:'row',zone:'S3',pos:[15.8,10.75],yaw:Math.PI,txt:'로잉',dur:5.5},
- {id:'wallball',zone:'S3',pos:[8.2,13.55],yaw:0,txt:'월볼',dur:5},
- {id:'carry',zone:'S3',pos:[12,13.7],yaw:Math.PI/2,txt:'파머스 캐리',dur:5.5},
- {id:'lunge',zone:'S3',pos:[15.8,14.55],yaw:Math.PI,txt:'샌드백 런지',dur:5.5}];
-function stationNear(x,z,r=1.5){let best=null,bd=r;for(const s of STATIONS){const d=Math.hypot(s.pos[0]-x,s.pos[1]-z);if(d<bd){bd=d;best=s}}return best}
-function stationTick(ch,st,t){if(st.id==='sled'){ch.x=st.pos[0];ch.z=st.pos[1]-Math.min(1.3,t*.3);ch.yaw=Math.PI}else if(st.id==='carry'){ch.x=st.pos[0]+Math.sin(t*1.1)*1.1;ch.z=st.pos[1];ch.yaw=Math.cos(t*1.1)>=0?Math.PI/2:-Math.PI/2}else{ch.x=st.pos[0];ch.z=st.pos[1];ch.yaw=st.yaw}}
+const STATIONS=[];const STICKS=new Set(['ohsquat','stickflow','sticklunge','stickrot']);const STICK=[.91,.42,.17];
+function addSt(o){o.key=STATIONS.length;STATIONS.push(o);return o}
+const RACK=[0,1,2,3,4,5,6].map(i=>({z:-9.4+i*.45,col:i%3===2?[.11,.11,.11]:STICK,i}));
+addSt({anim:'ohsquat',zone:'S1',pos:[-19.75,-9.4],yaw:-Math.PI/2,txt:'스틱 오버헤드 스쿼트',dur:5.5,rack:0,r:.42});
+addSt({anim:'sticklunge',zone:'S1',pos:[-19.75,-8.05],yaw:-Math.PI/2,txt:'스틱 플랜트 런지',dur:5.5,rack:3,r:.42});
+addSt({anim:'stickrot',zone:'S1',pos:[-19.75,-6.7],yaw:-Math.PI/2,txt:'스틱 트렁크 로테이션',dur:5.5,rack:6,r:.42});
+for(let i=0;i<3;i++)addSt({anim:'stickflow',zone:'S1',pos:[-14+i*2.7,-9.35],yaw:Math.PI,txt:'스틱 플로우',dur:5.5,rest:'stick',rs:[[-15+i*2.7,.06,-10],[-13+i*2.7,.06,-10.4]]});
+for(let r=0;r<2;r++)for(let i=0;i<4;i++)addSt({anim:'stretch',zone:'S1',pos:[-16+i*2.7,[-15.5,-12.5][r]],yaw:Math.PI/2,txt:'매트 스트레칭',dur:5,r:.9});
+for(const x of [7.4,9.2,11])addSt({anim:'swing',zone:'S2',pos:[x,-8.3],yaw:0,txt:'케틀벨 스윙',dur:5});
+addSt({anim:'pullup',zone:'S2',pos:[5.6,-13],yaw:0,txt:'철봉 풀업',dur:5.5});
+for(const x of [10.5,13.5])addSt({anim:'trxrow',zone:'S2',pos:[x,-14.35],yaw:Math.PI,txt:'리코일 S2 로우',dur:5,rest:'trx',ax:x});
+const BANDC=['#2e7d5b','#3a6ea5','#c9483a','#d9b23a','#6b5ba8'];
+for(let i=0;i<5;i++)addSt({anim:'band',zone:'S2',pos:[20.7,-17+i*1.3],yaw:Math.PI/2,txt:'플렉스빗 밴드 풀어파트',dur:5,rest:'band',bz:-17+i*1.3,bc:hex(BANDC[i]),r:.65});
+for(const x of [8,16])addSt({anim:'deadlift',zone:'S2',pos:[x,-4.15],yaw:0,txt:'바벨 데드리프트',dur:5,rest:'barbell',bx:x});
+for(const z of [-10.5,-12.5])addSt({anim:'plank',zone:'S2',pos:[13.2,z],yaw:-Math.PI/2,txt:'플랭크',dur:5,r:1});
+addSt({anim:'ski',zone:'S3',pos:[8.2,11.25],yaw:Math.PI,txt:'스키에르그',dur:5});
+addSt({anim:'sled',zone:'S3',pos:[12,10.2],yaw:Math.PI,txt:'슬레드 푸시',dur:5,mv:'sled'});
+addSt({anim:'row',zone:'S3',pos:[15.8,10.75],yaw:Math.PI,txt:'로잉',dur:5.5});
+addSt({anim:'wallball',zone:'S3',pos:[8.2,13.55],yaw:0,txt:'월볼',dur:5});
+addSt({anim:'carry',zone:'S3',pos:[12,13.7],yaw:Math.PI/2,txt:'파머스 캐리',dur:5.5,mv:'carry'});
+addSt({anim:'lunge',zone:'S3',pos:[15.8,14.55],yaw:Math.PI,txt:'샌드백 런지',dur:5.5});
+addSt({anim:'sled',zone:'S3',pos:[4.6,19.7],yaw:Math.PI/2,txt:'터프 슬레드 푸시',dur:5,mv:'lanepush'});
+addSt({anim:'lanepull',zone:'S3',pos:[12.6,20.9],yaw:-Math.PI/2,txt:'터프 슬레드 풀',dur:5,mv:'lanepull'});
+addSt({anim:'soak',zone:'S4',pos:[-12,17.4],yaw:0,txt:'히노키 탕 담그기',dur:6,r:2});
+for(const [x,z] of [[-18,8],[-15,8],[-18,10],[-15,10]])addSt({anim:'meditate',zone:'S4',pos:[x,z],yaw:Math.PI,txt:'마루 명상',dur:6,r:.9});
+function stationNear(x,z,r=1.5){let best=null,bd=1e9;for(const s of STATIONS){const d=Math.hypot(s.pos[0]-x,s.pos[1]-z);if(d<(s.r||r)&&d<bd){bd=d;best=s}}return best}
+function stationTick(ch,st,t){if(st.mv==='sled'){ch.x=st.pos[0];ch.z=st.pos[1]-Math.min(1.3,t*.3);ch.yaw=Math.PI}else if(st.mv==='lanepush'){ch.x=st.pos[0]+Math.min(3.5,t*.55);ch.z=st.pos[1];ch.yaw=Math.PI/2}else if(st.mv==='carry'){ch.x=st.pos[0]+Math.sin(t*1.1)*1.1;ch.z=st.pos[1];ch.yaw=Math.cos(t*1.1)>=0?Math.PI/2:-Math.PI/2}else{ch.x=st.pos[0];ch.z=st.pos[1];ch.yaw=st.yaw}}
 function dynRod(list,a,b,r,col){const d=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],L=Math.hypot(...d)||.001;const yaw=Math.atan2(d[0],d[2]);const pit=Math.acos(Math.max(-1,Math.min(1,d[1]/L)));
  list.push({g:G.cyl,c:col,m:M.ch(M.T((a[0]+b[0])/2,(a[1]+b[1])/2,(a[2]+b[2])/2),M.RY(yaw),M.RX(pit),M.S(r*2,L,r*2))})}
 function sledParts(list,root){const P=(m,g,sx,sy,sz,c)=>list.push({g:G[g],c,m:M.mul(m,M.S(sx,sy,sz))});const W=[.79,.76,.71],K=[.12,.12,.12];
  P(M.mul(root,M.T(0,.09,0)),'box',.8,.18,1,W);P(M.mul(root,M.T(0,.33,.12)),'cyl',.55,.14,.55,K);P(M.mul(root,M.T(0,.47,.12)),'cyl',.45,.12,.45,K);
  for(const s of [-1,1])P(M.ch(root,M.T(.3*s,.6,-.45),M.RX(-.15)),'box',.06,.85,.06,W);P(M.mul(root,M.T(0,1.0,-.52)),'box',.68,.06,.06,W)}
-function inUse(st){return st.busy&&st.busy.state===st.id?st.busy:null}
+function inUse(st){const u=st.busy;return u&&u.station===st&&u.state===st.anim?u:null}
+function dynRing(list,cx,cy,cz,r,t,col,ry,seg=12){for(let i=0;i<seg;i++){const a0=i/seg*Math.PI*2,a1=(i+1)/seg*Math.PI*2;const P=a=>{const x=Math.cos(a)*r,y=Math.sin(a)*r,c=Math.cos(ry),s=Math.sin(ry);return[cx+x*c,cy+y,cz-x*s]};dynRod(list,P(a0),P(a1),t,col)}}
 function stationProps(list){
- for(const st of STATIONS){const u=inUse(st);
-  if(st.id==='sled'){if(u)sledParts(list,M.ch(M.T(u.x,0,u.z),M.RY(u.yaw),M.T(0,0,.72)));else sledParts(list,M.ch(M.T(12,0,8.9),M.RY(Math.PI)))}
-  if(st.id==='carry'&&!u)for(const x of [11.6,12.4]){list.push({g:G.sph,c:[.11,.11,.11],m:M.ch(M.T(x,.2,14.6),M.S(.42,.38,.42))});list.push({g:G.box,c:[.11,.11,.11],m:M.ch(M.T(x,.45,14.6),M.S(.22,.05,.06))})}
-  if(st.id==='wallball'&&!u)list.push({g:G.sph,c:[.2,.19,.18],m:M.ch(M.T(9.15,.18,14.25),M.S(.36,.36,.36))});
-  if(st.id==='lunge'&&!u)list.push({g:G.cyl,c:[.24,.23,.21],m:M.ch(M.T(15.8,.2,13.6),M.RZ(Math.PI/2),M.S(.38,.9,.38))});
-  if(st.id==='ski'&&u&&u.hands)for(let i=0;i<2;i++)dynRod(list,u.hands[i],[8.2+(i?.12:-.12),2.0,10.2],.012,[.1,.1,.1]);
-  if(st.id==='row'&&u&&u.hands){const c=[(u.hands[0][0]+u.hands[1][0])/2,(u.hands[0][1]+u.hands[1][1])/2,(u.hands[0][2]+u.hands[1][2])/2];dynRod(list,c,[15.8,.37,9.62],.014,[.55,.55,.52])}
+ const K=[.11,.11,.11];
+ for(const st of STATIONS){const u=inUse(st);const id=st.mv||st.anim;
+  if(st.mv==='sled'){if(u)sledParts(list,M.ch(M.T(u.x,0,u.z),M.RY(u.yaw),M.T(0,0,.72)));else sledParts(list,M.ch(M.T(12,0,8.9),M.RY(Math.PI)))}
+  if(st.mv==='lanepush'){if(u)sledParts(list,M.ch(M.T(u.x,0,u.z),M.RY(u.yaw),M.T(0,0,.72)));else sledParts(list,M.ch(M.T(st.pos[0]+.72,0,st.pos[1]),M.RY(Math.PI/2)))}
+  if(st.mv==='lanepull'){const sx=9+(u?Math.min(2.4,u.t*.5):0);sledParts(list,M.ch(M.T(sx,0,20.9),M.RY(-Math.PI/2)));
+   if(u&&u.hands){const c=[(u.hands[0][0]+u.hands[1][0])/2,(u.hands[0][1]+u.hands[1][1])/2,(u.hands[0][2]+u.hands[1][2])/2];dynRod(list,c,[sx+.5,.95,20.9],.02,[.83,.75,.55])}}
+  if(id==='carry'&&!u)for(const x of [11.6,12.4]){list.push({g:G.sph,c:K,m:M.ch(M.T(x,.2,14.6),M.S(.42,.38,.42))});list.push({g:G.box,c:K,m:M.ch(M.T(x,.45,14.6),M.S(.22,.05,.06))})}
+  if(id==='wallball'&&!u)list.push({g:G.sph,c:[.2,.19,.18],m:M.ch(M.T(9.15,.18,14.25),M.S(.36,.36,.36))});
+  if(id==='lunge'&&!u)list.push({g:G.cyl,c:[.24,.23,.21],m:M.ch(M.T(15.8,.2,13.6),M.RZ(Math.PI/2),M.S(.38,.9,.38))});
+  if(id==='ski'&&u&&u.hands)for(let i=0;i<2;i++)dynRod(list,u.hands[i],[8.2+(i?.12:-.12),2.0,10.2],.012,[.1,.1,.1]);
+  if(id==='row'&&u&&u.hands){const c=[(u.hands[0][0]+u.hands[1][0])/2,(u.hands[0][1]+u.hands[1][1])/2,(u.hands[0][2]+u.hands[1][2])/2];dynRod(list,c,[15.8,.37,9.62],.014,[.55,.55,.52])}
+  if(st.rest==='stick'&&!(u&&u.t>.35))dynRod(list,st.rs[0],st.rs[1],.035,STICK);
+  if(st.rest==='trx'){for(let i=0;i<2;i++){const ax=st.ax+(i?.12:-.12),top=[ax,2.8,-15.2];
+   if(u&&u.hands){dynRod(list,u.hands[i],top,.02,[.08,.08,.08]);list.push({g:G.box,c:RED,e:RED.map(v=>v*.3),m:M.ch(M.T(...u.hands[i]),M.S(.05,.05,.14))})}
+   else{dynRod(list,top,[ax,1.1,-15.2],.02,[.08,.08,.08]);list.push({g:G.box,c:RED,e:RED.map(v=>v*.3),m:M.ch(M.T(ax,1.05,-15.2),M.S(.14,.05,.05))})}}}
+  if(st.rest==='band'){if(u&&u.hands)dynRod(list,u.hands[0],u.hands[1],.03,st.bc);else dynRing(list,21.6,1.45,st.bz,.42,.02,st.bc,Math.PI/2)}
+  if(st.rest==='barbell'&&!u){const bb=M.ch(M.T(st.bx,.23,-3.75),M.RZ(Math.PI/2));list.push({g:G.cyl,c:[.72,.72,.7],m:M.mul(bb,M.S(.045,1.6,.045))});for(const s of [-1,1])list.push({g:G.cyl,c:K,m:M.ch(bb,M.T(0,.66*s,0),M.S(.46,.07,.46))})}
  }
- for(const c of [me,...crew])if(c.state==='lift'&&c.hands&&zoneAt(c.x,c.z)==='S2'){const f=[Math.sin(c.yaw),Math.cos(c.yaw)];for(let i=0;i<2;i++)dynRod(list,c.hands[i],[c.x+f[0]*.9+(i?.15:-.15)*f[1],2.8,c.z+f[1]*.9-(i?.15:-.15)*f[0]],.018,[.08,.08,.08])}
+ // stick rack: hide a stick while it's in someone's hands
+ for(const r of RACK){const st=STATIONS.find(s=>s.rack===r.i),u=st&&inUse(st);if(u&&u.t>.35)continue;dynRod(list,[-20.5,.12,r.z],[-21.25,2.35,r.z],.035,r.col)}
+ // held sticks pass through both hands
+ for(const c of [me,...crew]){if(!STICKS.has(c.state)||!c.hands||c.t<.35)continue;const a=c.hands[0],b=c.hands[1];
+  if(c.state==='sticklunge'){const m=[(a[0]+b[0])/2,(a[1]+b[1])/2,(a[2]+b[2])/2];const f=[Math.sin(c.yaw),Math.cos(c.yaw)];dynRod(list,[m[0],m[1]+.28,m[2]],[m[0]+f[0]*.05,0,m[2]+f[1]*.05],.035,STICK)}
+  else{const d=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],L=Math.hypot(...d)||1,e=(1.5-L)/2/L;dynRod(list,[a[0]-d[0]*e,a[1]-d[1]*e,a[2]-d[2]*e],[b[0]+d[0]*e,b[1]+d[1]*e,b[2]+d[2]*e],.035,STICK)}
+  for(const hnd of [a,b])list.push({g:G.sph,c:c.skin,m:M.ch(M.T(...hnd),M.S(.13,.13,.13))})}
+ // floor sticks hidden once picked up
+ if(started&&!action)for(const st of STATIONS){if(inUse(st))continue;const d=Math.hypot(st.pos[0]-me.x,st.pos[1]-me.z);if(d>7)continue;const near=d<(st.r||1.5);
+  trList.push({g:G.cyl,c:near?RED:BONE,e:near?RED.map(v=>v*.6):[.4,.4,.38],m:M.ch(M.T(st.pos[0],.03,st.pos[1]),M.S(.75,.01,.75)),a:near?.45:.16})}
 }
-const ACT={S1:{state:'flow',dur:5.5,txt:'깨우는 중'},S2:{state:'lift',dur:5.2,txt:'버티는 중'},S3:{state:'run',dur:7.5,txt:'트랙 한 바퀴',lap:true},S4:{state:'breathe',dur:6.5,txt:'호흡하는 중'},YOU:{state:'stay',dur:6,txt:'머무는 중'}};
+const ACT={S1:{state:'flow',dur:5.5,txt:'맨몸 플로우 중'},S2:{state:'lift',dur:5.2,txt:'맨몸 스쿼트 중'},S3:{state:'run',dur:7.5,txt:'트랙 한 바퀴',lap:true},S4:{state:'breathe',dur:6.5,txt:'호흡하는 중'},YOU:{state:'stay',dur:6,txt:'머무는 중'}};
 function doAction(n){if(!started)return;
  if(n===1){const z=curZone;if(z==='PATH'){toast('존 안에서 할 수 있어요');return}
   let A=ACT[z];target=null;const stn=stationNear(me.x,me.z);
-  if(stn&&stn.zone===z){A={state:stn.id,dur:stn.dur,txt:stn.txt,st:stn};if(stn.busy&&stn.busy!==me)stn.busy.wait=0;stn.busy=me;stationTick(me,stn,0)}
+  if(stn&&stn.zone===z){A={state:stn.anim,dur:stn.dur,txt:stn.txt,st:stn};if(stn.busy&&stn.busy!==me)stn.busy.wait=0;stn.busy=me;me.station=stn;stationTick(me,stn,0)}
   if(A.st){action={zone:z,...A,t:0}}
   else if(A.lap){// snap to nearest track point
    let best=0,bd=1e9;for(let i=0;i<64;i++){const a=i/64*Math.PI*2,p=[12+Math.cos(a)*7.6,12+Math.sin(a)*5.6];const d=Math.hypot(p[0]-me.x,p[1]-me.z);if(d<bd){bd=d;best=a}}
@@ -670,7 +727,7 @@ function doAction(n){if(!started)return;
 }
 function greet(){let best=null,bd=4;for(const c of [...coaches,...crew]){const d=Math.hypot(c.x-me.x,c.z-me.z);if(d<bd){bd=d;best=c}}
  if(best){setTimeout(()=>{if(best.state!=='walk'){best.prev=best.state;best.state='bow';best.t=0;setTimeout(()=>{best.state=best.prev||'idle'},1400)}},350)}}
-function finishAction(){const z=action.zone;if(action.st&&action.st.busy===me)action.st.busy=null;$('progress').style.display='none';me.glow=false;
+function finishAction(){const z=action.zone;const done=action.st?action.st.txt:(z?ACT[z].txt.replace(/ 중$/,''):null);if(action.st&&action.st.busy===me)action.st.busy=null;me.station=null;if(z)setTimeout(()=>followNudge(done),cardReq?3200:350);$('progress').style.display='none';me.glow=false;
  if(z){const need=ROUTE[routeIdx];
   if(z===need){routeIdx++;
    if(routeIdx>=ROUTE.length){routeIdx=0;sets++;toast(`<span class="big">ONE SESSION · SET ${sets}</span>깨우는 것부터 회복까지, 한 곡 완주.`,2600);cardReq={show:true}}
@@ -678,7 +735,7 @@ function finishAction(){const z=action.zone;if(action.st&&action.st.busy===me)ac
   else toast(`순서대로 돌아요 · 지금은 <b>${ROUTE_LBL[need]}</b> 차례`);
   renderRoute()}
  action=null;me.state='idle';me.t=0}
-function cancelAction(){if(action){if(action.st&&action.st.busy===me)action.st.busy=null;if(action.zone)$('progress').style.display='none';me.glow=false;action=null}}
+function cancelAction(){if(action){if(action.st&&action.st.busy===me)action.st.busy=null;me.station=null;if(action.zone)$('progress').style.display='none';me.glow=false;action=null}}
 
 // ---------- input ----------
 let drag=null;
@@ -703,13 +760,13 @@ function pick(cx,cy){const r=cv.getBoundingClientRect();const x=(cx-r.left)/r.wi
 function npcUpdate(c,dt){
  if(c.goal){const dx=c.goal[0]-c.x,dz=c.goal[1]-c.z,d=Math.hypot(dx,dz);
   if(d<.25){c.goal=null;c.t=0;c.wait=6+Math.random()*7;
-   if(c.station){c.state=c.station.id;stationTick(c,c.station,0)}
+   if(c.station){c.state=c.station.anim;stationTick(c,c.station,0)}
    else c.state={S1:'flow',S2:'lift',S3:'flow',S4:'breathe',YOU:'stay'}[c.zone]}
   else{const sp=1.6;c.x+=dx/d*sp*dt;c.z+=dz/d*sp*dt;c.yaw=Math.atan2(dx,dz);c.state='walk';if(d>1.2)collide(c,.3)}}
- else{if(c.station&&c.state===c.station.id)stationTick(c,c.station,c.t);
+ else{if(c.station&&c.state===c.station.anim)stationTick(c,c.station,c.t);
   c.wait-=dt;if(c.wait<=0){if(c.station){if(c.station.busy===c)c.station.busy=null;c.station=null}
   const zs=['S1','S2','S3','S4','YOU'];c.zone=zs[(zs.indexOf(c.zone)+1)%5];const Z=ZONES[c.zone];
-  const free=STATIONS.filter(s=>s.zone===c.zone&&!s.busy);
+  const free=STATIONS.filter(s=>s.zone===c.zone&&!s.busy&&Math.hypot(s.pos[0]-me.x,s.pos[1]-me.z)>2);
   if(free.length&&Math.random()<.8){const s=free[Math.random()*free.length|0];s.busy=c;c.station=s;c.goal=s.pos.slice()}
   else{const r=c.zone==='YOU'?2.5:6;c.goal=[Z.c[0]+(Math.random()-.5)*r*2,Z.c[1]+(Math.random()-.5)*r*2+(c.zone==='YOU'?2:0)]}
   c.state='walk'}}
@@ -739,7 +796,7 @@ function mkAudio(){const AC=window.AudioContext||window.webkitAudioContext;if(!A
   cue(z){bell(ctx.currentTime+.01,z==='S4'||z==='YOU'?330:660,.06)},mute(m){out.gain.setTargetAtTime(m?0:.5,ctx.currentTime,.1)}}}
 
 // ---------- site / locker ----------
-const zg=$('zoneGrid');ROUTE.forEach(z=>{const Z=ZONES[z];zg.insertAdjacentHTML('beforeend',`<div class="z" style="border-top:2px solid ${Z.accent}"><div class="c" style="color:${Z.accent}">${Z.code}</div><div class="n">${Z.name}</div><div class="a"><span style="color:${Z.accent};margin:0">${Z.tag}</span></div><div class="d">${Z.desc}</div><ul>${Z.gear.map(g=>`<li>${g}</li>`).join('')}</ul><div class="act"><kbd>1</kbd>${Z.acts}</div></div>`)});
+const zg=$('zoneGrid');ROUTE.forEach(z=>{const Z=ZONES[z];zg.insertAdjacentHTML('beforeend',`<div class="z" style="border-top:2px solid ${Z.accent}"><div class="c" style="color:${Z.accent}">${Z.code}</div><ul>${Z.gear.map(g=>`<li>${g}</li>`).join('')}</ul><div class="act"><kbd>1</kbd>${Z.acts}</div></div>`)});
 const sw=$('sw');TOPS.forEach((t,i)=>{const b=document.createElement('button');b.style.background=`rgb(${t.c.map(v=>v*255|0).join(',')})`;b.title=t.n;if(i===0)b.classList.add('on');
  b.onclick=()=>{topIdx=i;me.top=t.c;sw.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on')};sw.appendChild(b)});
 me.acc='band';me.accCol=RED;me.skin=SKIN;me.hair=HAIRS[0];
@@ -749,7 +806,7 @@ $('nick').addEventListener('input',e=>{meLabel.el.textContent=(e.target.value.tr
 function enter(){started=true;if(!startTime)startTime=performance.now();$('site').classList.add('off');$('hud').classList.add('on');
  if(!audio){try{audio=mkAudio()}catch(e){audio=null}}
  if(audio){if(audio.ctx.state==='suspended')audio.ctx.resume();audio.mute(!soundOn)}else $('sndBtn').style.display='none';
- cam.yaw=0;cam.pitch=.5;cam.dist=8.5;renderRoute();curZone='';toast('바닥을 클릭해 걸어가요 · 첫 존은 <b>GROUND</b>',3000)}
+ cam.yaw=0;cam.pitch=.5;cam.dist=8.5;renderRoute();curZone='';toast('바닥을 클릭해 걸어가요 · 첫 존은 <b>S2:1</b>',3000)}
 document.querySelectorAll('.enterBtn').forEach(b=>b.onclick=enter);
 $('exitBtn').onclick=()=>{started=false;cancelAction();target=null;$('hud').classList.remove('on');$('site').classList.remove('off');if(audio)audio.mute(true)};
 // locker preview (second GL context-free: render offscreen via main gl into preview by readPixels is heavy) -> draw with 2D snapshot each frame
@@ -773,7 +830,7 @@ let makeCard=function(snap,req){
  x.save();x.beginPath();x.ellipse(W/2+40,1440,300,46,0,0,Math.PI*2);x.fillStyle='rgba(0,0,0,.28)';x.fill();x.restore();
  x.drawImage(snap,W/2-460+40,700,920,920);
  // route
- const R=[['GROUND','#e5483b'],['STRENGTH','#e5483b'],['ENGINE','#e5483b'],['RECOVERY','#6a9bd8'],['YOU','#f2efe8']];
+ const R=[['S2:1','#e5483b'],['S2:2','#e5483b'],['S2:3','#e5483b'],['S2:4','#6a9bd8'],['S2:U','#f2efe8']];
  const y0=1560;x.strokeStyle='rgba(242,239,232,.25)';x.lineWidth=3;x.beginPath();x.moveTo(120,y0);x.lineTo(W-120,y0);x.stroke();
  R.forEach((r,i)=>{const px=120+i*(W-240)/4;x.fillStyle=r[1];x.beginPath();x.arc(px,y0,14,0,Math.PI*2);x.fill();x.font='400 34px '+BB;x.textAlign='center';x.fillText(r[0],px,y0+30)});
  x.textAlign='left';
@@ -797,6 +854,14 @@ function applyUnlock(){unlocked=true;try{localStorage.setItem('s2u_gold','1')}ca
  if(!accEl.querySelector('.gold')){const b=document.createElement('button');b.textContent='골드 밴드 ✨';b.className='gold';b.onclick=()=>{me.acc='band';me.accCol=GOLD;accEl.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on')};accEl.appendChild(b);b.click()}}
 document.querySelectorAll('.igLink').forEach(a=>a.addEventListener('click',()=>{if(!unlocked)setTimeout(applyUnlock,600)}));
 if(unlocked)applyUnlock();
+// follow nudge after each finished exercise
+let nudgeT=0,nudgeCount=0,nudgeSnooze=0;
+function followNudge(done){if(!started||$('cardModal').classList.contains('on'))return;if(performance.now()<nudgeSnooze)return;nudgeCount++;
+ const lines=unlocked?['스토리에 @s2useoul 태그하면 S2:U가 봐요.','이 동작, 실제 센터에서 같이 해요.']:['이런 루틴, 매주 @s2useoul에 올라와요.','팔로우하면 락커룸 골드 밴드가 열려요.','오프라인 센터 오픈 소식도 @s2useoul에서 먼저.'];
+ $('nudgeT').innerHTML=`<b>NICE · ${done||'운동'} 완료</b>${lines[(nudgeCount-1)%lines.length]}`;
+ $('nudge').querySelector('.go').textContent=unlocked?'@s2useoul 보러 가기':'@s2useoul 팔로우';
+ $('nudge').classList.add('on');clearTimeout(nudgeT);nudgeT=setTimeout(()=>$('nudge').classList.remove('on'),6000)}
+$('nudgeX').onclick=()=>{$('nudge').classList.remove('on');nudgeSnooze=performance.now()+45000};
 // arrival from Instagram (in-app browser)
 if(/Instagram/i.test(navigator.userAgent)||/instagram\.com/i.test(document.referrer)){$('igbar').classList.add('on');document.querySelector('.nav').style.top='40px'}
 $('igx').onclick=()=>$('igbar').classList.remove('on');
