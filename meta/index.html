@@ -197,7 +197,7 @@ footer b{color:var(--ink);font-weight:500;display:block}
 
 <div class="igbar" id="igbar"><span>인스타에서 오셨네요 👋 한 바퀴 완주하면 <b>완주 카드</b>를 드려요 · 스토리에 @s2useoul 태그!</span><button id="igx" aria-label="닫기">×</button></div>
 <div id="site">
- <div class="nav"><span class="w">S2:U</span><span><a href="#concept">CONCEPT</a><a href="#zones">ZONES</a><a href="#locker">LOCKER</a><a href="#card">CARD</a><a class="igLink" href="https://www.instagram.com/s2useoul/" style="color:#e5483b;opacity:1">@S2USEOUL</a></span></div>
+ <div class="nav"><span class="w">S2:U</span><span><a href="#locker">LOCKER</a><a href="#card">CARD</a><a class="igLink" href="https://www.instagram.com/s2useoul/" style="color:#e5483b;opacity:1">@S2USEOUL</a></span></div>
  <header class="hero">
   <div class="eyebrow">PERFORMANCE CULTURE BRAND · ONLINE BRANCH</div>
   <h1>S2:U TRAINING<br>CENTER <em>META</em></h1>
@@ -205,18 +205,6 @@ footer b{color:var(--ink);font-weight:500;display:block}
   <div class="cta"><button class="btn enterBtn">ENTER</button><a class="btn ghost" href="#locker" style="text-decoration:none">LOCKER ROOM</a></div>
   <p class="note">설치 없이 브라우저에서 바로 · 소리가 함께 나와요</p>
  </header>
- <section class="sec" id="concept">
-  <div class="k">CONCEPT</div>
-  <h2>한 세션이<br>한 곡처럼</h2>
-  <p class="body">S2:U는 운동을 끝까지 설계한다. 깨우는 것부터 회복까지, 한 세션이 한 곡처럼 완결된다.</p>
-  <p class="body">이 공간은 그 설계를 그대로 걸을 수 있게 펼친 곳이에요. 네 개의 존이 프로그램 순서대로 놓여 있고, 마지막은 가운데 장독대 마당. 바깥 벽에는 한지 창호, 회복 존에는 히노키 탕과 마루를 두었어요. 옛것을 그대로 꺼내지 않고, 지금의 운동 공간 안에 다시 놓았어요.</p>
- </section>
- <section class="sec alt" id="zones">
-  <div class="k">S2:U PROGRAM SYSTEM</div>
-  <h2>S2:1 → S2:2 → S2:3 → S2:4 → S2:U</h2>
-  <p class="body">각 존에서 <b>1</b>을 누르면 그 존의 운동을 해요. 순서대로 다섯 곳을 돌면 한 세트가 올라가요.</p>
-  <div class="zones" id="zoneGrid"></div>
- </section>
  <section class="sec" id="locker">
   <div class="k">LOCKER ROOM</div>
   <h2>오늘의 나</h2>
@@ -240,7 +228,7 @@ footer b{color:var(--ink);font-weight:500;display:block}
    <div><b>ACT</b>기구 앞 바닥의 동그라미가 빨갛게 바뀌면 1 — 그 기구로 운동해요. 주황 스틱부터 케틀벨, 철봉, 밴드, 바벨, 하이록스, 히노키 탕까지. 2 앉기 · 3 인사.</div>
   </div>
  </section>
- <section class="sec alt" id="card">
+ <section class="sec" id="card">
   <div class="k">SESSION CARD</div>
   <h2>완주하면,<br>카드가 나와요</h2>
   <div class="cardsec">
@@ -796,7 +784,7 @@ function mkAudio(){const AC=window.AudioContext||window.webkitAudioContext;if(!A
   cue(z){bell(ctx.currentTime+.01,z==='S4'||z==='YOU'?330:660,.06)},mute(m){out.gain.setTargetAtTime(m?0:.5,ctx.currentTime,.1)}}}
 
 // ---------- site / locker ----------
-const zg=$('zoneGrid');ROUTE.forEach(z=>{const Z=ZONES[z];zg.insertAdjacentHTML('beforeend',`<div class="z" style="border-top:2px solid ${Z.accent}"><div class="c" style="color:${Z.accent}">${Z.code}</div><ul>${Z.gear.map(g=>`<li>${g}</li>`).join('')}</ul><div class="act"><kbd>1</kbd>${Z.acts}</div></div>`)});
+const zg=$('zoneGrid');if(zg)ROUTE.forEach(z=>{const Z=ZONES[z];zg.insertAdjacentHTML('beforeend',`<div class="z" style="border-top:2px solid ${Z.accent}"><div class="c" style="color:${Z.accent}">${Z.code}</div><ul>${Z.gear.map(g=>`<li>${g}</li>`).join('')}</ul><div class="act"><kbd>1</kbd>${Z.acts}</div></div>`)});
 const sw=$('sw');TOPS.forEach((t,i)=>{const b=document.createElement('button');b.style.background=`rgb(${t.c.map(v=>v*255|0).join(',')})`;b.title=t.n;if(i===0)b.classList.add('on');
  b.onclick=()=>{topIdx=i;me.top=t.c;sw.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on')};sw.appendChild(b)});
 me.acc='band';me.accCol=RED;me.skin=SKIN;me.hair=HAIRS[0];
