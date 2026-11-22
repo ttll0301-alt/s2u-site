@@ -229,6 +229,17 @@
   .card-desc{font-size:13.5px; color:#b8b8b8; line-height:1.65; margin-top:10px;}
   .card-with{margin-top:16px; padding-top:14px; border-top:1px solid var(--line); font-size:11px; letter-spacing:0.06em; color:var(--bone-dim); text-transform:uppercase;}
   .card-with b{color:var(--bone); font-weight:700;}
+  .card-music{margin-top:16px; padding-top:14px; border-top:1px solid var(--line);}
+  .card-music-h{font-size:11px; letter-spacing:0.12em; color:var(--bone-dim); margin-bottom:6px;}
+  .cm-row{padding:10px 0; border-bottom:1px dashed var(--line);}
+  .cm-row:last-child{border-bottom:none;}
+  .cm-top{display:flex; justify-content:space-between; gap:10px; font-size:11px; letter-spacing:0.08em;}
+  .cm-part{color:var(--bone); font-weight:700;}
+  .cm-time{color:var(--bone-dim);}
+  .cm-dj{font-size:12.5px; color:var(--bone); margin-top:4px;}
+  .cm-genre{font-size:12px; color:#b8b8b8; margin-top:2px;}
+  .cm-link{display:inline-block; margin-top:6px; font-size:12px; color:var(--bone); text-decoration:underline; text-underline-offset:3px; word-break:break-word;}
+  .cm-link:hover{opacity:0.75;}
   .card-rsvp{display:inline-block; margin-top:14px; padding:9px 18px; border-radius:999px; background:var(--bone); color:var(--off-black); font-family:'Bebas Neue'; font-size:16px; letter-spacing:0.05em;}
   .card-rsvp::after{content:' →';}
 
@@ -1797,6 +1808,12 @@
 
   // rsvp:'<slug>' 를 넣으면 카드에 RSVP 신청 버튼이 생깁니다 (/admin/ 에서 만든 행사 주소).
   const events = [
+    {cat:'collab', date:'2026.11.17', title:'SKID RACE × PUBG · DROP IN 01', desc:'SKID RACE × PUBG 스포츠 데이. S2:U가 현장 디렉팅을 맡았습니다. 그날 세션의 음악도 함께 나눕니다.', with:'펍지성수', letter:'S', participants:0,
+      music:[
+        {part:'OPENING', dj:'COMY', time:'18:00 – 19:00', genre:'Soulful House / Jazz House'},
+        {part:'ENERGY BUILD-UP', dj:'COMY', time:'19:00 – 20:00', genre:'Afro House / Deep House / Funky House', link:'https://www.youtube.com/watch?v=mdUCvBGHWgg', linkLabel:"Soulful Social Grooves / Comy's Recorded mix series #02"},
+        {part:'MAIN TIME', dj:'UNGKIM', time:'20:00 – 22:30', genre:'Tech House / Bass House / House & All-Kind', link:'https://on.soundcloud.com/e6iOuoS1skqxvTxS9C', linkLabel:'SoundCloud mix'},
+      ]},
     {cat:'collab', date:'2026.10.20', title:'RUNMATE CAMP · 1:1 RUNNING COACHING', desc:'SK텔레콤 런메이트 캠프에서 프라이빗 세션과 1:1 러닝 코칭을 맡았습니다. 피지컬 테스트와 AI 러닝 분석으로 자세·착지·리듬을 확인하고, S2:U 코치진이 11일간 1:1 코칭을 이어갑니다.', with:'S2:U × SK TELECOM · T팩토리 성수', letter:'S', participants:0},
     {cat:'collab', date:'2026.10.19', title:"RUNNER'S HOUSE · MOVV URBAN 5K RUN", desc:'MOVV와 S2:U의 첫 번째 어반 러닝 세션입니다. 발과 발목을 중심으로 몸을 준비하고, MOVV 러닝화를 신고 도심 속 5km를 함께 달린 뒤 더샵갤러리의 리커버리 시설에서 회복까지 이어갔습니다.', with:'MOVV × THE SHARP GALLERY', letter:'M', participants:0},
     {cat:'collab', date:'2026.10.05', title:'FIRST RUCK SESSION', desc:'더템플짐 해방촌에서 출발해 웨이트 베스트를 메고 동네와 숲길을 함께 걷고 오른 S2:U의 첫 럭킹 세션입니다. 15명을 초대했습니다.', with:'S2:U × GORUCK', letter:'G', participants:15},
@@ -1830,6 +1847,7 @@
           <div class="card-date">${e.date}${e.participants ? ' · 참여 ' + e.participants + '명' : ''}</div>
           <div class="card-title display">${e.title}</div>
           <div class="card-desc">${e.desc}</div>
+          ${e.music ? `<div class="card-music"><div class="card-music-h">SESSION MUSIC</div>${e.music.map(m => `<div class="cm-row"><div class="cm-top"><span class="cm-part">${m.part}</span><span class="cm-time">${m.time}</span></div><div class="cm-dj">DJ : ${m.dj}</div><div class="cm-genre">${m.genre}</div>${m.link ? `<a class="cm-link" href="${m.link}" target="_blank" rel="noopener">▶ ${m.linkLabel || 'Listen'}</a>` : ''}</div>`).join('')}</div>` : ''}
           <div class="card-with">With <b>${e.with}</b></div>
           ${e.rsvp ? `<a class="card-rsvp" href="/rsvp/?e=${encodeURIComponent(e.rsvp)}">RSVP · 신청하기</a>` : ''}
         </div>
