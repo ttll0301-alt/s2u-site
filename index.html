@@ -240,6 +240,13 @@
   .cm-genre{font-size:12px; color:#b8b8b8; margin-top:2px;}
   .cm-link{display:inline-block; margin-top:6px; font-size:12px; color:var(--bone); text-decoration:underline; text-underline-offset:3px; word-break:break-word;}
   .cm-link:hover{opacity:0.75;}
+  .cm-row.has-cover{display:grid; grid-template-columns:64px minmax(0,1fr); gap:12px; align-items:start;}
+  .cm-cover{display:block; width:64px; height:64px; border-radius:6px; overflow:hidden; background:var(--black-2) linear-gradient(150deg, rgba(255,61,46,0.25), rgba(10,10,10,0.9)); position:relative;}
+  .cm-cover img{width:100%; height:100%; object-fit:cover; display:block;}
+  .cm-cover img:not([src]){visibility:hidden;}
+  .cm-cover::after{content:'\25B6'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:16px; color:#fff; background:rgba(0,0,0,0.35); opacity:0; transition:opacity 0.2s;}
+  .cm-cover:hover::after{opacity:1;}
+  .thumb.has-cover{background-size:cover; background-position:center;}
   .card-rsvp{display:inline-block; margin-top:14px; padding:9px 18px; border-radius:999px; background:var(--bone); color:var(--off-black); font-family:'Bebas Neue'; font-size:16px; letter-spacing:0.05em;}
   .card-rsvp::after{content:' →';}
 
@@ -1808,7 +1815,7 @@
 
   // rsvp:'<slug>' 를 넣으면 카드에 RSVP 신청 버튼이 생깁니다 (/admin/ 에서 만든 행사 주소).
   const events = [
-    {cat:'collab', date:'2026.11.17', title:'SKID RACE × PUBG · DROP IN 01', desc:'SKID RACE × PUBG 스포츠 데이. S2:U가 현장 디렉팅을 맡았습니다. 그날 세션의 음악도 함께 나눕니다.', with:'펍지성수', letter:'S', participants:0,
+    {cat:'collab', date:'2026.11.17', title:'SKID RACE × PUBG · DROP IN 01', desc:'SKID RACE × PUBG 스포츠 데이. S2:U가 현장 디렉팅을 맡았습니다. 그날 세션의 음악도 함께 나눕니다.', with:'펍지성수', letter:'S', participants:0, cover:'https://i.ytimg.com/vi/mdUCvBGHWgg/hqdefault.jpg',
       music:[
         {part:'OPENING', dj:'COMY', time:'18:00 – 19:00', genre:'Soulful House / Jazz House'},
         {part:'ENERGY BUILD-UP', dj:'COMY', time:'19:00 – 20:00', genre:'Afro House / Deep House / Funky House', link:'https://www.youtube.com/watch?v=mdUCvBGHWgg', linkLabel:"Soulful Social Grooves / Comy's Recorded mix series #02"},
@@ -1842,17 +1849,21 @@
     });
     grid.innerHTML = sorted.map((e, i) => `
       <div class="card cat-${e.cat}" data-cat="${e.cat}" style="animation-delay:${i * 0.05}s">
-        <div class="thumb"><span class="big">${e.letter}</span><span class="cat-tag">${e.cat === 'collab' ? 'Brand Session' : 'Community Session'}</span></div>
+        <div class="thumb${e.cover ? ' has-cover' : ''}"${e.cover ? ` style="background-image:linear-gradient(180deg, rgba(10,10,10,0) 45%, rgba(10,10,10,0.85)), url('${e.cover}')"` : ''}>${e.cover ? '' : `<span class="big">${e.letter}</span>`}<span class="cat-tag">${e.cat === 'collab' ? 'Brand Session' : 'Community Session'}</span></div>
         <div class="card-body">
           <div class="card-date">${e.date}${e.participants ? ' · 참여 ' + e.participants + '명' : ''}</div>
           <div class="card-title display">${e.title}</div>
           <div class="card-desc">${e.desc}</div>
-          ${e.music ? `<div class="card-music"><div class="card-music-h">SESSION MUSIC</div>${e.music.map(m => `<div class="cm-row"><div class="cm-top"><span class="cm-part">${m.part}</span><span class="cm-time">${m.time}</span></div><div class="cm-dj">DJ : ${m.dj}</div><div class="cm-genre">${m.genre}</div>${m.link ? `<a class="cm-link" href="${m.link}" target="_blank" rel="noopener">▶ ${m.linkLabel || 'Listen'}</a>` : ''}</div>`).join('')}</div>` : ''}
+          ${e.music ? `<div class="card-music"><div class="card-music-h">SESSION MUSIC</div>${e.music.map(m => `<div class="cm-row${m.link ? ' has-cover' : ''}">${m.link ? `<a class="cm-cover" href="${m.link}" target="_blank" rel="noopener" aria-label="${m.linkLabel || 'Listen'}"><img alt="" ${/youtu/.test(m.link) ? `src="https://i.ytimg.com/vi/${(m.link.match(/[?&]v=([^&]+)/) || m.link.match(/youtu\.be\/([^?]+)/) || [])[1]}/hqdefault.jpg"` : `data-sc="${m.link}"`}></a>` : ''}<div class="cm-info"><div class="cm-top"><span class="cm-part">${m.part}</span><span class="cm-time">${m.time}</span></div><div class="cm-dj">DJ : ${m.dj}</div><div class="cm-genre">${m.genre}</div>${m.link ? `<a class="cm-link" href="${m.link}" target="_blank" rel="noopener">▶ ${m.linkLabel || 'Listen'}</a>` : ''}</div></div>`).join('')}</div>` : ''}
           <div class="card-with">With <b>${e.with}</b></div>
           ${e.rsvp ? `<a class="card-rsvp" href="/rsvp/?e=${encodeURIComponent(e.rsvp)}">RSVP · 신청하기</a>` : ''}
         </div>
       </div>
     `).join('');
+    grid.querySelectorAll('img[data-sc]').forEach(img => {
+      fetch('https://soundcloud.com/oembed?format=json&url=' + encodeURIComponent(img.dataset.sc))
+        .then(r => r.json()).then(d => { if(d && d.thumbnail_url) img.src = d.thumbnail_url; }).catch(() => {});
+    });
     // re-apply active category filter after re-render
     const activeCat = document.querySelector('#filterBar .filter-btn.active')?.dataset.cat || 'all';
     document.querySelectorAll('.card').forEach(card => card.classList.toggle('hide', activeCat !== 'all' && card.dataset.cat !== activeCat));
