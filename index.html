@@ -498,21 +498,14 @@
   .flow-w[data-flow="service"]::after{background:var(--recover-blue);}
   .flow-arr{color:rgba(244,242,237,0.3); font-size:clamp(13px,2vw,20px); padding:0 2px;}
 
-  /* ---- 히어로 세션 플레이리스트 ---- */
+  /* ---- 히어로 세션 플레이리스트: 정사각 커버 + 아래 제목 ---- */
   .hero-pl{margin-top:clamp(26px,3.6vw,40px); max-width:100%;}
   .hero-pl-h{font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:0.14em; color:var(--bone); margin-bottom:12px; display:flex; align-items:baseline; gap:12px;}
   .hero-pl-h span{font-family:'Pretendard',sans-serif; font-size:11px; letter-spacing:0.04em; color:var(--bone-dim);}
-  .hero-pl-row{display:flex; align-items:flex-start; gap:14px; overflow-x:auto; scrollbar-width:none; padding-bottom:4px; scroll-snap-type:x proximity;}
+  .hero-pl-row{display:flex; align-items:flex-start; gap:16px; overflow-x:auto; scrollbar-width:none; padding-bottom:4px; scroll-snap-type:x proximity;}
   .hero-pl-row::-webkit-scrollbar{display:none;}
-  .hero-pl-c{flex:0 0 auto; display:flex; flex-direction:column; align-items:stretch; width:112px; background:none; border:none; padding:0; text-align:left; cursor:pointer; color:inherit; scroll-snap-align:start;}
-  .hero-pl-img{display:block; position:relative; width:112px; height:112px; border-radius:8px; overflow:hidden; background:linear-gradient(150deg, rgba(255,61,46,0.3), rgba(43,108,176,0.35));}
-  .hero-pl-img img{width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 0.5s;}
-  .hero-pl-img img.ready{opacity:1;}
-  .hero-pl-img::after{content:'\25B6'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; background:rgba(0,0,0,0.35); opacity:0; transition:opacity 0.2s;}
-  .hero-pl-c:hover .hero-pl-img::after{opacity:1;}
-  .hero-pl-t{display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-top:8px; font-size:11.5px; line-height:1.35; color:var(--bone);}
-  .hero-pl-s{display:block; margin-top:3px; font-size:9.5px; letter-spacing:0.12em; color:var(--bone-dim);}
-  @media (max-width:640px){ .hero-pl-c, .hero-pl-img{width:92px;} .hero-pl-img{height:92px;} }
+  .hero-pl-c{flex:0 0 clamp(132px,15vw,180px); scroll-snap-align:start;}
+  @media (max-width:640px){ .hero-pl-c{flex-basis:40vw;} }
 
   .scroll-cue{margin-top:clamp(28px,4vw,44px); display:flex; align-items:center; gap:12px;
     font-size:10.5px; letter-spacing:0.16em; color:var(--bone-dim);}
@@ -716,7 +709,33 @@
   }
 
   /* ---- 플레이리스트 (표 형식) ---- */
-  .pl-grid{margin-top:38px; border-top:1px solid var(--line-strong);}
+  .pl-grid{margin-top:38px; display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:clamp(28px,3vw,40px) clamp(14px,1.6vw,22px);}
+  @media (max-width:900px){ .pl-grid{grid-template-columns:repeat(3, minmax(0,1fr));} }
+  @media (max-width:640px){ .pl-grid{grid-template-columns:repeat(2, minmax(0,1fr)); gap:26px 12px;} }
+  .pl-card, .hero-pl-c{display:flex; flex-direction:column; align-items:stretch; background:none; border:none; padding:0; margin:0; text-align:left; cursor:pointer; color:inherit; font:inherit;}
+  .pl-cover{display:block; position:relative; aspect-ratio:1/1; overflow:hidden; background:linear-gradient(150deg, rgba(255,61,46,0.28), rgba(43,108,176,0.32));}
+  .pl-cover img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 0.5s, transform 0.6s cubic-bezier(.2,0,.15,1);}
+  .pl-cover img.ready{opacity:1;}
+  .pl-card:hover .pl-cover img, .hero-pl-c:hover .pl-cover img{transform:scale(1.04);}
+  .pl-cover::after{content:'\25B6'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:22px; color:#fff; background:rgba(0,0,0,0.32); opacity:0; transition:opacity 0.2s;}
+  .pl-card:hover .pl-cover::after, .hero-pl-c:hover .pl-cover::after{opacity:1;}
+  .playing .pl-cover::after{opacity:0 !important;}
+  .pl-eq{position:absolute; left:10px; bottom:10px; display:none; gap:3px; align-items:flex-end; height:16px; z-index:1;}
+  .pl-eq b{display:block; width:3px; background:var(--move-red); animation:eq 0.9s ease-in-out infinite;}
+  .pl-eq b:nth-child(2){animation-delay:0.2s;} .pl-eq b:nth-child(3){animation-delay:0.4s;}
+  @keyframes eq{0%,100%{height:4px;} 50%{height:16px;}}
+  .playing .pl-eq{display:flex;}
+  .pl-name{display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-top:12px; font-size:14px; line-height:1.5; color:var(--bone);}
+  .pl-src{display:block; margin-top:4px; font-size:10px; letter-spacing:0.14em; color:var(--bone-dim);}
+  .hero-pl-c .pl-name{font-size:12.5px; margin-top:9px;}
+  .pl-dock{position:fixed; left:50%; bottom:16px; transform:translate(-50%, 140%); width:min(640px, calc(100vw - 24px)); z-index:900; background:rgba(12,12,13,0.96); border:1px solid var(--line-strong); border-radius:12px; overflow:hidden; transition:transform 0.4s cubic-bezier(.2,0,.15,1); box-shadow:0 12px 40px rgba(0,0,0,0.5);}
+  .pl-dock.open{transform:translate(-50%, 0);}
+  .pl-dock-bar{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; font-size:11px; letter-spacing:0.06em; color:var(--bone-dim);}
+  .pl-dock-t{overflow:hidden; white-space:nowrap; text-overflow:ellipsis; color:var(--bone);}
+  .pl-dock-x{background:none; border:none; color:var(--bone-dim); font-size:11px; letter-spacing:0.1em; cursor:pointer; flex:0 0 auto;}
+  .pl-dock-frame{height:152px;}
+  .pl-dock.yt .pl-dock-frame{height:auto; aspect-ratio:16/9;}
+  .pl-dock-frame iframe{width:100%; height:100%; border:0; display:block;}
   .pl-row{display:grid; grid-template-columns:34px 52px minmax(0,1fr) auto auto;
     align-items:center; gap:clamp(12px,2.4vw,26px); padding:12px 6px;
     border-bottom:1px solid var(--line); transition:background 0.25s ease, padding-left 0.25s ease;}
@@ -2418,7 +2437,7 @@ ${pts}
       fs.classList.toggle('pick', !same);
     });
   })();
-  /* ---- 플레이리스트 (표 형식, 행 안에서 재생) ---- */
+  /* ---- 플레이리스트 (커버 그리드, 누르면 하단 플레이어) ---- */
   (function(){
     const wrap = document.getElementById('plGrid');
     if(!wrap) return;
@@ -2444,58 +2463,48 @@ ${pts}
       {t:'Cozy Soul Radio Vol.2', s:'SOUNDCLOUD', k:'sc',
        url:'https://soundcloud.com/soundsgood_store/monday-mix-sgmm123-cozy-soul-radio-vol2'}
     ];
+
+    const dock = document.createElement('div');
+    dock.className = 'pl-dock'; dock.id = 'plDock';
+    dock.innerHTML = '<div class="pl-dock-bar"><span class="pl-dock-t"></span><button type="button" class="pl-dock-x" aria-label="닫기">CLOSE ✕</button></div><div class="pl-dock-frame"></div>';
+    document.body.appendChild(dock);
+    const dockT = dock.querySelector('.pl-dock-t'), dockF = dock.querySelector('.pl-dock-frame');
+    let current = -1;
+    function closeDock(){ dock.classList.remove('open', 'yt'); dockF.innerHTML = ''; current = -1;
+      document.querySelectorAll('.playing[data-pl]').forEach(function(c){ c.classList.remove('playing'); }); }
+    dock.querySelector('.pl-dock-x').addEventListener('click', closeDock);
+    function play(n){
+      if(current === n){ closeDock(); return; }
+      const it = LIST[n];
+      closeDock(); current = n;
+      dockT.textContent = it.t + ' · ' + it.s;
+      dock.classList.toggle('yt', it.k === 'yt');
+      dockF.innerHTML = '<iframe src="' + it.em + '" allow="autoplay; encrypted-media; fullscreen" title="' + it.t + '"></iframe>';
+      dock.classList.add('open');
+      document.querySelectorAll('[data-pl="' + n + '"]').forEach(function(c){ c.classList.add('playing'); });
+    }
+    const heroRow = document.getElementById('heroPlRow');
+    function tile(cls, it, n){
+      const el = document.createElement('button');
+      el.type = 'button'; el.className = cls; el.dataset.pl = n;
+      el.innerHTML = '<span class="pl-cover"><img alt=""><i class="pl-eq"><b></b><b></b><b></b></i></span>'
+        + '<span class="pl-name">' + it.t + '</span><span class="pl-src">' + it.s + '</span>';
+      el.addEventListener('click', function(){ play(n); });
+      return el;
+    }
     LIST.forEach(function(it, n){
       it.em = it.em || ('https://w.soundcloud.com/player/?url=' + encodeURIComponent(it.url)
         + '&color=%23ff3d2e&auto_play=true&hide_related=true&show_comments=false&show_user=false&visual=false');
-      const row = document.createElement('div');
-      row.className = 'pl-row';
-      row.innerHTML =
-        '<div class="pl-i">' + String(n + 1).padStart(2, '0') + '</div>'
-        + '<div class="pl-thumb"><div class="pl-fallback"></div><img alt=""></div>'
-        + '<div class="pl-t">' + it.t + '</div>'
-        + '<div class="pl-s">' + it.s + '</div>'
-        + '<a class="pl-ext" href="' + it.url + '" target="_blank" rel="noopener" aria-label="새 창에서 열기">&#8599;</a>'
-        + '<div class="pl-player"></div>';
-      wrap.appendChild(row);
-
-      // 첫 화면(히어로)에도 같은 커버를 띄운다 — 누르면 플레이리스트 탭에서 바로 재생
-      const heroRow = document.getElementById('heroPlRow');
-      if(heroRow){
-        const chip = document.createElement('button');
-        chip.type = 'button'; chip.className = 'hero-pl-c';
-        chip.innerHTML = '<span class="hero-pl-img"><img alt=""></span><span class="hero-pl-t">' + it.t + '</span><span class="hero-pl-s">' + it.s + '</span>';
-        heroRow.appendChild(chip);
-        const himg = chip.querySelector('img');
-        row.querySelector('img').addEventListener('load', function(){ himg.src = this.src; himg.classList.add('ready'); });
-        chip.addEventListener('click', function(){
-          if(window.setView) setView('playlist');
-          setTimeout(function(){
-            row.scrollIntoView({behavior:'smooth', block:'center'});
-            const box = row.querySelector('.pl-player');
-            if(!box.classList.contains('open')) row.querySelector('.pl-thumb').click();
-          }, 120);
-        });
-      }
-
-      const img = row.querySelector('img');
-      if(it.k === 'yt') row.classList.add('pl-yt');
-      if(it.img){ img.onload = () => img.classList.add('ready'); img.src = it.img; }
-      else {
+      const card = tile('pl-card', it, n);
+      wrap.appendChild(card);
+      const imgs = [card.querySelector('img')];
+      if(heroRow){ const c = tile('hero-pl-c', it, n); heroRow.appendChild(c); imgs.push(c.querySelector('img')); }
+      function setImg(src){ imgs.forEach(function(im){ im.onload = function(){ im.classList.add('ready'); }; im.src = src; }); }
+      if(it.img){ setImg(it.img); return; }
       const api = it.k === 'sp'
         ? 'https://open.spotify.com/oembed?url=' + encodeURIComponent(it.url)
         : 'https://soundcloud.com/oembed?format=json&url=' + encodeURIComponent(it.url);
-      fetch(api).then(r => r.json()).then(function(d){
-        if(d && d.thumbnail_url){ img.onload = () => img.classList.add('ready'); img.src = d.thumbnail_url; }
-      }).catch(function(){});
-      }
-
-      row.querySelector('.pl-thumb').addEventListener('click', function(){
-        const box = row.querySelector('.pl-player');
-        if(box.classList.contains('open')){ box.classList.remove('open'); box.innerHTML = ''; return; }
-        wrap.querySelectorAll('.pl-player.open').forEach(function(o){ o.classList.remove('open'); o.innerHTML = ''; });
-        box.innerHTML = '<iframe src="' + it.em + '" allow="autoplay; encrypted-media" loading="lazy" title="' + it.t + '"></iframe>';
-        box.classList.add('open');
-      });
+      fetch(api).then(r => r.json()).then(function(d){ if(d && d.thumbnail_url) setImg(d.thumbnail_url); }).catch(function(){});
     });
   })();
   /* ---- 접속하면 흐르는 플레이리스트: 브라우저가 소리 자동재생을 막으므로
