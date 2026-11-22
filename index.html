@@ -717,6 +717,7 @@
   .pl-player{grid-column:1 / -1; padding:0; overflow:hidden; height:0; transition:height 0.4s ease;}
   .pl-player.open{height:120px; padding:12px 0 4px;}
   .pl-player iframe{width:100%; height:100%; border:0; display:block;}
+  .pl-yt .pl-player.open{height:auto; aspect-ratio:16/9; max-width:640px;}
   @media (max-width:600px){
     .pl-row{grid-template-columns:44px minmax(0,1fr) auto; gap:12px;}
     .pl-i{display:none;}
@@ -2396,6 +2397,12 @@ ${pts}
     const wrap = document.getElementById('plGrid');
     if(!wrap) return;
     const LIST = [
+      {t:"SKID RACE · ENERGY BUILD-UP — DJ COMY (Soulful Social Grooves #02)", s:'YOUTUBE', k:'yt',
+       url:'https://www.youtube.com/watch?v=mdUCvBGHWgg',
+       img:'https://i.ytimg.com/vi/mdUCvBGHWgg/hqdefault.jpg',
+       em:'https://www.youtube-nocookie.com/embed/mdUCvBGHWgg?autoplay=1'},
+      {t:'SKID RACE · MAIN TIME — DJ UNGKIM', s:'SOUNDCLOUD', k:'sc',
+       url:'https://on.soundcloud.com/e6iOuoS1skqxvTxS9C'},
       {t:'S2: MOVE BETTER CLASS', s:'SPOTIFY', k:'sp',
        url:'https://open.spotify.com/playlist/0Ft3pPwxbpmQh2Wm8LX1jW',
        em:'https://open.spotify.com/embed/playlist/0Ft3pPwxbpmQh2Wm8LX1jW?theme=0'},
@@ -2426,12 +2433,16 @@ ${pts}
       wrap.appendChild(row);
 
       const img = row.querySelector('img');
+      if(it.k === 'yt') row.classList.add('pl-yt');
+      if(it.img){ img.onload = () => img.classList.add('ready'); img.src = it.img; }
+      else {
       const api = it.k === 'sp'
         ? 'https://open.spotify.com/oembed?url=' + encodeURIComponent(it.url)
         : 'https://soundcloud.com/oembed?format=json&url=' + encodeURIComponent(it.url);
       fetch(api).then(r => r.json()).then(function(d){
         if(d && d.thumbnail_url){ img.onload = () => img.classList.add('ready'); img.src = d.thumbnail_url; }
       }).catch(function(){});
+      }
 
       row.querySelector('.pl-thumb').addEventListener('click', function(){
         const box = row.querySelector('.pl-player');
