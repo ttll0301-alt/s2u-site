@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /rsvp/
+Disallow: /goods/
+
+Sitemap: https://sustaintoyou.com/sitemap.xml
