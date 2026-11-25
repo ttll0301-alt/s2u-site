@@ -36,9 +36,17 @@ main{display:grid;grid-template-rows:1fr auto;height:calc(100dvh - 110px);min-he
 #log{border-top:1px solid var(--line);max-height:26vh;overflow:auto;padding:10px max(3vw,14px);font-size:14px;color:var(--mute);background:var(--panel)}
 #log p{margin:0 0 6px}#log time{color:#5d6067;margin-right:8px;font-variant-numeric:tabular-nums}
 .row{display:flex;gap:8px;flex-wrap:wrap}
+#stage.face{padding:0;gap:0;justify-content:stretch}
+.face .half{flex:1 1 50%;display:flex;flex-direction:column;justify-content:flex-end;gap:.35em;padding:3vh 5vw;overflow:hidden;min-height:0}
+.face .them{transform:rotate(180deg);border-bottom:1px solid var(--line)}
+.face .them .cap{font-size:1em}
+.face .me .cap{font-size:.72em;color:#d9d9d6}
+.face .tag{font-size:13px;font-weight:600;color:var(--mute);letter-spacing:0;margin-bottom:auto;padding-top:4px}
+.cap .fix{color:var(--ink)}
 body.display header,body.display #status,body.display #log{display:none}
 body.display main{height:100dvh}
 body.display #exit{display:block}
+body:has(#stage.face) #exit{top:calc(50dvh - 22px)}
 #exit{display:none;position:fixed;top:calc(env(safe-area-inset-top) + 10px);right:12px;opacity:.5;z-index:5}
 @media (max-width:700px){
  header{padding:10px 12px;gap:8px}
@@ -63,7 +71,8 @@ body.display #exit{display:block}
   <h1>실시간 번역 자막</h1>
   <label>말하는 언어<select id="srcLang" disabled><option>한국어</option></select></label>
   <label>자막 언어<select id="tgtLang"><optgroup label="자주 쓰는 언어"><option value="0" selected>English 영어</option><option value="1">日本語 일본어</option><option value="2">简体中文 중국어(간체)</option><option value="3">繁體中文 중국어(번체)</option><option value="4">Español 스페인어</option><option value="5">Français 프랑스어</option><option value="6">Deutsch 독일어</option></optgroup><optgroup label="아시아"><option value="7">Tiếng Việt 베트남어</option><option value="8">ไทย 태국어</option><option value="9">Bahasa Indonesia 인도네시아어</option><option value="10">Bahasa Melayu 말레이어</option><option value="11">Filipino 필리핀어</option><option value="12">हिन्दी 힌디어</option><option value="13">বাংলা 벵골어</option><option value="14">اردو 우르두어</option><option value="15">தமிழ் 타밀어</option><option value="16">नेपाली 네팔어</option><option value="17">සිංහල 싱할라어</option><option value="18">မြန်မာ 미얀마어</option><option value="19">ខ្មែរ 크메르어</option><option value="20">ລາວ 라오어</option><option value="21">Монгол 몽골어</option><option value="22">Қазақ 카자흐어</option><option value="23">Oʻzbek 우즈베크어</option></optgroup><optgroup label="유럽"><option value="24">Italiano 이탈리아어</option><option value="25">Português 포르투갈어</option><option value="26">Русский 러시아어</option><option value="27">Українська 우크라이나어</option><option value="28">Polski 폴란드어</option><option value="29">Nederlands 네덜란드어</option><option value="30">Svenska 스웨덴어</option><option value="31">Norsk 노르웨이어</option><option value="32">Dansk 덴마크어</option><option value="33">Suomi 핀란드어</option><option value="34">Čeština 체코어</option><option value="35">Magyar 헝가리어</option><option value="36">Română 루마니아어</option><option value="37">Ελληνικά 그리스어</option><option value="38">Български 불가리아어</option><option value="39">Hrvatski 크로아티아어</option><option value="40">Српски 세르비아어</option></optgroup><optgroup label="중동·아프리카"><option value="41">العربية 아랍어</option><option value="42">Türkçe 튀르키예어</option><option value="43">فارسی 페르시아어</option><option value="44">עברית 히브리어</option><option value="45">Kiswahili 스와힐리어</option><option value="46">አማርኛ 암하라어</option><option value="47">isiZulu 줄루어</option></optgroup></select></label>
-  <label>표시<select id="mode"><option value="both">원문 + 번역</option><option value="tgt">번역만</option><option value="src">원문만</option></select></label>
+  <label>상황 · 말투<select id="tone"><option value="basic">기본 (빠른 번역)</option><option value="formal">격식 — 미팅·행사·어른</option><option value="daily" selected>일상 — 가게·여행·처음 본 사람</option><option value="friend">친구 — 편한 사이</option><option value="coach">운동 — 러닝·코칭 구령</option></select></label>
+  <label>표시<select id="mode"><option value="face">마주보기 (폰을 사이에 두고)</option><option value="both">원문 + 번역</option><option value="tgt">번역만</option><option value="src">원문만</option></select></label>
   <label>글자 크기<select id="size"><option value="clamp(24px,3.2vw,56px)">보통</option><option value="clamp(30px,4.4vw,76px)" selected>크게</option><option value="clamp(40px,6vw,104px)">아주 크게</option><option value="clamp(18px,2.2vw,40px)">작게</option></select></label>
   <span class="sp"></span>
   <div class="row">
@@ -78,6 +87,7 @@ body.display #exit{display:block}
   <section id="stage" aria-live="polite"></section>
   <section id="log"><div class="row" style="margin-bottom:8px"><button id="copy">기록 복사</button><button id="save">기록 저장 (.txt)</button><button id="clear">지우기</button></div><div id="lines"></div></section>
 </main>
+<script src="../rsvp/config.js"></script>
 <script>
 {
 const LANGS=[ // [Google 코드, 이름, 그룹] — 말하는 언어는 한국어 고정
@@ -148,6 +158,15 @@ let caps=[]; // {src,tgt,final}
 function render(state){
   const {caps,mode,size}=state;
   stage.style.fontSize=size;
+  if(mode==='face'){
+    stage.classList.add('face');
+    const last=caps.slice(-2);
+    const line=(c,i,a,t)=>`<div class="cap${i<a.length-1?' old':''}"><span class="${c.final?'':'live'}">${esc(t(c)||'…')}</span></div>`;
+    stage.innerHTML=`<div class="half them"><div class="tag">${esc(state.tgtName||'')}</div>${last.map((c,i,a)=>line(c,i,a,x=>x.tgt)).join('')||'<div class="cap old">…</div>'}</div>`+
+      `<div class="half me"><div class="tag">한국어 · 내가 보는 쪽</div>${last.map((c,i,a)=>line(c,i,a,x=>x.src)).join('')||'<div class="cap old" style="font-size:.5em">시작을 누르고 말해보세요. 위쪽은 상대방 쪽으로 뒤집혀 보여요.</div>'}</div>`;
+    return;
+  }
+  stage.classList.remove('face');
   stage.innerHTML=caps.slice(-3).map((c,i,a)=>{
     const old=i<a.length-1?' old':'';const live=c.final?'':' live';
     const src=`<span class="src${live}">${esc(c.src)}</span>`;
@@ -157,7 +176,7 @@ function render(state){
   }).join('');
 }
 function push(){
-  const st={caps:caps.slice(-3),mode:$('mode').value,size:$('size').value};
+  const st={caps:caps.slice(-3),mode:$('mode').value,size:$('size').value,tgtName:LANGS[tgtSel.value][1].split(' ')[0]};
   render(st);bc&&bc.postMessage(st);
 }
 
@@ -194,6 +213,26 @@ async function translate(text){
   const j=await r.json(); return j[0].map(x=>x[0]).join('');
 }
 
+// ---------- 상황별 번역 (S2:U 서버 → Gemini). 실패하면 기본 번역 유지 ----------
+const CFG=window.S2_RSVP||{};
+let aiOff=false,aiQ=Promise.resolve();
+const recent=[];
+function aiTranslate(text){
+  const tone=$('tone').value;
+  if(tone==='basic'||aiOff||!CFG.url||!CFG.anonKey) return Promise.resolve(null);
+  const ctx=recent.slice(-2);
+  const run=()=>fetch(CFG.url+'/functions/v1/caption-translate',{method:'POST',
+      headers:{'Content-Type':'application/json',Authorization:'Bearer '+CFG.anonKey,apikey:CFG.anonKey},
+      body:JSON.stringify({text,lang:tgtCode(),langName:LANGS[tgtSel.value][1].split(' ').slice(-1)[0]+' ('+LANGS[tgtSel.value][1].split(' ')[0]+')',tone,context:ctx})})
+    .then(async r=>{
+      if(r.status===503||r.status===404){aiOff=true;setStatus('상황별 말투 번역은 아직 준비 중이라 <b>기본 번역</b>으로 보여드려요.');return null}
+      if(r.status===429){setStatus('말이 빨라서 말투 번역이 잠깐 밀렸어요 — 이 문장은 기본 번역');return null}
+      if(!r.ok) return null;
+      const j=await r.json();return j.text||null;
+    }).catch(()=>null);
+  const p=aiQ.then(run);aiQ=p.catch(()=>{});return p; // 한 번에 하나씩 순서대로
+}
+
 // ---------- 음성 인식: Web Speech API ----------
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 if(!SR){setStatus(/iPhone|iPad/.test(navigator.userAgent)?'iPhone에서는 <b>Safari</b>로 열어주세요 (카톡·인스타 내부 브라우저 X). 설정 → Safari → 고급에서 음성 인식이 켜져 있어야 해요.':'이 브라우저는 음성 인식을 지원하지 않아요. <b>Chrome</b>으로 열어주세요 (카톡·인스타 내부 브라우저 X).');$('go').disabled=true}
@@ -210,7 +249,10 @@ function start(){
     for(let i=e.resultIndex;i<e.results.length;i++){
       const r=e.results[i],txt=r[0].transcript.trim(); if(!txt) continue;
       const c=current(); c.src=txt;
-      if(r.isFinal){c.final=true;translate(txt).then(out=>{c.tgt=out;push();log(txt,out)}).catch(()=>{log(txt,'')});}
+      if(r.isFinal){c.final=true;
+        const quick=translate(txt).then(out=>{if(!c.ai){c.tgt=out;push()}return out}).catch(()=>'');
+        aiTranslate(txt).then(async ai=>{const q=await quick;if(ai){c.ai=true;c.tgt=ai;push()}log(txt,ai||q)});
+        recent.push(txt);if(recent.length>4)recent.shift();}
       else{ // 말하는 중: 0.35초마다 번역 갱신 → 단어 단위로 흘러나옴
         clearTimeout(interimTimer);
         const now=Date.now();
@@ -233,7 +275,11 @@ $('go').onclick=async()=>{
   keepAwake(); await prepTranslator(); start();
 };
 tgtSel.onchange=(async()=>{try{localStorage.setItem('capTgt',tgtSel.value)}catch(e){};trKey='';await prepTranslator();caps=[];push()});
-['mode','size'].forEach(id=>$(id).onchange=push);
+['mode','size'].forEach(id=>$(id).onchange=()=>{try{localStorage.setItem('cap_'+id,$(id).value)}catch(e){};push()});
+$('tone').onchange=()=>{aiOff=false;try{localStorage.setItem('cap_tone',$('tone').value)}catch(e){}};
+try{for(const id of ['mode','size','tone']){const v=localStorage.getItem('cap_'+id);if(v&&[...$(id).options].some(o=>o.value===v))$(id).value=v}}catch(e){}
+try{if(!matchMedia('(max-width:700px)').matches&&!localStorage.getItem('cap_mode'))$('mode').value='both'}catch(e){}
+push();
 
 // ---------- 기록 ----------
 const lines=[];
