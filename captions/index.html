@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0b0b0c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="자막">
+<title>실시간 번역 자막</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0b0c;--panel:#16171a;--line:#2a2c31;--ink:#f3f3f1;--mute:#8d9097;--accent:#ffd23f;--rec:#ff3b30}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;-webkit-text-size-adjust:100%;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);background:var(--bg);color:var(--ink);font:16px/1.5 Pretendard,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:14px max(3vw,14px);border-bottom:1px solid var(--line);background:var(--panel)}
+h1{font-size:18px;margin:0 12px 0 0;font-weight:800}
+label{font-size:13px;color:var(--mute);display:flex;flex-direction:column;gap:4px}
+select,button{font:inherit;font-size:15px;min-height:42px;border-radius:10px;border:1px solid var(--line);background:#202227;color:var(--ink);padding:0 12px}
+button{cursor:pointer;font-weight:600}
+button:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#go{background:var(--accent);color:#111;border-color:var(--accent);min-width:120px}
+#go.on{background:var(--rec);border-color:var(--rec);color:#fff}
+.sp{flex:1}
+#status{font-size:13px;color:var(--mute);padding:8px max(3vw,14px)}
+#status b{color:var(--accent);font-weight:600}
+main{display:grid;grid-template-rows:1fr auto;height:calc(100dvh - 110px);min-height:420px}
+#stage{display:flex;flex-direction:column;justify-content:flex-end;padding:3vh 5vw;overflow:hidden;gap:.4em}
+.cap{font-weight:800;line-height:1.25;text-wrap:balance}
+.cap .src{display:block;color:var(--mute);font-weight:600;font-size:.55em;margin-bottom:.15em}
+.cap.old{opacity:.38}
+.cap .live{color:var(--accent)}
+#log{border-top:1px solid var(--line);max-height:26vh;overflow:auto;padding:10px max(3vw,14px);font-size:14px;color:var(--mute);background:var(--panel)}
+#log p{margin:0 0 6px}#log time{color:#5d6067;margin-right:8px;font-variant-numeric:tabular-nums}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+body.display header,body.display #status,body.display #log{display:none}
+body.display main{height:100dvh}
+body.display #exit{display:block}
+#exit{display:none;position:fixed;top:calc(env(safe-area-inset-top) + 10px);right:12px;opacity:.5;z-index:5}
+@media (max-width:700px){
+ header{padding:10px 12px;gap:8px}
+ h1{width:100%;font-size:16px}
+ header label{flex:1 1 44%}
+ header select{width:100%}
+ .sp,#popout{display:none}
+ header .row{width:100%}
+ header .row button{flex:1}
+ #go{order:-1;flex:1 1 100%!important;min-height:52px;font-size:17px}
+ main{height:auto;min-height:0;display:block}
+ #stage{padding:16px 14px;height:max(260px,calc(100dvh - 360px))}
+ body.display #stage{height:100dvh}
+ #log{max-height:30dvh}
+}
+@media (max-width:700px) and (orientation:landscape){header{display:none}body.display header{display:none}}
+@media (prefers-reduced-motion:no-preference){.cap{transition:opacity .3s}}
+</style>
+</head>
+<body>
+<header>
+  <h1>실시간 번역 자막</h1>
+  <label>말하는 언어<select id="srcLang" disabled><option>한국어</option></select></label>
+  <label>자막 언어<select id="tgtLang"><optgroup label="자주 쓰는 언어"><option value="0" selected>English 영어</option><option value="1">日本語 일본어</option><option value="2">简体中文 중국어(간체)</option><option value="3">繁體中文 중국어(번체)</option><option value="4">Español 스페인어</option><option value="5">Français 프랑스어</option><option value="6">Deutsch 독일어</option></optgroup><optgroup label="아시아"><option value="7">Tiếng Việt 베트남어</option><option value="8">ไทย 태국어</option><option value="9">Bahasa Indonesia 인도네시아어</option><option value="10">Bahasa Melayu 말레이어</option><option value="11">Filipino 필리핀어</option><option value="12">हिन्दी 힌디어</option><option value="13">বাংলা 벵골어</option><option value="14">اردو 우르두어</option><option value="15">தமிழ் 타밀어</option><option value="16">नेपाली 네팔어</option><option value="17">සිංහල 싱할라어</option><option value="18">မြန်မာ 미얀마어</option><option value="19">ខ្មែរ 크메르어</option><option value="20">ລາວ 라오어</option><option value="21">Монгол 몽골어</option><option value="22">Қазақ 카자흐어</option><option value="23">Oʻzbek 우즈베크어</option></optgroup><optgroup label="유럽"><option value="24">Italiano 이탈리아어</option><option value="25">Português 포르투갈어</option><option value="26">Русский 러시아어</option><option value="27">Українська 우크라이나어</option><option value="28">Polski 폴란드어</option><option value="29">Nederlands 네덜란드어</option><option value="30">Svenska 스웨덴어</option><option value="31">Norsk 노르웨이어</option><option value="32">Dansk 덴마크어</option><option value="33">Suomi 핀란드어</option><option value="34">Čeština 체코어</option><option value="35">Magyar 헝가리어</option><option value="36">Română 루마니아어</option><option value="37">Ελληνικά 그리스어</option><option value="38">Български 불가리아어</option><option value="39">Hrvatski 크로아티아어</option><option value="40">Српски 세르비아어</option></optgroup><optgroup label="중동·아프리카"><option value="41">العربية 아랍어</option><option value="42">Türkçe 튀르키예어</option><option value="43">فارسی 페르시아어</option><option value="44">עברית 히브리어</option><option value="45">Kiswahili 스와힐리어</option><option value="46">አማርኛ 암하라어</option><option value="47">isiZulu 줄루어</option></optgroup></select></label>
+  <label>표시<select id="mode"><option value="both">원문 + 번역</option><option value="tgt">번역만</option><option value="src">원문만</option></select></label>
+  <label>글자 크기<select id="size"><option value="clamp(24px,3.2vw,56px)">보통</option><option value="clamp(30px,4.4vw,76px)" selected>크게</option><option value="clamp(40px,6vw,104px)">아주 크게</option><option value="clamp(18px,2.2vw,40px)">작게</option></select></label>
+  <span class="sp"></span>
+  <div class="row">
+    <button id="popout" title="프로젝터·OBS용 자막 전용 창">자막 창 띄우기</button>
+    <button id="full">자막만 크게</button>
+    <button id="go">● 시작</button>
+  </div>
+</header>
+<div id="status"><b>시작</b>을 누르면 마이크 권한을 묻습니다. 휴대폰은 Android Chrome 또는 iPhone Safari에서 열어주세요.</div>
+<button id="exit" aria-label="자막 화면 닫기">✕ 닫기</button>
+<main>
+  <section id="stage" aria-live="polite"></section>
+  <section id="log"><div class="row" style="margin-bottom:8px"><button id="copy">기록 복사</button><button id="save">기록 저장 (.txt)</button><button id="clear">지우기</button></div><div id="lines"></div></section>
+</main>
+<script>
+{
+const LANGS=[ // [Google 코드, 이름, 그룹] — 말하는 언어는 한국어 고정
+  ['en','English 영어','자주 쓰는 언어'],
+  ['ja','日本語 일본어','자주 쓰는 언어'],
+  ['zh-CN','简体中文 중국어(간체)','자주 쓰는 언어'],
+  ['zh-TW','繁體中文 중국어(번체)','자주 쓰는 언어'],
+  ['es','Español 스페인어','자주 쓰는 언어'],
+  ['fr','Français 프랑스어','자주 쓰는 언어'],
+  ['de','Deutsch 독일어','자주 쓰는 언어'],
+  ['vi','Tiếng Việt 베트남어','아시아'],
+  ['th','ไทย 태국어','아시아'],
+  ['id','Bahasa Indonesia 인도네시아어','아시아'],
+  ['ms','Bahasa Melayu 말레이어','아시아'],
+  ['tl','Filipino 필리핀어','아시아'],
+  ['hi','हिन्दी 힌디어','아시아'],
+  ['bn','বাংলা 벵골어','아시아'],
+  ['ur','اردو 우르두어','아시아'],
+  ['ta','தமிழ் 타밀어','아시아'],
+  ['ne','नेपाली 네팔어','아시아'],
+  ['si','සිංහල 싱할라어','아시아'],
+  ['my','မြန်မာ 미얀마어','아시아'],
+  ['km','ខ្មែរ 크메르어','아시아'],
+  ['lo','ລາວ 라오어','아시아'],
+  ['mn','Монгол 몽골어','아시아'],
+  ['kk','Қазақ 카자흐어','아시아'],
+  ['uz','Oʻzbek 우즈베크어','아시아'],
+  ['it','Italiano 이탈리아어','유럽'],
+  ['pt','Português 포르투갈어','유럽'],
+  ['ru','Русский 러시아어','유럽'],
+  ['uk','Українська 우크라이나어','유럽'],
+  ['pl','Polski 폴란드어','유럽'],
+  ['nl','Nederlands 네덜란드어','유럽'],
+  ['sv','Svenska 스웨덴어','유럽'],
+  ['no','Norsk 노르웨이어','유럽'],
+  ['da','Dansk 덴마크어','유럽'],
+  ['fi','Suomi 핀란드어','유럽'],
+  ['cs','Čeština 체코어','유럽'],
+  ['hu','Magyar 헝가리어','유럽'],
+  ['ro','Română 루마니아어','유럽'],
+  ['el','Ελληνικά 그리스어','유럽'],
+  ['bg','Български 불가리아어','유럽'],
+  ['hr','Hrvatski 크로아티아어','유럽'],
+  ['sr','Српски 세르비아어','유럽'],
+  ['ar','العربية 아랍어','중동·아프리카'],
+  ['tr','Türkçe 튀르키예어','중동·아프리카'],
+  ['fa','فارسی 페르시아어','중동·아프리카'],
+  ['he','עברית 히브리어','중동·아프리카'],
+  ['sw','Kiswahili 스와힐리어','중동·아프리카'],
+  ['am','አማርኛ 암하라어','중동·아프리카'],
+  ['zu','isiZulu 줄루어','중동·아프리카']
+];
+const $=id=>document.getElementById(id);
+const srcSel=$('srcLang'),tgtSel=$('tgtLang'),stage=$('stage'),status=$('status');
+const SRC={rec:'ko-KR',code:'ko'};
+const grp=[...new Set(LANGS.map(l=>l[2]))];
+try{const v=localStorage.getItem('capTgt');tgtSel.value=v&&LANGS[v]?v:0}catch(e){tgtSel.value=0}
+// Chrome 내장 번역기용 코드 (Google 코드와 다른 것만)
+const TR_CODE={'zh-CN':'zh','zh-TW':'zh-Hant','tl':'fil'};
+const tgtCode=()=>LANGS[tgtSel.value][0];
+const isDisplay=location.hash==='#display';
+const bc=('BroadcastChannel' in self)?new BroadcastChannel('live-captions'):null;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const setStatus=h=>status.innerHTML=h;
+
+// ---------- 화면 렌더링 (메인 창 + 자막 창 공용) ----------
+let caps=[]; // {src,tgt,final}
+function render(state){
+  const {caps,mode,size}=state;
+  stage.style.fontSize=size;
+  stage.innerHTML=caps.slice(-3).map((c,i,a)=>{
+    const old=i<a.length-1?' old':'';const live=c.final?'':' live';
+    const src=`<span class="src${live}">${esc(c.src)}</span>`;
+    const tgt=`<span class="${live.trim()}">${esc(c.tgt||'…')}</span>`;
+    const body=mode==='src'?`<span class="${live.trim()}">${esc(c.src)}</span>`:mode==='tgt'?tgt:src+tgt;
+    return `<div class="cap${old}">${body}</div>`;
+  }).join('');
+}
+function push(){
+  const st={caps:caps.slice(-3),mode:$('mode').value,size:$('size').value};
+  render(st);bc&&bc.postMessage(st);
+}
+
+if(isDisplay){
+  document.body.classList.add('display');
+  document.title='자막';
+  bc&&(bc.onmessage=e=>render(e.data));
+  stage.innerHTML='<div class="cap" style="font-size:2vw;color:#8d9097">메인 창에서 시작을 누르면 자막이 여기에 나옵니다. 이 창을 프로젝터로 옮기거나 OBS 창 캡처로 쓰세요.</div>';
+  stage.ondblclick=()=>document.documentElement.requestFullscreen?.().catch(()=>{});
+}else{
+
+// ---------- 번역: Chrome 내장 번역(기기 내, 무료) → 안 되면 Google 무료 엔드포인트 ----------
+let translator=null,trKey='';
+async function prepTranslator(){
+  const s=SRC.code,t=TR_CODE[tgtCode()]||tgtCode();
+  const key=s+'>'+t; if(key===trKey) return; trKey=key; translator=null;
+  try{
+    if('Translator' in self){
+      const av=await Translator.availability({sourceLanguage:s,targetLanguage:t});
+      if(av!=='unavailable'){
+        translator=await Translator.create({sourceLanguage:s,targetLanguage:t,monitor(m){
+          m.addEventListener('downloadprogress',e=>setStatus(`번역 모델 내려받는 중… <b>${Math.round(e.loaded*100)}%</b> (최초 1회)`));}});
+        setStatus('번역: <b>Chrome 내장 번역</b> (기기 안에서 처리)');return;
+      }
+    }
+  }catch(e){translator=null}
+  setStatus('번역: <b>Google 무료 번역</b> (인터넷 필요)');
+}
+async function translate(text){
+  if(!text.trim()) return '';
+  if(translator){try{return await translator.translate(text)}catch(e){}}
+  const tl=tgtCode()==='he'?'iw':tgtCode();
+  const r=await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=ko&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`);
+  const j=await r.json(); return j[0].map(x=>x[0]).join('');
+}
+
+// ---------- 음성 인식: Web Speech API ----------
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR){setStatus(/iPhone|iPad/.test(navigator.userAgent)?'iPhone에서는 <b>Safari</b>로 열어주세요 (카톡·인스타 내부 브라우저 X). 설정 → Safari → 고급에서 음성 인식이 켜져 있어야 해요.':'이 브라우저는 음성 인식을 지원하지 않아요. <b>Chrome</b>으로 열어주세요 (카톡·인스타 내부 브라우저 X).');$('go').disabled=true}
+let rec=null,running=false,lastInterimAt=0,interimTimer=null,seq=0;
+function current(){let c=caps[caps.length-1];if(!c||c.final){c={src:'',tgt:'',final:false,id:++seq};caps.push(c)}return c}
+async function updateTgt(c){
+  const id=c.id,txt=c.src;
+  try{const out=await translate(txt); if(c.id===id&&c.src===txt||c.final&&c.id===id){c.tgt=out;push()}}
+  catch(e){setStatus('번역 오류 — 원문만 표시 중');}
+}
+function start(){
+  rec=new SR();rec.lang=SRC.rec;rec.continuous=true;rec.interimResults=true;
+  rec.onresult=e=>{
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      const r=e.results[i],txt=r[0].transcript.trim(); if(!txt) continue;
+      const c=current(); c.src=txt;
+      if(r.isFinal){c.final=true;translate(txt).then(out=>{c.tgt=out;push();log(txt,out)}).catch(()=>{log(txt,'')});}
+      else{ // 말하는 중: 0.35초마다 번역 갱신 → 단어 단위로 흘러나옴
+        clearTimeout(interimTimer);
+        const now=Date.now();
+        if(now-lastInterimAt>350){lastInterimAt=now;updateTgt(c)} else interimTimer=setTimeout(()=>updateTgt(c),350);
+      }
+      push();
+    }
+  };
+  rec.onerror=e=>{ if(e.error==='not-allowed'){setStatus('마이크 권한이 거부됐어요. 주소창 왼쪽 자물쇠 → 마이크 허용 후 다시 시작.');stop()}
+    else if(e.error!=='no-speech'&&e.error!=='aborted') setStatus('인식 오류: '+esc(e.error)+' — 자동 재시도 중'); };
+  rec.onend=()=>{ if(running){try{rec.start()}catch(e){setTimeout(()=>running&&rec.start(),300)}} };
+  rec.start();
+}
+let wake=null;async function keepAwake(){try{wake=await navigator.wakeLock?.request('screen')}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(running&&document.visibilityState==='visible')keepAwake()});
+function stop(){running=false;try{wake&&wake.release()}catch(e){};wake=null;try{rec&&rec.stop()}catch(e){};$('go').classList.remove('on');$('go').textContent='● 시작'}
+$('go').onclick=async()=>{
+  if(running){stop();setStatus('정지됨');return}
+  running=true;$('go').classList.add('on');$('go').textContent='■ 정지';
+  keepAwake(); await prepTranslator(); start();
+};
+tgtSel.onchange=(async()=>{try{localStorage.setItem('capTgt',tgtSel.value)}catch(e){};trKey='';await prepTranslator();caps=[];push()});
+['mode','size'].forEach(id=>$(id).onchange=push);
+
+// ---------- 기록 ----------
+const lines=[];
+function log(src,tgt){
+  const t=new Date().toLocaleTimeString('ko-KR',{hour12:false});
+  lines.push({t,src,tgt});
+  const p=document.createElement('p');p.innerHTML=`<time>${t}</time>${esc(src)}${tgt&&tgt!==src?' → <span style="color:#f3f3f1">'+esc(tgt)+'</span>':''}`;
+  $('lines').appendChild(p);$('log').scrollTop=1e9;
+}
+const asText=()=>lines.map(l=>`[${l.t}] ${l.src}${l.tgt&&l.tgt!==l.src?'\n         '+l.tgt:''}`).join('\n');
+$('copy').onclick=()=>navigator.clipboard.writeText(asText()).then(()=>setStatus('기록을 복사했어요')).catch(()=>setStatus('복사 실패'));
+$('save').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([asText()],{type:'text/plain'}));a.download=`자막기록_${new Date().toISOString().slice(0,16).replace(/[:T]/g,'-')}.txt`;a.click()};
+$('clear').onclick=()=>{lines.length=0;$('lines').innerHTML='';caps=[];push()};
+$('popout').onclick=()=>{window.open(location.href.split('#')[0]+'#display','captions','width=1280,height=400')||setStatus('팝업이 막혔어요. 주소창 오른쪽에서 팝업 허용')};
+$('exit').onclick=()=>{document.body.classList.remove('display');document.fullscreenElement&&document.exitFullscreen?.().catch(()=>{})};
+$('full').onclick=()=>{document.body.classList.toggle('display');document.documentElement.requestFullscreen?.().catch(()=>{})};
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement)document.body.classList.remove('display')});
+stage.addEventListener('dblclick',()=>document.body.classList.toggle('display'));
+if(!window.isSecureContext&&location.protocol!=='file:')setStatus('마이크는 <b>https</b> 주소에서만 켜져요.');
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.body.classList.remove('display')});
+}
+}
+</script>
+</body>
+</html>
